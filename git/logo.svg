@@ -2,9 +2,9 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="297mm"
-   height="210mm"
-   viewBox="0 0 1122.5197 793.70081"
+   width="270mm"
+   height="55mm"
+   viewBox="0 0 1020.4725 207.87402"
    version="1.1"
    id="svg5"
    inkscape:version="1.1.2 (0a00cf5339, 2022-02-04, custom)"
@@ -21,17 +21,21 @@
      inkscape:pageshadow="2"
      inkscape:pageopacity="0.0"
      inkscape:pagecheckerboard="0"
-     inkscape:document-units="mm"
+     inkscape:document-units="px"
      showgrid="false"
      inkscape:zoom="0.95410354"
-     inkscape:cx="439.67974"
-     inkscape:cy="397.23152"
+     inkscape:cx="486.84444"
+     inkscape:cy="318.6237"
      inkscape:window-width="1920"
      inkscape:window-height="1027"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     inkscape:current-layer="layer2" />
+     inkscape:current-layer="layer2"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
   <defs
      id="defs2" />
   <g
@@ -44,14 +48,14 @@
        height="113.38583"
        x="0"
        y="94.48819"
-       style="stroke-width:1.03035;fill:#d40000" />
+       style="fill:#d40000;stroke-width:1.03035" />
     <rect
        id="rect25659"
        width="226.77165"
        height="113.38583"
        x="793.70081"
        y="-4.4408921e-16"
-       style="stroke-width:1.03035;fill:#d4aa00" />
+       style="fill:#d4aa00;stroke-width:1.03035" />
     <rect
        id="rect25683"
        width="975.1181"
