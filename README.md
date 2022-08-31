@@ -8,8 +8,8 @@ Open A-Life simulates a world in the form of a 2D grid of cells. This world is t
 ## How does it work?
 Open A-Life is comprised of 3 distinct sections. They are:
 
- - **The Backend** _ _This is where the world and all of its factions are initialised and the AI's can run and update the API folder. If this was a restraunt, they would be the kitchen staff_ _
+ - **The Backend**: This is where the world and all of its factions are initialised and the AI's can run and update the API folder. If this was a restraunt, they would be the kitchen staff
 
- - **The Frontend** _ _This is what the user will see_ _
+ - **The Frontend**: This is what the user will see
 
- - **The API** _ _This is the intermidarary folder that both the Backend and Frontend read from and write to. If this was a restraunt, they would be our waitors_ _
+ - **The API**: This is the intermidarary folder that both the Backend and Frontend read from and write to. If this was a restraunt, they would be our waitors
