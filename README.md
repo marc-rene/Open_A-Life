@@ -13,3 +13,9 @@ Open A-Life is comprised of 3 distinct sections. They are:
  - **The Frontend**: This is what the user will see
 
  - **The API**: This is the intermidarary folder that both the Backend and Frontend read from and write to. If this was a restraunt, they would be our waitors
+
+
+### The Backend
+
+Random text
+
