@@ -24,7 +24,10 @@ Every implementation of the backend _**MUST**_ accomplish the following requirem
  
  - Read the state of the World from **../API/Ready.world** and write the current world to **../API/writing.world**
  
- - Read and adjust behaviour according to **../API/Operation.mode**. Operation.mode should be a number which corolates to a function, such as exiting, adjusting speed of execution, pausing, etc... _These codes can be found below_
+ - Read and adjust behaviour according to **../API/Operation.mode**. Operation.mode should be a number which corolates to a function, such as exiting, adjusting speed of execution, pausing, etc... _These codes can be found in the table below_
+
+
+Further details of how each implementation works can be found in the **Readme.md** of each implementation's folder... _Which will be coming soon!_
 
 
 
