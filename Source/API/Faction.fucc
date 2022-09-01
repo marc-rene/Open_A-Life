@@ -1,0 +1,45 @@
+!!! This is a FACTION file !!!
+
+# Faction Data should be organised like this, no tabs, just SPACES
+# I put in the '~' for organised and disorganised cause they share the same substring... its so we can better differentiate later
+
+#Faction Names,				Initials,		Faction Homes,	Starting Strength (Max 255),	Is essential?	Faction Structures (Disorganised/Non Central,	Migrant,	Organised)
+[START READ]
+Cats							|	CAT					|	2					|	250							|	OUI			|	~Migrant
+Loyalists					|	LOYALS			|	6					|	160							|	OUI			|	~Organised
+Deserters				|	DSRT				|	9					|	Random Strength				|	OUI			|	~Migrant
+Rebels						|	RBLS				|	12				|	180							|	OUI			|	~Organised
+Ecologists				|	ECO					|	15				|	120							|	OUI			|	~Migrant
+Red Army				|	VDV					|	18				|	150							|	OUI			|	~Organised
+S.T.A.L.K.E.Rs			|	STLKR				|	20				|	Random Strength				|	OUI			|	~Disorganised
+Bandits					|	BNDT				|	22				|	10							|	OUI			|	~Disorganised
+Mercenaries			|	MERC				|	24				|	195							|	OUI			|	~Disorganised
+Feminists				|	FMST				|	26				|	10							|	non			|	~Disorganised
+Neckbeards				|	NKBRD			|	28				|	Random Strength 			|	non			|	~Disorganised
+Grand-dads				|	GD					|	32 				|	Random Strength 			|	non			|	~Organised
+Farmers					|	FARM				|	34 				|	Random Strength 			|	non			|	~Migrant
+Smugglers				|	SMUG				|	35				|	Random Strength 			|	non			|	~Organised
+Jedi							|	JEDI					|	37 				|	Random Strength 			|	non			|	~Migrant
+Blue Army				|	SEAL				|	42 				|	Random Strength 			|	non			|	~Organised
+W.A.N.K.E.R's			|	CUNT				|	44 				|	Random Strength 			|	non			|	~Disorganised
+Broken Veterans		|	BRVT				|	45 				|	Random Strength 			|	non			|	~Disorganised
+Rogue Embers			|	RE					|	46 				|	Random Strength 			|	non			|	~Disorganised
+Large Outlaws		|	LO					|	47 				|	Random Strength 			|	non			|	~Organised
+Force of Tears			|	TEARS				|	48 				|	Random Strength 			|	non			|	~Migrant
+Dawn of Darkness	|	DAWN				|	50 				|	Random Strength 			|	non			|	~Organised
+Pact of the Heroic	|	PH					|	52 				|	Random Strength 			|	non			|	~Migrant
+Deceived					|	DECIV				|	53 				|	Random Strength 			|	non			|	~Organised
+Fire Dragons			|	FRDR				|	55 				|	Random Strength 			|	non			|	~Disorganised
+Stormmight				|	STORM			|	59 				|	Random Strength 			|	non			|	~Disorganised
+Bluescars				|	BLUE				|	Random Home |	Random Strength 			|	non			|	~Disorganised
+Ordained Headhunters	|	OHEAD	|	Random Home |	Random Strength 			|	non			|	~Organised
+Bitter Inferno			|	BI						|	Random Home |	Random Strength 			|	non			|	~Migrant
+Blue Entities			|	BE					|	Random Home |	Random Strength 			|	non			|	~Organised
+Champions of Life	|	CL					|	Random Home |	Random Strength 			|	non			|	~Migrant
+Order of the Wicked|	WICKED			|	Random Home |	Random Strength 			|	non			|	~Organised
+Trembleshroud		|	TRMBLE			|	Random Home |	Random Strength 			|	non			|	~Disorganised
+Swiftbreaker			|	SWIFT				|	Random Home |	Random Strength 			|	non			|	~Organised
+Shattertops				|	SHATTR			|	Random Home |	Random Strength 			|	non			|	~Organised
+[END]
+
+# Random name generators were heavily used here
