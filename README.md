@@ -17,6 +17,13 @@ Open A-Life is comprised of 3 distinct sections. They are:
 
 # The Backend
 
-The backend is currently being offered in C and C++ which are all currently in development.
+The backend is currently being offered in C and C++ which are all currently still in development, and a python version will be entering development soon.
 Every implementation of the backend **must** accomplish the following requirements in order for everything to work smoothly: 
 
+ - Read and set parametres from Settings.OALC 
+ 
+ - Read the state of the World from Backup.world and write the current world to write.world
+ 
+ 
+ 
+ 
