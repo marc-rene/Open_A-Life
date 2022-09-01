@@ -22,9 +22,9 @@ Every implementation of the backend _ _**MUST**_ _ accomplish the following requ
 
  - Read and set parametres from **API/Settings.OALC**, and possibly update it should any changes to the factions occur
  
- - Read the state of the World from **Ready.world** and write the current world to **writing.world**
+ - Read the state of the World from **API/Ready.world** and write the current world to **writing.world**
  
- - Read and adjust behaviour according to **API/Operation.mode**. Operation.mode should be a number which corolates to a function, such as exiting, adjusting speed of execution, pausing, etc... _ _These codes can be found below_ _
+ - Read and adjust behaviour according to **API/Operation.mode**. Operation.mode should be a number which corolates to a function, such as exiting, adjusting speed of execution, pausing, etc... _These codes can be found below_
 
 
 
