@@ -24,14 +24,14 @@
      inkscape:document-units="px"
      showgrid="false"
      inkscape:zoom="1.3493062"
-     inkscape:cx="496.92206"
+     inkscape:cx="496.92205"
      inkscape:cy="141.55423"
      inkscape:window-width="1920"
      inkscape:window-height="1027"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="layer3"
      fit-margin-top="0"
      fit-margin-left="0"
      fit-margin-right="0"
@@ -68,18 +68,57 @@
   <g
      inkscape:groupmode="layer"
      id="layer2"
-     inkscape:label="Layer 2">
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:204.789px;line-height:1.25;font-family:sans-serif;fill:#333333;fill-opacity:1;stroke:none;stroke-width:5.11976"
-       x="31.005045"
-       y="158.79915"
+     inkscape:label="Layer 2" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="Layer 3"
+     style="display:inline">
+    <g
+       aria-label="OPEN A-LIFE"
+       transform="scale(0.93970082,1.0641685)"
        id="text1485"
-       transform="scale(0.93970082,1.0641685)"><tspan
-         sodipodi:role="line"
-         id="tspan1483"
-         x="31.005045"
-         y="158.79915"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Blender Pro';-inkscape-font-specification:'Blender Pro weight=250';fill:#ffffff;stroke-width:5.11976">OPEN A-LIFE</tspan></text>
+       style="font-size:204.789px;line-height:1.25;fill:#f9f9f9;stroke-width:5.11976">
+      <path
+         d="m 133.19476,129.71911 q 0,6.75804 -3.27663,11.67297 -2.45747,3.27663 -7.3724,8.19156 -4.71015,4.91494 -7.57719,6.55325 -5.93889,3.6862 -12.69692,3.6862 H 71.143689 q -6.758037,0 -12.696918,-3.6862 -2.867046,-1.63831 -7.986771,-6.55325 -4.914936,-5.11972 -6.962826,-8.19156 -3.276624,-4.91493 -3.276624,-11.67297 V 65.620153 q 0,-6.758037 3.276624,-11.672973 2.04789,-3.071835 6.962826,-7.986771 5.119725,-5.119725 7.986771,-6.758037 5.938881,-3.686202 12.696918,-3.686202 h 31.127931 q 6.75803,0 12.69692,3.686202 2.86704,1.638312 7.57719,6.553248 4.91493,4.914936 7.3724,8.19156 3.27663,4.914936 3.27663,11.672973 z M 61.723395,66.23452 v 63.2798 q 0,0.61437 0.204789,0.81916 4.09578,6.14367 9.010716,8.80592 0.409578,0.20479 1.023945,0.20479 h 29.489615 q 0.61437,0 1.02395,-0.20479 4.91493,-2.66225 9.01071,-8.80592 l 0.20479,-0.81916 v -63.2798 q 0,-0.819156 -0.20479,-1.023945 -4.30057,-6.348459 -9.01071,-9.010716 -0.40958,-0.204789 -1.02395,-0.204789 H 71.962845 q -0.819156,0 -1.023945,0.204789 -4.710147,2.662257 -9.010716,9.010716 z"
+         style="font-weight:bold;font-family:'Blender Pro';-inkscape-font-specification:'Blender Pro weight=250';fill:#aa0000"
+         id="path10279" />
+      <path
+         d="m 247.46716,82.61764 q 0,6.962826 -3.6862,12.492129 -1.43352,2.04789 -5.11972,5.734091 -3.68621,3.48141 -5.93889,5.11973 -6.34845,4.50535 -14.54001,4.50535 h -36.04287 v 48.33021 H 160.63663 V 36.335326 h 57.54571 q 8.19156,0 14.54001,4.505358 2.04789,1.433523 5.7341,5.324514 3.89099,3.890991 5.32451,5.938881 3.6862,5.529303 3.6862,12.492129 z M 225.96432,82.412851 V 64.800997 q 0,-1.023945 -0.20479,-1.433523 -3.48141,-6.14367 -6.55325,-6.553248 h -1.02394 -36.04287 v 33.175818 h 36.04287 q 1.43352,0 3.89099,-2.252679 2.45746,-2.252679 3.6862,-4.505358 0.20479,-0.409578 0.20479,-0.819156 z"
+         style="font-weight:bold;font-family:'Blender Pro';-inkscape-font-specification:'Blender Pro weight=250';fill:#ffffff"
+         id="path10281" />
+      <path
+         d="M 347.60911,158.79915 H 270.60844 V 36.335326 h 77.00067 v 20.4789 h -55.49782 v 30.923139 h 51.60683 v 20.478905 h -51.60683 v 30.10398 h 55.49782 z"
+         style="font-weight:bold;font-family:'Blender Pro';-inkscape-font-specification:'Blender Pro weight=250'"
+         id="path10283" />
+      <path
+         d="M 462.90549,158.79915 H 440.17391 L 397.78258,77.497915 V 158.79915 H 376.27974 V 36.335326 H 399.4209 L 441.40264,118.6605 V 36.335326 h 21.50285 z"
+         style="font-weight:bold;font-family:'Blender Pro';-inkscape-font-specification:'Blender Pro weight=250'"
+         id="path10285" />
+      <path
+         d="m 636.97614,158.79915 h -22.93637 l -9.01071,-26.0082 h -46.48711 l -9.01071,26.0082 h -22.93637 l 42.8009,-122.463824 h 24.98426 z M 598.27102,112.31205 581.8879,63.981841 565.29999,112.31205 Z"
+         style="font-weight:bold;font-family:'Blender Pro';-inkscape-font-specification:'Blender Pro weight=250';fill:#aa0000;fill-opacity:1"
+         id="path10287" />
+      <path
+         d="M 694.52183,118.6605 H 649.05867 V 99.410338 h 45.46316 z"
+         style="font-weight:bold;font-family:'Blender Pro';-inkscape-font-specification:'Blender Pro weight=250';fill:#ffffff;fill-opacity:1"
+         id="path10289" />
+      <path
+         d="M 794.04929,158.79915 H 718.27736 V 36.335326 H 739.7802 V 138.32025 h 54.26909 z"
+         style="font-weight:bold;font-family:'Blender Pro';-inkscape-font-specification:'Blender Pro weight=250';fill:#aa0000;fill-opacity:1"
+         id="path10291" />
+      <path
+         d="M 838.07885,158.79915 H 816.576 V 36.335326 h 21.50285 z"
+         style="font-weight:bold;font-family:'Blender Pro';-inkscape-font-specification:'Blender Pro weight=250';fill:#ffffff;fill-opacity:1"
+         id="path10293" />
+      <path
+         d="M 944.36443,56.814226 H 889.0714 v 30.923139 h 51.60683 V 108.21627 H 889.0714 v 50.58288 H 867.56856 V 36.335326 h 76.79587 z"
+         style="font-weight:bold;font-family:'Blender Pro';-inkscape-font-specification:'Blender Pro weight=250';fill:#ffffff;fill-opacity:1"
+         id="path10295" />
+      <path
+         d="M 1045.7349,158.79915 H 968.73427 V 36.335326 h 77.00063 v 20.4789 h -55.49779 v 30.923139 h 51.60679 v 20.478905 h -51.60679 v 30.10398 h 55.49779 z"
+         style="font-weight:bold;font-family:'Blender Pro';-inkscape-font-specification:'Blender Pro weight=250';fill:#ffffff;fill-opacity:1"
+         id="path10297" />
+    </g>
   </g>
 </svg>
