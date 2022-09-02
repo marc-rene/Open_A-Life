@@ -30,6 +30,14 @@ Every implementation of the backend _**MUST**_ accomplish the following requirem
 Further details of how each implementation works can be found in the **Readme.md** of each implementation's folder... _Which will be coming soon!_
 
 
+Each implementation should be similiar enough in structure.
 
+Each backend should ideally follow the following format:
+
+
+
+## Declarations
+
+ This is more specific to C and C++ but there should ideally be a Declarations.h file which should hold all of our macros, function declarations, and type definitions.
  
  
