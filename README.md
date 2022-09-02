@@ -47,6 +47,7 @@ This is where the World Cell class should be defined.
 Each cell should have the following:
 
  1. The integer ID of the owning faction
- 
- 2. An integer value expressing how difficult the cell is to traverse
+ 2. An integer value expressing how difficult the cell is to physically traverse
+ 3. A way of identitfying which weather and climate is currently active, can be done in an enum or integer, or whatever you may prefer in your own implementation!
+ 4. How many spare slots for other factions are there.  
  
