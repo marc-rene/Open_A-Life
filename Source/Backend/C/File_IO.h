@@ -77,6 +77,10 @@ bool Check_file_is_open(FILE* file_to_check, char* file_name, const char* mode, 
 
 
 
+char* Get_Full_File_Path_And_Append_String_At_The_End
+
+
+
 
 void Check_to_See_If_We_Should_Still_Be_Running(char* API_Folder_Path)
 {
@@ -193,3 +197,8 @@ void Check_to_See_If_We_Should_Still_Be_Running(char* API_Folder_Path)
 
 
 
+int Get_Value_From_Settings(char* setting_to_search_for)
+{
+	// make sure it's found first
+
+}
