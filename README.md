@@ -47,11 +47,22 @@ This is where the World Cell class should be defined.
 Each cell should have the following:
 
  1. The **integer ID** of the owning faction
+ 
  2. An **integer** value expressing how difficult the cell is to physically traverse
+ 
  3. A way of identitfying which weather and climate is currently active, can be done in an **enum** or **integer**, or whatever you may prefer in your own implementation!
+ 
  4. How many spare slots for other factions are there, best use an **integer** for this.  
+ 
  5. An **array/map** of Faction ID's in those slots and their buffs and debuffs there.
+ 
  6. The local population size
+ 
  7. How large the local munitions stockpile is _(This will determine the governing force's ability to: 
   - Attack neighbouring cells
-  - Defend against attacks domestic and 
+  - Defend against attacks both domestic and foreign
+ 
+ 8. Local population contentness, this should just be an integer how content and subjugated/happy the local population is
+
+
+ 
