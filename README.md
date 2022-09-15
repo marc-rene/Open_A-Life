@@ -62,7 +62,21 @@ Each cell should have the following:
   - Attack neighbouring cells
   - Defend against attacks both domestic and foreign
  
- 8. Local population contentness, this should just be an integer how content and subjugated/happy the local population is
+ 8. Local population contentness, this should just be an integer how happy or subjugated the local population is
+ 
+ 
+ 
+ ## Faction
+ 
+ There are 4 distinct Faction types so far
+ 
+  - A Faction could be commanded from a central HQ. Holds land and needs a "home" cell. **Eg: An organised army**
+  
+  - A Faction could be autonomous. Holds land but does not need a home cell. **Eg: Bandits**
+  
+  - Traders/Travellers also qualify as a faction. They don't hold land but travel to targetted cells based on certain conditions.
+  
+  - Diseases act like Traders, except they just enter into adjacent territory
 
 
  
