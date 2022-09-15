@@ -1,542 +1,268 @@
 #include "Declarations.h"
-
-
-////////////////////			THIS FUNCTION IS COMPLETELY RESPONSIBLE FOR		 		///////////////
-////////////////////			THE READING AND SETTING OF OUR INTEGER VALUES			///////////////
-																										
-void get_set_ints_from_config()																			
-{																										
-																										
-	/*  		find and open the config file		*/													
-    std::ifstream  		config(MINT_CONFIG_FILE_PATH);													
-																										
-	// 	As the name implies, this will just																
-	//	act as a placeholder for all our lines															
-	std::string		    temp_string;																	
-																										
-	//	Will we extract the values in the next line, yay or nay?										
-    bool                extract_next_line   =   false;													
-																										
-	//	And if we will extract that line, what data will we set											
-	enum    var_types 	                                                                               
-    {	how_many_factions, 	rand_strength_range_max,	rand_strength_range_min,	e_Log_Level, 	world_width,	world_height,
-		performance_mode, 	speed_divider	};			           
-                                                                                                       
-    var_types next_var;																					
-																										
-																											
-	/*	Oh god hope that the file works and is valid?	*/													
-    if (!config)																							
-    {	
-		for (uMint i = 0; i < 10; i++)
-		{
-			if (config)
-			{
-				break; // yay! it worked 
-			}
-			else
-			{
-				printf(LOW_SEVERITY_ERROR);
-				printf("\nAh fiddlestciks! We couldn't open the mints file \ntrying to open file again! \nWish us luck");
-				printf("\nCHECK MAIN_SETTINGS.h AND SEE IF THE RELATIVE PATHS ARE CORRECT... Visual Studio and Visual Studio Code cause Tomfoolery here!!!");
-				config.open(MINT_CONFIG_FILE_PATH);
-				SLEEP(SPEED_DIVIDER);
-			}//end else
-				
-			SLEEP( SPEED_DIVIDER*5 );	
-		}//end child if
-
-
-		if (!config) 	// is it still not working??? 
-		{
-			printf(HIGH_SEVERITY_ERROR);
-			printf("\nWE STILL CANT OPEN OR FIND THE MINTS!!! \nI HAVE FAILED YOU ANAKIN");
-			exit(4);
-		}//end child if					
-
-    }// end file check... hope it worked																										
-																										
-																										
-																										
-	/*		Yay! The file's been found																		
-		Time to read the config file line by line...														
-		And save the line into the temporary string 														
-			variable we made earlier!				*/ 														
-    while (std::getline(	config,		temp_string ))														
-    {																										
-																										
-		//	only do this if we've found a value to set													
-        if (extract_next_line)																			
-        {																								
-																										
-			/*	What variable will 																		
-				we be setting?		*/																	
-			switch (next_var)																			
-			{																							
-				case how_many_factions:							       								
-					HOW_MANY_FACTIONS = (uMint)stoi(temp_string);        								
-					extract_next_line = false;															
-					break;		
-
-				case rand_strength_range_max:
-					Random_Strength_Range_MAX = (uMint)stoi(temp_string);        								
-					extract_next_line = false;															
-					break;
-
-				case rand_strength_range_min:
-					Random_Strength_Range_MIN = (uMint)stoi(temp_string);        								
-					extract_next_line = false;															
-					break;																		
-																										
-																										
-				case e_Log_Level:																	
-					LOG_LEVEL = (uMint)stoi(temp_string);     									
-					extract_next_line = false;															
-					break;																				
-																										
-																										
-				case world_width:																		
-					WORLD_WIDTH = (uMint)stoi(temp_string);     										
-					extract_next_line = false;															
-					break;																				
-				
-				
-				case world_height:																		
-					WORLD_HEIGHT = (uMint)stoi(temp_string);     										
-					extract_next_line = false;															
-					break;						
-
-				case performance_mode:
-					HIGH_PERFORMANCE_MODE = stoi(temp_string);
-					extract_next_line = false;
-					break;		
-
-				case speed_divider:
-					SPEED_DIVIDER = stoi(temp_string);
-					extract_next_line = false;
-					break;																				
-																										
-				default:																				
-					printf("\nERROR IN get_set_ints_from_config SWITCH PART");							
-					break;																				
-																										
-			}//end switch																				
-																										
-        }//end if-line extraction																		
-																										
-																										
-																										
-        //	check to see if it's a comment first														
-        if (temp_string[0] == '#')																		
-        {	continue;	}																				
-																										
-																										
-		//	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	//			
-		//								HAVE WE FOUND SOMETHING?							//			
-		//	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	
-        else if (temp_string.find("[FACTION COUNT]") != std::string::npos )					
-        {																					
-            next_var = how_many_factions;													
-			extract_next_line = true;	// Start extraction									
-        }																					
-																							
-																							
-		else if (temp_string.find("[LOG LEVEL]") != std::string::npos )				
-        {																					
-            next_var = e_Log_Level;													
-			extract_next_line = true;														
-        }																					
-																							
-																							
-		else if (temp_string.find("[WORLD WIDTH]") != std::string::npos )					
-        {																					
-            next_var = world_width;															
-			extract_next_line = true;														
-        }      																				
-		
-		
-		else if (temp_string.find("[WORLD HEIGHT]") != std::string::npos )					
-        {																					
-            next_var = world_height;														
-			extract_next_line = true;														
-        }      
-
-		else if (temp_string.find("[RANDOM STRENGTH RANGE MAX]") != std::string::npos )					
-        {																					
-            next_var = rand_strength_range_max;														
-			extract_next_line = true;														
-        }      								
-
-		else if (temp_string.find("[RANDOM STRENGTH RANGE MIN]") != std::string::npos )					
-        {																					
-            next_var = rand_strength_range_min;														
-			extract_next_line = true;														
-        }    
-
-		else if (temp_string.find("[USE HIGH PERFORMANCE MODE? 0 or 1]") != std::string::npos )
-		{
-			next_var = performance_mode;
-			extract_next_line = true;
-		}  
-
-		else if (temp_string.find("[SPEED DIVIDER]") != std::string::npos )
-		{
-			next_var = speed_divider;
-			extract_next_line = true;
-		}  																				
-		//	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	//			
-																										
-	}//end while																						
-																										
-																																																		
-	config.close();
-
-	WORLD_SIZE = WORLD_HEIGHT*WORLD_WIDTH;																
-																										
-}																										
-																										
-////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma once
 
 
 
-
-
-////////////////////////			EXACT SAME AS THE ABOVE FUNCTION, EXCEPT WE'RE GETTING FACTION DETAILS			////////////////////	
-
-void get_set_fac_details_from_config()																										
-{		
-	uMint counter = 0; //DEBUG ONLY
-
-	std::ifstream   config( FAC_CONFIG_FILE_PATH );    //  find and open the faction config file											
-	std::string     temp_string;																											
-	bool start_extraction = false;																											
-																																																																				
-    if (!config)																							
-    {	
-		for (uMint i = 0; i < 10; i++)
-		{
-			if (config)
-			{
-				break; // yay! it worked 
-			}
-			else
-			{
-				printf(LOW_SEVERITY_ERROR);
-				printf("\nAh fiddlestciks! We couldn't open the fuccs file \ntrying to open file again! \nWish us luck");
-				printf("\nCHECK MAIN_SETTINGS.h AND SEE IF THE RELATIVE PATHS ARE CORRECT... Visual Studio and VSCode cause Tomfoolery here!!!");
-				config.open(MINT_CONFIG_FILE_PATH);
-				SLEEP(SPEED_DIVIDER);
-			}//end else
-				
-			SLEEP( SPEED_DIVIDER*5 );	
-		}//end child if
-
-
-		if (!config) 	// is it still not working??? 
-		{
-			printf(HIGH_SEVERITY_ERROR);
-			printf("\nWE STILL CANT OPEN OR FIND THE FUCCS!!! \n");
-			exit(19);
-		}//end child if					
-
-    }// end file check... hope it worked																										
-
-
-	while (std::getline(config,	temp_string))																								
-	{																																		
-		// 	Is the line line a comment?																										
-		if (temp_string[0] == '#')																											
-		{	continue;	}																													
-																															
-		//	Have we reached the end																									
-		else if (temp_string.find("[END]") != std::string::npos)																			
-		{	return;		}																													
-
-		//	Go ahead been given, we've read START READ																																
-		else if (start_extraction)																												
-		{		
-			counter++;
-
-			HIGH_LOG("We on the " << counter << "th guy");																													
-			
-			uShort div_indexs[5];																												
-			uMint stage = 0;																												
-			temp_string.erase( remove( temp_string.begin(), temp_string.end(), '\t' ), temp_string.end());	// get rid of tabs
-																																		
-			//check for | first and figure out where they are																				
-			for (uShort i = 0; i < temp_string.length(); i++)																					
-			{																																
-				if (temp_string[i] == '|')																									
-				{																															
-					div_indexs[stage] = i;																									
-					stage++;																												
-				}																															
-			}//end for																														
-
-																																		
-																																		
-			/*	Faction Names, Insignias, Faction Homes, Starting Strength, Faction Structures	*/	
-			// 	the name will be the first thing we find, add that first...																													
-			std::string name = temp_string.substr(0, div_indexs[0]);																	
-
-			//callsign	
-			std::string initial = temp_string.substr( (div_indexs[0] + 1), (div_indexs[1] - div_indexs[0]) - 1 ) ;
-
-																															
-
-			//home
-			uShort temp_home;
-
-			if (temp_string.find("Random Home") != std::string::npos)
-			{
-				HIGH_LOG("Generating random home");
-			
-
-				uShort counter = 0;
-				bool unclean = true;
-				bool change_needed;
-				
-				do
-				{
-					change_needed = false;
-
-					if (counter > 200)
-					{
-						HIGH_LOG("We doing the crappy method of randomness");
-						
-
-						for (uShort x = WORLD_SIZE-1; x >= 0; x--)
-						{
-							for (uShort y = 0; y < HOW_MANY_FACTIONS; y++)
-							{
-								if( x == Faction_Homes[y] )
-								{ continue; }
-								else
-								{
-									temp_home = x;
-									unclean = false;
-									change_needed = false;
-									break;
-								}
-							}
-						}
-						
-					}
-					else if (counter > 50 )
-					{
-						temp_home = Faction_Homes.at(rand() % (HOW_MANY_FACTIONS/2) ) - (rand() % 3) + 1;
-						printf("\nLOOP ERROR %d times", counter);
-					}
-					else
-					{
-						temp_home = rand() % WORLD_SIZE;
-					}
-
-					for (uS i = 0; i < HOW_MANY_FACTIONS; i++)
-					{
-						if (temp_home == Faction_Homes[i])
-						{
-							change_needed = true;
-							break;
-						}
-					}//end for
-
-					if (!change_needed)
-					{
-						unclean = false;
-					}
-
-					counter++;
-				}//end do
-				while (unclean);	
-
-			}//end if
-
-			else
-			{																															
-				std::string temp_home_s = temp_string.substr( (div_indexs[1] + 1), (div_indexs[2] - div_indexs[1]) - 1 ); //the plus 1's are her
-				temp_home = (uS)stol(temp_home_s);																							
-			}
-			Faction_Homes.push_back(temp_home);																								
-
-
-			//strength
-			uMint temp_STRNTH;	
-
-			if (temp_string.find("Random Strength") != std::string::npos)
-			{	
-				HIGH_LOG
-					printf("\nGenerating random strength\n");
-				END_LOG
-
-				temp_STRNTH = Random_Strength_Range_MIN + ( rand() % (Random_Strength_Range_MAX-Random_Strength_Range_MIN) );
-			}	
-			else
-			{																												
-				std::string temp_STRNTH_s = temp_string.substr( (div_indexs[2] + 1), (div_indexs[3] - div_indexs[2]) - 1 );						
-				temp_STRNTH = (uMint)stol(temp_STRNTH_s);																					
-			}
-
-			Starting_Strengths.push_back(temp_STRNTH);																						
-																																		
-																																		
-			////////		Time to set up our Faction structures		//////////															
-			if (temp_string.find("~Disorganised") != std::string::npos)			//															
-			{	Faction_Structures.push_back(Disorganised);	}					//															
-																				//															
-																				//															
-			else if (temp_string.find("~Organised") != std::string::npos)		//															
-			{	Faction_Structures.push_back(Organised);	}					//															
-																				//															
-																				//															
-			else if (temp_string.find("~Migrant") != std::string::npos)			//															
-			{	Faction_Structures.push_back(Migrant);		}					//															
-			//////////////////////////////////////////////////////////////////////		
-
-
-			Fac_Deets.push_back(Faction_Settings(name, initial, temp_home, temp_STRNTH, ))																												
-		}//end extraction																													
-																																		
-																																		
-																																		
-		/*		Start Extracting Data once we read the go ahead! 	*/																		
-		else if (temp_string.find("[START READ]") != std::string::npos)																			
-		{	start_extraction = true;	}																									
-																																		
-	}																																		
-																																		
-																																		
-	config.close();																															
-																																		
-}
-
-
-////////////////////////			Should we Exit or not?			////////////////////	
-
-void Check_to_See_If_We_Should_Still_Be_Running()
+//	Check to make sure the file is successfully opened!
+bool Check_file_is_open(FILE* file_to_check, char* file_name, const char* mode, int pause_duration, bool debugging)
 {
-	/*	The way this should work is by opening the Keep_Reading.bool file
-		and exit if a 1 is read, or ignore if nothing is read				*/
-	bool Stay_Alive = 	true;
-	bool First_Run	=	true;
 
-	while (true)
-	{
-		SLEEP(10);
-	}
+	// Is sleep for the weak??? ',:/  //
+	bool do_sleep = false;
 	
 
+	if (pause_duration != 0)
+		{	do_sleep = true;		}
 
 
-
-	
-	do
+	//	Time to check! //
+	if(file_to_check == NULL)
 	{
-		std::fstream	file(STATUS_READ_FILE_PATH);
-		
-		if (!file)	// Was the file opened successfully?
+		PRINT_MED_SEVERITY_ERROR;
+		printf("\n%s Didn't open properly", file_name);
+		printf("\nAttempting Re-open");
+
+		// Lets try open the file a few more times
+		for (mint i = 0; i < Global_settings.File_ReOpen_Attempts; i++)
 		{
-			for (uMint i = 0; i < 10; i++)
-			{
-				if (file)
-				{
-					break; // yay! it worked 
-				}
 
-				else
-				{
-					printf(LOW_SEVERITY_ERROR);
-					printf("\nAh fiddlestciks! We couldn't open the status file to determine if we should keep going or not\ntrying to open file again!\nWish us luck");
-					file.open(STATUS_READ_FILE_PATH);
-					SLEEP(SPEED_DIVIDER);
-				}//end else
+			if ( (file_to_check=fopen(file_name, mode)) != NULL)	// file opened successfully
+			{
+				if (debugging)
+					{	BORING_LOG( ("%s successfully at last!", file_name) );	}
 				
-				SLEEP( SPEED_DIVIDER*5 );	
-			}//end child if
-
-			if (!file) 	// is it still not working??? 
-			{
-				printf(HIGH_SEVERITY_ERROR);
-				printf("\nWE CANT DETERMINE IF WE WILL CONTINUE ON OR NOT!!! \nPRAY HARDER NEXT TIME");
-				printf("\n\nCHECK TO SEE IF Keep_Reading.bool IS IN THE CURTAINS FOLDER!\n");
-				exit(-1);
-			}//end child if
-
-		}//end parent if
-		
-		std::string temp_string;
-
-		std::getline(file,	temp_string);	// read the file and copy the output into temp_string
-
-
-		if ( temp_string.find("Continue") != std::string::npos )
-		{
-			//We keep swimming
-			SLEEP(SPEED_DIVIDER*10);
-		}
-
-		else if ( temp_string.find("Exit") != std::string::npos )
-		{
-			//Nevermind, lets close!
-			Stay_Alive	=	false;
-			Exiting = true;
-			printf("\n\n\t\tATTENTION!\tWE GONNA SELF-DESTRUCT NOW!\n\t\t\tEXITING");
-			SLEEP(SPEED_DIVIDER);
-			printf(".");
-			SLEEP(SPEED_DIVIDER);
-			printf(".");
-			SLEEP(SPEED_DIVIDER);
-			printf(".");
-			SLEEP(SPEED_DIVIDER);
-			printf("\n\nBye bye :)");
-			SLEEP(SPEED_DIVIDER);
-		}
-
-		else
-		{
-			if (LOG_LEVEL >= 3)
-			{
-				NEW_LINE;
-				THIN_LINE;
-				NEW_LINE;
-				printf(MED_SEVERITY_ERROR);
-				printf("\nWe couldn't make sense of the Keep_Reading file so we just gonna assume that it's a 'continue' there");
-				THIN_LINE;	
+				return true;
 			}
 
-			file.close();
-			SLEEP(SPEED_DIVIDER);
+			else
+			{
+				printf(". ");
+			}
 
-			std::ofstream out_file(STATUS_READ_FILE_PATH);
-			out_file << "Continue";
-			out_file.close();
-		}
-		
-		if(First_Run)
+
+			if(do_sleep)
+				{	SLEEP(pause_duration);	}
+
+		}//end for
+
+
+		if (file_to_check == NULL)
 		{
-			Permission_to_work = true;
-			First_Run = false;
-		}
 
-		file.close();
-		SLEEP( SPEED_DIVIDER*10 );
+			PRINT_HIGH_SEVERITY_ERROR;
+			CRUCIAL_LOG( ("THERE WAS AN ERROR OPENING %s", file_name) );
+			
+			return false;
+		}//end if
+		
+	}//end if
 
-	} while (Stay_Alive);
 
+
+	else if (file_to_check != NULL)
+	{
+		if (debugging)
+			{	BORING_LOG( ("%s opened successfully first time round!", file_name) );	}
+
+		return true;
+	}//end elif
 	
+
+	// We should never get here!
+	PRINT_LOW_SEVERITY_ERROR;
+	INTERESTING_LOG("...What? We reached the end of check if file is open function... we're not supposed to???");
+
+	return false; // if nothing happened... then just WHAT???
+
 }//end function
 
 
 
-////////////////////////			THE GUI MUST BE TOLD!			////////////////////	
-
-// If an oncoming storm is approaching
-//void News_Report(Weathers )
 
 
+void Check_to_See_If_We_Should_Still_Be_Running(char* API_Folder_Path)
+{
+	char Status_file_path[FILE_PATH_BUFFER_SIZE];
+	
 
-////////////////////////////////////////////////////////////////////////////////////////
-
-
+	strcpy(Status_file_path, API_Folder_Path); // We Now have the API folder path
 
 	
+
+	//	What OS are we on ???
+	if (AM_I_RUNNING_WINDOWS) // Windows?
+		{	strcat(Status_file_path, "\\");	}
+
+	else // Windowsn't?
+		{	strcat(Status_file_path, "/");	}
+	
+	
+	strcat(Status_file_path, STATUS_READ_FILE); // Now we should have our whole file path!
+	
+	
+	BORING_LOG( ("We're reading the status from: %s", Status_file_path) );
+	BORING_LOG("Attempting to open now!");
+
+
+	FILE* status_file;
+	status_file = fopen(Status_file_path, "r");
+
+
+	IF_HIGH_PERFORMANCE
+	{
+		if( Check_file_is_open(status_file, Status_file_path, "r", 1, false) )
+			{	BORING_LOG( ("All's good opening %s", Status_file_path) );	}
+
+		else
+		{
+			PRINT_HIGH_SEVERITY_ERROR;
+			CRUCIAL_LOG( ("OH SHIT! %s wont open", Status_file_path) );
+		}
+	}//end if high performance
+
+	IF_LOW_PERFORMANCE
+	{ 
+		if( Check_file_is_open(status_file, Status_file_path, "r", 5, false) )
+			{	BORING_LOG( ("All's good opening %s", Status_file_path) );	}
+
+		else
+		{
+			PRINT_HIGH_SEVERITY_ERROR;
+			CRUCIAL_LOG( ("OH SHIT! %s wont open", Status_file_path) );
+		}
+	}//end if low performance
+	
+
+
+	char code; // will explain the different codes later!
+
+	// Time to keep checking!
+	do
+	{
+		status_file = fopen(Status_file_path, "r");
+
+		if (Check_file_is_open(status_file, Status_file_path, "r", 1, false))
+			{	code = fgetc(status_file);	}
+		else
+			{	CRUCIAL_LOG("Bad shit happened at Status check!");	}
+		
+
+		switch (code)
+		{
+			case '1':						//	Continue on
+				printf("%c", code);
+				break;
+			
+			case '0':						//	Exit
+				printf("\nTime to stop");
+				break;
+			
+			case EOF:
+				printf("\nEND");
+				break;
+			
+			default:						//	WTF?
+				printf("\nError reading status, we getting %c", code);
+				break;
+		}//end switch
+
+
+		fclose(status_file); // gotta close and let changes happen and be read
+	
+		IF_HIGH_PERFORMANCE
+			{	SLEEP(1);	}
+
+		IF_LOW_PERFORMANCE
+			{	SLEEP(5);	}
+
+	} while (true);
+	
+	// Don't think we should ever get here... but if we do it's better to be free 
+	free(Status_file_path);
+
+}
+
+
+
+char* Get_Time()
+{
+	//	BE CAREFUL TO FREE THIS DUDE WHENEVER YOU GET THE CHANCE
+	static char time_string[128];
+	
+
+	for (unsigned int i = 0; i < 128; i++)
+	{
+		time_string[i] = '\0';	//just to make sure
+	}
+	
+
+	//	Thanks https://www.epochconverter.com/programming/c
+	time_t epoch_time = time(NULL);
+    struct tm  ts;
+
+    // 	Format time, "ddd yyyy-mm-dd hh:mm:ss zzz"
+    ts = *localtime(&epoch_time);
+
+    strftime(time_string, sizeof(time_string), "%a %Y-%m-%d %H:%M:%S %Z", &ts);
+
+
+	for (unsigned i = 0; i < 128; i++)
+	{
+		if (time_string[i] == '\0' )
+		{
+			time_string[i] = ' ';
+			time_string[i+1] = ';';
+			time_string[i+2] = ' ';
+			break;
+		}
+	}
+
+	return time_string;
+}
+
+
+bool Log_To_File(char* message)
+{
+	unsigned int message_length = 0;
+	
+	while (message[message_length] != '\0')
+	{
+		message_length++;
+	}
+
+
+	//	Write the Time part	
+	char* time_part = Get_Time();
+
+	for (unsigned __int8 i = 0; i < 128; i++)
+	{
+		fputc(time_part[i], Global_settings.Log_File_Ptr);
+	}
+
+	free(time_part);
+	
+
+
+	for (unsigned int i = 0; i < message_length; i++)
+	{
+		fputc(message[i], Global_settings.Log_File_Ptr);
+	}
+
+
+	fputc('\n', Global_settings.Log_File_Ptr);
+
+
+}
+
+
+
+void Get_Value_From_Settings()
+{
+	// make sure it's found first
+	while (true)
+	{
+		SLEEP(2);
+		printf(".");
+	}
+	
+}

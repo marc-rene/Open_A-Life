@@ -1,25 +1,9 @@
-#include "UTILITY_ITEMS.h"
+#include "File_IO.h"
 
-//		the path of includes should look like this
-//		
-//		            Declarations.h
-//		                 |
-//		              File_IO.h
-//		                 |
-//		               World.h
-//		                 |
-//		            Faction Struct.h
-//		                 |
-//		             Faction AI.h
-//		                 |
-//		            UTILITY Items.h
-//		                 |
-//		               Here :)
-//
-//
-//
+
+
 //			It probably would have made more sense to write everything into the one file 
-//		but oh sweet jesus christ on a tricycle, that would be hell to develop in!
+//		but oh lord, that would be hell to develop in!
 //		I also understand that having mulitple #includes in the one cpp file might've made sense
 //		but in this context this works perfectly fine! :)
 //		
@@ -27,8 +11,6 @@
 //			The purpose of this project is to make an open source version of the
 //		A-Life system in the S.T.A.L.K.E.R video game francise that can be implemented into any 
 //		application that may benefit from it, such as video games and/or visualisers.
-
-
 //
 //
 //			The world is comprised into a 2d grid with different factions, Humans, Wildlife, etc...
@@ -59,58 +41,40 @@
 
 
 
-int main(int argument_count,	char** API_Folder_Path) 
+int main(int argument_count,	char** API_Folder_Path_argument) 
 {
 	if (argument_count == 1) 	// No arguments is 1, Giving an arguement is 2+... QUE???
 	{
+		API_Folder_Path_argument[1] = DEFAULT_API_FOLDER_PATH;
+
 		printf("\n We Weren't given an API folder path");
-		std::cin.get();
-		return 1;
+		printf("\n Going to try use the defulat path of %s", API_Folder_Path_argument[1] );
 	}
+
+
+
+	// These are our default values!
+	Global_settings.API_Folder_Path = API_Folder_Path_argument[1];
+	Global_settings.LOG_LEVEL = 3;
+	Global_settings.SPEED_DIVIDER = 1;
 	
-	// Get all of our starting parametres from the Waiters / API files
-    INIT_WORLD(); 
-	
-	
-	// Now lets initialise our threads! 
-	// Each faction gets their own
-	std::vector<std::thread> thr_pool(HOW_MANY_FACTIONS);	
-	
-
-	// call the faction constructor X amount of times
-	ALL_FACTIONS.resize(HOW_MANY_FACTIONS);	
-
-
-	// Make all threads in our pool start the faction AI, we pass in a reference to that pool
-	Startup_Threads(&thr_pool);
-
-
-	// 	Dedicate a thread to just writing to the map
-	std::thread Map_Write_thread(Write_Map_to_Waiters_File);
-
-
-	//	Dedicate a thread to determine if we should still be alive or not!
-	std::thread Stay_Alive_Check(Check_to_See_If_We_Should_Still_Be_Running);
-	//	...and Do NOT continue until the Stay_Alive check finishes or fails
-	Stay_Alive_Check.join();
-
 
 	//////////////////	DEBUGING CODE GOES HERE	//////////////////
-
-
-
-
-
-
+        
+		
 
 
 	
-	HIGH_LOG("yay all done\n\n");
+	
+	
+
+
+
+
+	printf("\nyay all done\n\n");
 
 	//////////////////////////////////////////////////////////////
 
-	printf("\n yay %d", argument_count);
-	std::cin.get();
-		
+
 	return 0;
 }
