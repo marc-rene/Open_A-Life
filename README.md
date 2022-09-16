@@ -110,3 +110,11 @@ The API folder is where all of our API files shall be. The required files and th
 | P | Pause the backend immediately |
 | U ***X*** | Pause the backend for ***X*** seconds |
 
+
+# Quickstart
+
+## Backend
+
+### C/C++
+
+To get started using the **C/C++**, simply go to the appropriate folder and compile main.c/main
