@@ -100,11 +100,11 @@ The API folder is where all of our API files shall be. The required files and th
 
 | Code Number | Description |
 | ----------- | ----------- |
-| C **Epoch timestamp** | Continue running as normal. The timestamp is there to shut down the backend if the stamp hasn't been updated after a specified time |
+| C * **Epoch timestamp*** * | Continue running as normal. The timestamp is there to shut down the backend if the stamp hasn't been updated after a specified time |
 | A | Continue running as normal. I don't advise using this as the backend must be shutdown manually if there is no frontend to shut it down |
 | S | Run at slowest settings |
 | F | Run at normal settings |
-| T **X** | Set the Speed divider of the backend to **X** |  
+| T * ***X*** * | Set the Speed divider of the backend to * ***X*** * |  
 | P | Pause the backend immediately |
-| U **X** | Pause the backend for **X** seconds |
+| U * ***X*** * | Pause the backend for * ***X*** * seconds |
 
