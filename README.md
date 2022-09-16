@@ -95,3 +95,10 @@ The API folder is where all of our API files shall be. The required files and th
 
  - **What.ToDo**: This file will be read by our backend and it will determine all of it's actions based on the code it recieves. The code lookup table can be found below:
  
+| Code Number | Description |
+| ----------- | ----------- |
+| 0 **Epoch timestamp** | Continue running as normal. The timestamp is there to shut down the backend if the stamp hasn't been updated after a specified time |
+| 1 | Continue running as normal. I don't advise using this as the backend must be shutdown manually if there is no frontend to shut it down |
+| 2 | Run at slowest settings |
+| 3 | Run at normal settings |
+| 4 **x** | Set the Speed divider of the backend to **x** |  
