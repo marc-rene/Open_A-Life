@@ -90,10 +90,8 @@ The API folder is where all of our API files shall be. The required files and th
  - **World.w**: This is the status of the world, who owns what and the status of each cell. The 'W' file extension should show that this file could still be written to and is not yet completed
  
  - **World.csv**: This is the fully completed version of World.w. Is ready to be read from and copied
- 
- - **What.ToDo**: This file will be read by our backend and it will determine all of it's actions based on the code it recieves. The code lookup table can be found below
- 
- - **Status.log**: This file should be written to by our backend. It should involve the status of the backend and notify the frontend of it's own operation, such as ""Working normally"" or ""Severe error X encountered... Exiting""
 
+ - **Status.log**: This file should be written to by our backend. It should involve the status of the backend and notify the frontend of it's own operation, such as * *Working normally* * or * *Severe error X encountered... Exiting* *
 
+ - **What.ToDo**: This file will be read by our backend and it will determine all of it's actions based on the code it recieves. The code lookup table can be found below:
  
