@@ -77,6 +77,13 @@ Each cell should have the following:
   - Traders/Travellers also qualify as a faction. They don't hold land but travel to targetted cells based on certain conditions.
   
   - Diseases act like Traders, except they just enter into adjacent territory
+  
+  
+# API
+
+The API folder is where all of our API files shall be. The required files and their responsibility are as follows:
+
+ - 
 
 
  
