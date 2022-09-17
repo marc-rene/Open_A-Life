@@ -117,4 +117,6 @@ The API folder is where all of our API files shall be. The required files and th
 
 ### C/C++
 
-To get started using the **C/C++**, simply go to the appropriate folder and compile main.c/main
+To get started using the **C/C++**, simply go to the appropriate folder and compile **main.cpp**.
+
+All nessesary files should be in the one folder and no additional includes are needed in compiler arguements
