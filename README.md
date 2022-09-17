@@ -59,8 +59,8 @@ Each cell should have the following:
  6. The local population size
  
  7. How large the local munitions stockpile is. This will determine the governing force's ability to:
-  - Attack neighbouring cells
-  - Defend against attacks both domestic and foreign
+  - **Attack** neighbouring cells
+  - **Defend** against attacks both domestic and foreign
  
  8. Local population contentness, this should just be an integer how happy or subjugated the local population is
  
