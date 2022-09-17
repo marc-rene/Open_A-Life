@@ -34,13 +34,15 @@ Each implementation should be similiar enough in structure and should ideally fo
 
 
 
-## Declarations
+## C++
+
+### Declarations
 
 This is more specific to C and C++ but there should ideally be a Declarations.h file which should hold all of our macros, function declarations, and type definitions.
  
  
  
-## World
+### World
 
 This is where the World Cell class should be defined.
 
@@ -54,7 +56,7 @@ Each cell should have the following:
  
  4. How many spare slots for other factions are there, best use an **integer** for this.  
  
- 5. An **array/map** of Faction ID's in those slots and their buffs and debuffs there.
+ 5. An **array** of Faction ID's in those slots and their buffs and debuffs there.
  
  6. The local population size
  
@@ -66,7 +68,7 @@ Each cell should have the following:
  
  
  
- ## Faction
+ ### Faction
  
  There are 4 distinct Faction types so far
  
