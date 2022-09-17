@@ -20,11 +20,11 @@ Open A-Life is comprised of 3 distinct sections. They are:
 The backend is currently being offered in **C++** which is currently still in development, and a **python** version will be entering development soon.
 Every implementation of the backend _**MUST**_ accomplish the following requirements in order for everything to work smoothly: 
 
- - Read and set parametres from **API/Settings.OALC**, and possibly update it should any changes to the factions occur
+ - Read and set parametres from **/API/Settings.OALC**, and possibly update it should any changes to the factions occur
  
- - Read the state of the World from **../API/Ready.world** and write the current world to **../API/writing.world**
+ - Read the state of the World from **/API/World.csv** and write the current world to **/API/World.w**
  
- - Read and adjust behaviour according to **../API/Operation.mode**. Operation.mode should be a number which corolates to a function, such as exiting, adjusting speed of execution, pausing, etc... _These codes can be found in the table below_
+ - Read and adjust behaviour according to **/API/What.todo**. Operation.mode should be a number which corolates to a function, such as exiting, adjusting speed of execution, pausing, etc... _These codes can be found in the table below_
 
 
 Further details of how each implementation works can be found in the **Readme.md** of each implementation's folder... _Which will be coming soon!_
