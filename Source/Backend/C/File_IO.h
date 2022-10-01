@@ -3,8 +3,94 @@
 
 
 
+// This is the MAIN LOG function
+void LOG(const char* message, Importance min_log_level, Error_Types severity, bool log_to_file_too)
+{
+	if(Global_settings.LOG_LEVEL >= min_log_level)
+	{	
+		printf("\n"); 
+		printf(message);
+
+		if (log_to_file_too)
+		{
+			switch (severity)
+			{
+				case SEVERE_ERROR:
+					Log_To_File(HIGH_SEVERITY_ERROR);
+					break;
+				case MILD_ERROR:
+					Log_To_File(MED_SEVERITY_ERROR);
+					break;
+				case MINOR_ERROR:
+					Log_To_File(LOW_SEVERITY_ERROR);
+					break;
+				
+				default:
+					break;
+			}//end error switch
+
+			Log_To_File(message);
+
+		}//end if
+	}//end root if
+}
+
+// Now for our different logging flavours
+void LOG(const char* message, Importance min_log_level)
+{
+	LOG(message, min_log_level, no_error, false);
+}
+
+void LOG(const char* message)
+{
+	LOG(message, no_importance, no_error, false);
+}
+
+void LOG(std::string message)
+{
+	LOG(message.c_str(), no_importance, no_error, false);
+}
+
+void LOG(std::string message, Importance min_log_level)
+{
+	LOG(message.c_str(), min_log_level, no_error, false);
+}
+
+void LOG(const char* message, Error_Types error_severity)
+{
+	LOG(message, IMPORTANT, error_severity, true);
+}
+
+void LOG(std::string message, Error_Types error_severity)
+{
+	LOG(message.c_str(), IMPORTANT, error_severity, true);
+}
+
+
+
+// Our default settings
+Parametres Default_Parametres()
+{
+	Parametres temp_options;
+
+	temp_options.HOW_MANY_FACTIONS			= 	10;
+	temp_options.LOG_LEVEL					= 	3;
+	temp_options.WORLD_WIDTH				= 	10;
+	temp_options.WORLD_HEIGHT				= 	10;
+	temp_options.File_ReOpen_Attempts		= 	5;
+	temp_options.USE_HIGH_PERFORMANCE_MODE 	= 	true;
+	temp_options.WORLD_SIZE					= 	temp_options.WORLD_WIDTH * temp_options.WORLD_HEIGHT;
+	temp_options.Log_File_Ptr				= 	fopen(LOG_FILE, "a");
+	temp_options.API_Folder_Path 			= 	DEFAULT_API_FOLDER_PATH;
+	temp_options.SPEED_DIVIDER				= 	1;
+
+	return temp_options;
+}
+
+
+
 //	Check to make sure the file is successfully opened!
-bool Check_file_is_open(FILE* file_to_check, char* file_name, const char* mode, int pause_duration, bool debugging)
+bool Check_File_Is_Open(FILE* file_to_check, const char* file_name, const char* mode, int pause_duration, bool debugging)
 {
 
 	// Is sleep for the weak??? ',:/  //
@@ -18,8 +104,7 @@ bool Check_file_is_open(FILE* file_to_check, char* file_name, const char* mode, 
 	//	Time to check! //
 	if(file_to_check == NULL)
 	{
-		PRINT_MED_SEVERITY_ERROR;
-		printf("\n%s Didn't open properly", file_name);
+		LOG( ("%s Didn't open properly first time", file_name), MINOR_ERROR );
 		printf("\nAttempting Re-open");
 
 		// Lets try open the file a few more times
@@ -29,7 +114,7 @@ bool Check_file_is_open(FILE* file_to_check, char* file_name, const char* mode, 
 			if ( (file_to_check=fopen(file_name, mode)) != NULL)	// file opened successfully
 			{
 				if (debugging)
-					{	BORING_LOG( ("%s successfully at last!", file_name) );	}
+					{	LOG( ("%s opened successfully at last!", file_name) );	}
 				
 				return true;
 			}
@@ -48,9 +133,7 @@ bool Check_file_is_open(FILE* file_to_check, char* file_name, const char* mode, 
 
 		if (file_to_check == NULL)
 		{
-
-			PRINT_HIGH_SEVERITY_ERROR;
-			CRUCIAL_LOG( ("THERE WAS AN ERROR OPENING %s", file_name) );
+			LOG( ("THERE WAS AN ERROR OPENING %s", file_name), SEVERE_ERROR );
 			
 			return false;
 		}//end if
@@ -62,62 +145,101 @@ bool Check_file_is_open(FILE* file_to_check, char* file_name, const char* mode, 
 	else if (file_to_check != NULL)
 	{
 		if (debugging)
-			{	BORING_LOG( ("%s opened successfully first time round!", file_name) );	}
+			{	LOG( ("%s opened successfully first time round!", file_name) );	}
 
 		return true;
 	}//end elif
 	
 
-	PRINT_LOW_SEVERITY_ERROR;
-	INTERESTING_LOG("...What? We reached the end of check if file is open function... we're not supposed to???")
+	// We should never get here!
+	LOG("...What? We reached the end of check if file is open function... we're not supposed to???", MILD_ERROR);
+
 	return false; // if nothing happened... then just WHAT???
 
 }//end function
 
 
 
+bool Check_File_Exists(const char* file_name, bool create_if_doesnt_exist)
+{
+	FILE* file_to_check = fopen(file_name, "r");
 
-char* Get_Full_File_Path_And_Append_String_At_The_End
+
+	for (uMint i = 0; i < 3; i++)
+	{
+
+		if (file_to_check == NULL)
+		{
+			if (Check_File_Is_Open(file_to_check, file_name, "r", 1, false) )
+			{
+				return true;
+			}
+
+			else
+			{
+				if (create_if_doesnt_exist)
+				{
+					file_to_check = fopen(file_name, "a");
+				}
+				else
+				{
+					return false;
+				}
+			}
+		}
+
+		//yay file exists
+		else
+		{
+			return true;
+		}
+	}//end for
+
+	//this should never be reached
+	return false;
+}
 
 
 
+// This is here becuase code repetition occured
+void Get_File_Path(const char* API_Folder_Path, const char* file_to_get, char* string_to_edit)
+{
+	// Clear up the string first
+	for (unsigned i = 0; i < FILE_PATH_BUFFER_SIZE; i++)
+	{
+		string_to_edit[i] = '\0';
+	}
 
-void Check_to_See_If_We_Should_Still_Be_Running(char* API_Folder_Path)
+	strcpy(string_to_edit, API_Folder_Path); 	 // We Now have the API folder path
+
+	
+	//	What OS are we on ???
+	if (AM_I_RUNNING_WINDOWS) // Windows?
+		{	strcat(string_to_edit, "\\");	}
+
+	else // Windowsn't?
+		{	strcat(string_to_edit, "/");	}
+
+	
+	strcat(string_to_edit, file_to_get); // Now we should have our whole file path!
+	
+	//Should have the path now!
+}
+
+
+
+// Check to see what we should do!
+void Check_Status_File()
 {
 	char Status_file_path[FILE_PATH_BUFFER_SIZE];
 	
 
-	// First things first! We need to set up what the path even is! //
-	for (uShort i = 0; i < FILE_PATH_BUFFER_SIZE; i++)
-		{	Status_file_path[i] = '\0';	}	// make sure that every char is initialised and won't cause some damn runoff
-	
+	Get_File_Path(Global_settings.API_Folder_Path, STATUS_READ_FILE, Status_file_path);
 
-	uShort x = 0;
 
-	do
-	{
-		Status_file_path[x] = *(API_Folder_Path + x);
-		x++;
-	} 
-	while ( *(API_Folder_Path + x) != '\0' );
 	
-	
-	if (AM_I_RUNNING_WINDOWS) //windows?
-		{	Status_file_path[x] = '\\';	}
-
-	else //Linux?
-		{	Status_file_path[x]	= '/';	}
-	
-	
-	for (uShort i = 0; i < strlen(STATUS_READ_FILE); i++)
-	{
-		x++;
-		Status_file_path[x] = STATUS_READ_FILE[i];
-	}
-	
-	
-	BORING_LOG( ("We're reading the status from: %s", Status_file_path) );
-	BORING_LOG("Attempting to open now!");
+	LOG( ("We're reading the status from: %s", Status_file_path), BORING, no_error, true );
+	LOG("Attempting to open now!");
 
 
 	FILE* status_file;
@@ -126,42 +248,39 @@ void Check_to_See_If_We_Should_Still_Be_Running(char* API_Folder_Path)
 
 	IF_HIGH_PERFORMANCE
 	{
-		if( Check_file_is_open(status_file, Status_file_path, "r", 1, false) )
-			{	BORING_LOG( ("All's good opening %s", Status_file_path) );	}
+		if( Check_File_Is_Open(status_file, Status_file_path, "r", 1, false) )
+			{	LOG( ("All's good opening %s", Status_file_path) );	}
 
 		else
 		{
-			PRINT_HIGH_SEVERITY_ERROR;
-			CRUCIAL_LOG( ("OH SHIT! %s wont open", Status_file_path) );
+			LOG( ("OH POOP! %s wont open", Status_file_path), SEVERE_ERROR );
 		}
-	}
+	}//end if high performance
 
 	IF_LOW_PERFORMANCE
 	{ 
-		if( Check_file_is_open(status_file, Status_file_path, "r", 5, false) )
-			{	BORING_LOG( ("All's good opening %s", Status_file_path) );	}
+		if( Check_File_Is_Open(status_file, Status_file_path, "r", 5, false) )
+			{	LOG( ("All's good opening %s", Status_file_path) );	}
 
 		else
 		{
-			PRINT_HIGH_SEVERITY_ERROR;
-			CRUCIAL_LOG( ("OH SHIT! %s wont open", Status_file_path) );
+			LOG( ("OH SHIT! %s wont open", Status_file_path), SEVERE_ERROR );
 		}
-		
-	}
+	}//end if low performance
 	
 
 
-	char code; // will explain the different codes later!
+	char code = '\0'; // will explain the different codes later!
 
 	// Time to keep checking!
 	do
 	{
 		status_file = fopen(Status_file_path, "r");
 
-		if (Check_file_is_open(status_file, Status_file_path, "r", 1, false))
+		if (Check_File_Is_Open(status_file, Status_file_path, "r", 1, false))
 			{	code = fgetc(status_file);	}
 		else
-			{	CRUCIAL_LOG("Bad shit happened at Status check!");	}
+			{	LOG("Bad stuff happened at Status check!", MILD_ERROR);	}
 		
 
 		switch (code)
@@ -184,21 +303,173 @@ void Check_to_See_If_We_Should_Still_Be_Running(char* API_Folder_Path)
 		}//end switch
 
 
-		fclose(status_file);
+		fclose(status_file); // gotta close and let changes happen and be read
 	
-		SLEEP(1);
+		IF_HIGH_PERFORMANCE
+			{	SLEEP(1);	}
+
+		IF_LOW_PERFORMANCE
+			{	SLEEP(5);	}
 
 	} while (true);
 	
-
+	// Don't think we should ever get here... but if we do it's better to be free 
+	free(Status_file_path);
 
 }
 
 
 
-
-int Get_Value_From_Settings(char* setting_to_search_for)
+//	Verified works
+void Log_To_File(const char* message, bool include_time)
 {
-	// make sure it's found first
+	if (include_time)
+	{
+		//	Write the Time part	!
+		const uShort time_buffer = 32;
+		char time_part[time_buffer];
 
+
+		// make sure all is null
+		for (uShort i = 0; i < time_buffer; i++)
+		{
+			time_part[i] = '\0'; 
+		}
+		
+
+		//	Thanks https://www.epochconverter.com/programming/c
+		time_t epoch_time = time(NULL);
+		struct tm  ts;
+
+		// 	Format time, "ddd yyyy-mm-dd hh:mm:ss zzz"
+		ts = *localtime(&epoch_time);
+
+		strftime(time_part, sizeof(time_part), "%Y-%m-%d   %H:%M:%S", &ts);
+
+		// add a little ; at the end
+		for (unsigned i = 0; i < time_buffer; i++)
+		{
+			if (time_part[i] == '\0' )
+			{
+				time_part[i] = ' ';
+				time_part[i+1] = ':';
+				time_part[i+2] = ' ';
+				break;
+			}
+		}
+		
+		
+		for (unsigned __int8 i = 0; i < time_buffer; i++)
+		{
+			fputc(time_part[i], Global_settings.Log_File_Ptr);
+		}
+	}//end if to include time or nah
+
+	else
+	{
+		fputc('\t', Global_settings.Log_File_Ptr);
+		fputc('\t', Global_settings.Log_File_Ptr);
+	}
+
+	// Main message
+	for (unsigned int i = 0; i < strlen(message); i++)
+	{
+		fputc(message[i], Global_settings.Log_File_Ptr);
+	}
+
+
+	fputc('\n', Global_settings.Log_File_Ptr);
 }
+
+
+//	verified works
+void Log_To_File(const char* message)
+{
+	Log_To_File(message, true);
+}
+
+
+//	Verified works
+void Log_To_File(std::string message)
+{
+	const char* charred_message = message.c_str();
+
+	Log_To_File(charred_message, true);
+}
+
+
+
+//	Verified Works, not happy with invalid value detection
+int Get_Value_From_Settings(const char* setting_to_search_for)
+{
+	char OAL_config_path[FILE_PATH_BUFFER_SIZE];
+
+	Get_File_Path(Global_settings.API_Folder_Path, CONFIG_FILE, OAL_config_path);
+
+
+	// make sure it's found first
+	if ( Check_File_Exists(OAL_config_path, false) == false)
+	{
+		LOG("WE CANT FIND THE OAL CONFIG FILE", SEVERE_ERROR);
+	}
+
+	std::ifstream config_file(OAL_config_path);
+	
+	if (config_file.is_open() )
+	{
+		LOG("Successfully found and opened the config", no_importance, no_error, false);
+	}
+	else
+	{
+		LOG("ERROR OPENING CONFIG", SEVERE_ERROR);
+	}
+
+	//	-	-	-	-	-	-	-	-	-
+	//		Now lets get that value!
+
+
+	std::string temp_string;
+	while (std::getline(config_file, temp_string) )
+	{
+		// Check our string if we found it!!!
+		if(temp_string.find(setting_to_search_for) != std::string::npos)
+		{
+			uShort equal_index = 0;
+			uShort end_index = 0;
+
+			for(uShort i = 0; i < temp_string.length(); i++)
+			{
+				if (temp_string[i] == '=')
+				{
+					equal_index = i;
+				}
+				else if (temp_string[i] == ';')
+				{
+					end_index = i;
+					break;
+					LOG("Found setting", no_importance, no_error, true);
+				}
+			}
+
+			if (equal_index == 0 || end_index == 0)
+			{
+				LOG("Ah poop, the settings file isn't correct, make sure every setting ends with a ; and has an = ", MILD_IMPORTANCE, MILD_ERROR, true);
+			}
+			
+			// Our value lies betweem = and ;
+			std::string extraction_string = temp_string.substr( (equal_index+1), (end_index-equal_index) );  
+			long value = 0;
+			value = std::stoi(extraction_string);
+
+			printf("\n%s is %d", setting_to_search_for, value);
+			
+
+			return value;
+		}
+	}
+	
+	LOG("ERROR GETTING VALUE FROM SETTINGS", MILD_IMPORTANCE, MILD_ERROR, true);
+	printf("\n%s Threw an error in value retrival", setting_to_search_for);
+	return 0;
+}
+

@@ -88,7 +88,7 @@ struct Co_Ordinates
 	int Y;
 };
 
-Co_Ordinates Int_To_Co_Ordinates(uShort Index)
+Co_Ordinates Int_To_Co_Ordinates(unsigned int Index)
 {
 	if (Index >= WORLD_SIZE)
 	{
@@ -107,7 +107,7 @@ int Co_Ordinates_to_Int(Co_Ordinates co_ords)
 {
 	if ( (co_ords.X == -1) || (co_ords.Y == -1) ) /////	HEY MAKE SURE THIS WORKS CAUSE I CHANGED IT
 	{
-		printf(LOW_SEVERITY_ERROR);
+		LOG
 		printf("\ncordinates to int conversion function was given an invalid coordinate to convert\n");
 		return -1;		
 	}
