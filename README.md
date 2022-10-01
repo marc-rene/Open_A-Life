@@ -17,7 +17,7 @@ Open A-Life is comprised of 3 distinct sections. They are:
 
 # The Backend
 
-The backend is currently being offered in **C++** which is currently still in development, and a **python** version will be entering development soon.
+The backend is currently being offered in **C++** which is currently still in development *(it was originally being coded in C, hense why much of the code is closer to C than C++)* , and a **python** version will be entering development soon.
 Every implementation of the backend _**MUST**_ accomplish the following requirements in order for everything to work smoothly: 
 
  - Read and set parametres from **/API/Settings.ALC**, and possibly update it should any changes to the factions occur
