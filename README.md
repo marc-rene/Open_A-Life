@@ -64,7 +64,9 @@ Each cell should have the following:
   - **Attack** neighbouring cells
   - **Defend** against attacks both domestic and foreign
  
- 8. Local population contentness, this should just be an integer how happy or subjugated the local population is
+ 8. How large the local supplies stockpile is. This would be medicine, goods, etc... 
+ 
+ 9. Local population contentness, this should just be an integer how happy or subjugated the local population is
  
  
  
