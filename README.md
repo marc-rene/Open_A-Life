@@ -54,9 +54,9 @@ Each cell should have the following:
  
  3. A way of identitfying which weather and climate is currently active, can be done in an **enum** or **integer**, or whatever you may prefer in your own implementation!
  
- 4. How many spare slots for other factions are there, best use an **integer** for this.  
+ 4. How many spare slots for other agents are there, best use an **integer** for this.  
  
- 5. An **array** of Faction ID's in those slots and their buffs and debuffs there.
+ 5. An **array** of Agent ID's in those slots and their buffs and debuffs there.
  
  6. The local population size
  
@@ -97,7 +97,7 @@ Agents should contain:
  
  - What their mission is *(Trade, diplomacy, sabotage, etc... Can be done with a simple enum)*
  
- - An integer representing their **quality** *(Are they a grunt or at the top of their class?)*
+ - How much of a difference will they make in their mission. Will they bring
  
  
   
