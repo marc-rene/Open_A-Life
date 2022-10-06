@@ -1,0 +1,21 @@
+PLEASE! End all of these with a ; otherwise chaos shall follow
+
+STARTING NUMBER OF FACTIONS = 8888;
+MAX NUMBER OF FACTIONS = 9999;
+STARTING NUMBER OF AGENTS = 8888;
+MAX NUMBER OF AGENTS = 9999;
+
+LOG LEVEL = 3;
+
+WORLD WIDTH = 15; 
+WORLD HEIGHT = 9;
+World Wrap Setting? = 3;
+
+
+File Reopen Attempts = 5;
+
+
+...Gotta go fast? = 1;
+
+Speed divider of 1 means it will go super fastest
+SPEED DIVIDER = 1;
