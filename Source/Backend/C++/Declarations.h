@@ -125,30 +125,28 @@ World_Wrap_Config;
 
 
 
-typedef enum	//	What resources might a cell have
+enum	Cell_Resource	//	What resources might a cell have
 {	
 	Population_Size			=		'P',	
 	Population_Contentness	=		'C',	
 	Munitions_Count			=		'M',	
 	Supplies_Count			=		'S'	
-} 
-Cell_Resource;
+};
 
 
 
-typedef enum	//	Climate Types
+enum	Climates_Types
 { 
 	Tundra 	= 	'T',
 	Cold 	= 	'C',
 	mild 	= 	'm',
 	Hot 	= 	'H',
 	Desert	=	'D'
-}
-Climates_Types; 	
+}; 	
 
 
 
-enum purpose_of_visit 
+enum 	purpose_of_visit 
 {
 	Trade			=	't',
 	Incite_Revolt	=	'r',	
@@ -203,7 +201,7 @@ struct 			Cell_Visitor;
 
 
 //	Function Declarations should go here:	- - - - - - - - - - - - - -
-
+//	-	-	-	-	File IO.h	-	-	-	-	//
 void LOG(const char*, Importance, Error_Types, bool);
 void LOG(std::string, Importance, Error_Types, bool);
 void LOG(const char*, Importance);
@@ -223,3 +221,5 @@ void Log_To_File(const char*, bool);
 void Log_To_File(const char*);
 void Log_To_File(std::string);
 int Get_Value_From_Settings(const char*);
+
+//	-	-	End of File IO.h Functions	-	-	//
