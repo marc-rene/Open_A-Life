@@ -154,8 +154,10 @@ enum purpose_of_visit
 	Incite_Revolt	=	'r',	
 	Beseige			=	'b',	// Should make difficulty to traverse way worse
 	Attack			=	'a',
-	Sabotage		= 	's'
-
+	Sabotage		= 	's',
+	Other			=	'o',	// incase this is made in a video game and a 
+								// quest giver is needed or something	//
+	
 };
 
 
