@@ -83,6 +83,25 @@ Each cell should have the following:
   - Diseases act like Traders, except they just enter into adjacent territory
   
   
+Factions can also have **agents**. The purpose of agents is to give each faction some more character. Let's say there is a **Red Army** Faction, the Red Army could have an agent which could be a person or squad which is traversing the world on their own mission. They can also visit individual cells and participate in missions such as trade, sabotage, or just visiting. 
+
+Agents should contain:
+ 
+ - The owning Faction's ID
+ 
+ - A Unique ID
+ 
+ - A Unique Name
+ 
+ - Targetted Location *(Where they're going to)*
+ 
+ - What their mission is *(Trade, diplomacy, sabotage, etc... Can be done with a simple enum)*
+ 
+ - An integer representing their **quality** *(Are they a grunt or at the top of their class?)*
+ 
+ 
+  
+  
 # API
 
 The API folder is where all of our API files shall be. The required files and their responsibility are as follows:
