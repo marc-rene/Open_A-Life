@@ -1,46 +1,7 @@
 #include "Faction_Struct.h"
+#pragma once
 
 
-
-
-
-void FACTION_START(FACTION* faction_ptr)
-{
-    while (faction_ptr->Current_Status	!=  DEAD)      
-    {
-		HIGH_LOG
-			std::cout << faction_ptr->Fac_Name << " is working on thread " << std::this_thread::get_id() << "\n";
-		END_LOG
-		
-		//	DEBUG... Please Change
-		int decision = rand() % 4;
-		switch (decision)
-		{
-			case 0:
-				faction_ptr->Move(North);
-				break;
-			case 1:
-				faction_ptr->Move(East);
-				break;
-			case 2:
-				faction_ptr->Move(South);
-				break;
-			case 3:
-				faction_ptr->Move(West);
-				break;
-			
-			default:
-				printf("\nfuck\n");
-				break;
-		}//end switch
-
-		WORLD.at(faction_ptr->Selected_Force_Location).ID_of_Faction_Here = faction_ptr->Fac_ID;
-		
-		SLEEP(SPEED_DIVIDER*2);
-	}//end while		
-}
-
-
-
+// To be continued!
 
 

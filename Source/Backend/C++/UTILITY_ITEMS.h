@@ -1,4 +1,5 @@
 #include "Declarations.h"
+#include "World.h" // for coordinate structs
 #include "File_IO.h"
 #pragma once
 
@@ -8,7 +9,10 @@ void Get_Set_Global_Settings()
 {
 	LOG("Loading Values now from .alc", BORING, no_error, true);
 
-	Global_settings.HOW_MANY_FACTIONS 			= Get_Value_From_Settings(	"HOW MANY FACTIONS"	);
+	Global_settings.HOW_MANY_FACTIONS_START 	= Get_Value_From_Settings(	"STARTING NUMBER OF FACTIONS"	);
+	Global_settings.MAX_NUMBER_OF_FACTIONS 		= Get_Value_From_Settings(	"MAX NUMBER OF FACTIONS"	);
+	Global_settings.HOW_MANY_FACTIONS_START 	= Get_Value_From_Settings(	"STARTING NUMBER OF AGENTS"	);
+	Global_settings.MAX_NUMBER_OF_AGENTS 		= Get_Value_From_Settings(	"MAX NUMBER OF AGENTS"	);
 	Global_settings.LOG_LEVEL					= Get_Value_From_Settings(	"LOG LEVEL"			);
 
 	Global_settings.WORLD_WIDTH					= Get_Value_From_Settings(	"WORLD WIDTH"	);
@@ -36,8 +40,42 @@ void Get_Set_Global_Settings()
 }
 
 
+void print_world(uMint mode)
+{
+	printf("\n\n");
+	for (uInt i = 0; i < Global_settings.WORLD_SIZE; i++)
+	{
+		switch (mode)
+		{
+			case 0:
+				printf("%lu\t", i);
+				break;
+			
+			case 1:
+				printf("%lu,%lu\t", Int_To_Co_Ordinates(i).X, Int_To_Co_Ordinates(i).Y);
+				break;
+
+			default:
+				break;
+		}
+
+		if(i % Global_settings.WORLD_WIDTH == Global_settings.WORLD_WIDTH - 1)
+		{	printf("\n");	}
+	}
+	
+}
 
 
+void test_co_ords_index_conversions(uInt test)
+{
+	Co_Ordinates test_CO = Int_To_Co_Ordinates(test);
+	uInt test_index = Co_Ordinates_to_Int(test_CO);
+	printf	("\n%lu\treturns\t%lu:%lu\twhich returns back\t%lu",
+				test,
+				test_CO.X,test_CO.Y,
+				test_index
+			);
+}
 
 
 

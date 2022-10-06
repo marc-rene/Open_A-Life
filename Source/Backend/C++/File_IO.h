@@ -78,7 +78,10 @@ Parametres Default_Parametres()
 {
 	Parametres temp_options;
 
-	temp_options.HOW_MANY_FACTIONS			= 	10;
+	temp_options.HOW_MANY_FACTIONS_START	= 	10;
+	temp_options.HOW_MANY_AGENTS_START		= 	10;
+	temp_options.MAX_NUMBER_OF_FACTIONS		= 	20;
+	temp_options.MAX_NUMBER_OF_AGENTS		= 	20;
 	temp_options.LOG_LEVEL					= 	3;
 	temp_options.WORLD_WIDTH				= 	10;
 	temp_options.WORLD_HEIGHT				= 	10;
@@ -171,7 +174,7 @@ bool Check_File_Exists(const char* file_name, bool create_if_doesnt_exist)
 	FILE* file_to_check = fopen(file_name, "r");
 
 
-	for (uMint i = 0; i < 3; i++)
+	for (uMint i = 0; i < Global_settings.File_ReOpen_Attempts; i++)
 	{
 
 		if (file_to_check == NULL)
@@ -331,6 +334,15 @@ void Log_To_File(const char* message, bool include_time)
 {
 	if (include_time)
 	{
+		//	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+		//	Ok this is just confusing! I stripped out unnessesary #includes
+		// and I commented out time.h
+		// This compiles flawlessly with time.h absent.... HOW??? 
+		// What are you doing g++?
+		// https://www.highlandernews.org/wp-content/uploads/2016/02/ops.meme_.nba_-1024x768.jpg
+		//	...好了
+		//	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+		
 		//	Write the Time part	!
 		const uShort time_buffer = 32;
 		char time_part[time_buffer];
@@ -427,7 +439,8 @@ int Get_Value_From_Settings(const char* setting_to_search_for)
 	}
 	else
 	{
-		LOG("ERROR OPENING CONFIG", SEVERE_ERROR);
+		LOG("ERROR OPENING CONFIG FILE", SEVERE_ERROR);
+		exit(1); 	// exit
 	}
 
 	//	-	-	-	-	-	-	-	-	-
@@ -435,7 +448,7 @@ int Get_Value_From_Settings(const char* setting_to_search_for)
 
 
 	std::string temp_string;
-	while (std::getline(config_file, temp_string) )
+	while (std::getline(config_file, temp_string) ) 	// Go throught the file line by line
 	{
 		// Check our string if we found it!!!
 		if(temp_string.find(setting_to_search_for) != std::string::npos)
@@ -466,7 +479,7 @@ int Get_Value_From_Settings(const char* setting_to_search_for)
 
 			// Our value lies betweem = and ;
 			std::string extraction_string = temp_string.substr( (equal_index+1), (end_index-equal_index) );  
-			std::string setting_stringed(setting_to_search_for);
+			std::string setting_stringed(setting_to_search_for); // std::string version of our setting
 			
 			chunky value = 0;
 			
@@ -489,6 +502,7 @@ int Get_Value_From_Settings(const char* setting_to_search_for)
 		}
 	}
 	
+	// We shouldn't ever reach here
 	LOG("ERROR GETTING VALUE FROM SETTINGS", MILD_IMPORTANCE, MILD_ERROR, true);
 	printf("\n%s Threw an error in value retrival", setting_to_search_for);
 	return 0;

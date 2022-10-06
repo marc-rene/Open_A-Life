@@ -4,6 +4,7 @@
 
 
 
+
 //			It probably would have made more sense to write everything into the one file 
 //		but oh lord, that would be hell to develop in!
 //		I also understand that having mulitple #includes in the one cpp file might've made sense
@@ -45,28 +46,29 @@
 
 int main(int argument_count,	const char** API_Folder_Path_argument) 
 {
-	// These are our default values!
-	Global_settings = Default_Parametres();
-
+	Global_settings = Default_Parametres(); 				// 	These are our default values
+	Global_settings.Log_File_Ptr = fopen(LOG_FILE, "a");	// 	Make sure our Log File pointer is up and running!
 	//goto Testing;	
 
-	Log_To_File("- - - - - - - - - - - - - - - - - - - - - - - - - -");
+	Log_To_File("#########################################################\n\n\n", false);
+	Log_To_File("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -", false);
 	Log_To_File("Backend Started! Wish us luck!");
+	Log_To_File("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -", false);
 
 
 	//	Check our Arguments!
 	if (argument_count == 1) 	// No arguments given is 1, Giving an arguement is 2+... QUE???
 		{	API_Folder_Path_argument[1] = DEFAULT_API_FOLDER_PATH;	}
-
-	
 	
 
 
 	Global_settings.API_Folder_Path = API_Folder_Path_argument[1];
 
+
 	Log_To_File("Using API Path of:\t┐");
 	Log_To_File(API_Folder_Path_argument[1], false);
-	
+
+
 	// Step 1: What does our .ALC have to say?
 	Get_Set_Global_Settings();
 
@@ -76,6 +78,8 @@ int main(int argument_count,	const char** API_Folder_Path_argument)
 	Testing:
 
 
+	
+
 
 
 
@@ -84,6 +88,6 @@ int main(int argument_count,	const char** API_Folder_Path_argument)
 
 	//////////////////////////////////////////////////////////////
 
-	std::cin.get();
+	getchar(); // Get an enter
 	return 0;
 }

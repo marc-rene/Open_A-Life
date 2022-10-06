@@ -1,15 +1,16 @@
 #include        		<stdio.h>
-#include        		<stdlib.h>
-#include				<time.h>
-#include				<string.h>
 #include				<string>
-#include				<iostream>
 #include				<fstream>
 #include 				<thread>
 
 
 
 #pragma once
+
+
+// Do we want to Have agents and the advanced features?
+#define USE_ADVANCED 1
+// Work in progress, keep this at 1 for now
 
 
 
@@ -27,17 +28,17 @@
 
 
 
-#define		NEEDED_THREAD_COUNT	5	
+#define		NEED_X_THREADS	5 	// How many threads will we need?	
 
 
-
+//	Define our data types!
 #define 	mint	       	__int8		//	micro int, or "mint"... I thought it was cute
 #define 	uMint	       	unsigned __int8
 #define 	uShort	       	unsigned short
 #define		uInt			unsigned int
 #define		chunky			int64_t 	//	Just to avoid that whole long == 4 bytes/8bytes confusion
 #define		uChunky			unsigned int64_t
-#define		FACTION_ID_MEMORY_TYPE	unsigned short	// This is incase we ever want 65000+ factions
+
 
 
 
@@ -50,6 +51,8 @@
 #define				LOG_FILE						"What_Happened.log"
 #define				FILE_PATH_BUFFER_SIZE			4096
 #define				GENERIC_CHAR_BUFFER_SIZE		3072
+
+#define				CO_ORDINATE_ERROR_NUMBER		4294967290				
 
 
 
@@ -69,7 +72,8 @@
 																				
 																
 
-typedef enum	//	Faction Organisational Structures
+// Faction Specific	~  ~  ~  ~  ~  ~  ~  ~  ~  ~	~  ~  ~  ~  ~  ~  ~  ~  ~  ~
+typedef enum	Faction_Types	//	Faction Organisational Structures
 {		
 	Centrally_Planned 	= 	'C',		// 	Holds Land, Needs a Home/HQ			(Red Army, US Army)
 	Antonomous			=	'A', 		// 	Holds Land, Doesn't need a Home/HQ	(Wildlife, Bandits)
@@ -79,7 +83,24 @@ typedef enum	//	Faction Organisational Structures
 Faction_Types;	
 
 
+typedef enum	Endgame_Aims
+{
+	Self_Sufficency		=	'S',		//	Iceland, wants to not need anyone else ideally
+	Total_Domination	=	'D',		//	Russia,	wants to conquour all
+	Trade_Power			=	'T',		//	Ireland, "...did someone say... TRADE DEAL???"
+	Absolute_Power		=	'P',		//	U.S.A, Wants to be the strongest
+	Defensive			=	'D',		//	Ukraine, Wants to defend its borders first, trade and peace second
+	Total_War			=	'W',		//	https://www.youtube.com/watch?v=jt_9fsA_XmA | https://www.meme-arsenal.com/memes/e4ea924a091639066da3b82277aded97.jpg
+	Dont_Care			=	'C',		// 	They just chilling... no aims or wishes, ideal for wildlife
+	Revenge				=	'R'			// 	They just chilling... until theres a need for revenge
+}
+Endgame_Aims;
 
+// ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~
+
+
+
+// File-IO Specific	#	#	#	#	#	#	#	#	#	#	#	#	#	#	#	#	#	#	#	#
 typedef enum
 {
 	SEVERE_ERROR 	= 	1,
@@ -90,7 +111,6 @@ typedef enum
 Error_Types;
 
 
-
 typedef enum
 {
 	IMPORTANT 		= 	1,
@@ -99,11 +119,12 @@ typedef enum
 	no_importance	= 	4
 } 
 Importance;
+// 	#	#	#	#	#	#	#	#	#	#	#	#	#	#	#	#	#	#	#	#	#	#	#	#
 
 
 
-// World Specific	-	-	-	-	-	-	-	-	-	-	-	-	-	-
-typedef enum	//	Directions             	
+// World Specific	*	*	*	*	*	*	*	*	*	*	*	*	*	*	*	*	*	*	*	*	*	*	*	*	*	*	*
+typedef enum	Direction             	
 {   
 	North	=	'N',  
 	East	=	'E',   
@@ -113,8 +134,7 @@ typedef enum	//	Directions
 Direction;
 
 
-
-typedef enum	//	World Wrapping Setting              	
+typedef enum	World_Wrap_Config             	
 {   
 	No_Wrap 			=	0,
 	Horizontal_Wrap		=	1,
@@ -124,19 +144,17 @@ typedef enum	//	World Wrapping Setting
 World_Wrap_Config;
 
 
-
-typedef enum	//	What resources might a cell have
+typedef enum	Cell_Resource 	//	What resources might a cell have
 {	
 	Population_Size			=		'P',	
 	Population_Contentness	=		'C',	
 	Munitions_Count			=		'M',	
 	Supplies_Count			=		'S'	
-} 
+}
 Cell_Resource;
 
 
-
-typedef enum	//	Climate Types
+typedef enum	Climates_Types 
 { 
 	Tundra 	= 	'T',
 	Cold 	= 	'C',
@@ -147,20 +165,21 @@ typedef enum	//	Climate Types
 Climates_Types; 	
 
 
-
-enum purpose_of_visit 
+typedef enum 	purpose_of_visit  
 {
 	Trade			=	't',
 	Incite_Revolt	=	'r',	
 	Beseige			=	'b',	// Should make difficulty to traverse way worse
 	Attack			=	'a',
-	Sabotage		= 	's'
+	Defend			=	'd',
+	Sabotage		= 	's',
+	Visiting		=	'v',
+	Passing_By		=	'p'		// They're moving to another cell
+}
+purpose_of_visit;
 
-};
 
-
-
-typedef enum 	// 	Storm Types
+typedef enum 	Storms_Types
 { 
 	Blizzard				=	'B', 
 	Terrential_Rain			=	'R', 
@@ -171,36 +190,40 @@ typedef enum 	// 	Storm Types
 	no_storm				=	'n',	 
 }
 Storms_Types; 
-//	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+//	*	*	*	*	*	*	*	*	*	*	*	*	*	*	*	*	*	*	*	*	*	*	*	*	*	*	*	*	*	*
 
 
 
 typedef struct Parametres	// MAKE SURE THAT THERE'S ONLY THE ONE
 {
-	uShort  					HOW_MANY_FACTIONS;
-	uMint   					LOG_LEVEL;
-	uShort   					WORLD_WIDTH;
-	uShort   					WORLD_HEIGHT;
-	uInt 						WORLD_SIZE;
-	World_Wrap_Config			World_Wrap_Setting;
-	uMint						File_ReOpen_Attempts;
-	bool						USE_HIGH_PERFORMANCE_MODE;
-	FILE*						Log_File_Ptr;
-	const char*					API_Folder_Path;
-	uMint						SPEED_DIVIDER;	// this is mostly for Speed control... a bigger number means the program will run slower but use up less resources hopefully
+	uShort  			HOW_MANY_FACTIONS_START;
+	uShort  			MAX_NUMBER_OF_FACTIONS;
+	uShort  			HOW_MANY_AGENTS_START;
+	uShort  			MAX_NUMBER_OF_AGENTS;
+	uMint   			LOG_LEVEL;
+	uShort   			WORLD_WIDTH;
+	uShort   			WORLD_HEIGHT;
+	uInt 				WORLD_SIZE;
+	World_Wrap_Config	World_Wrap_Setting;
+	uMint				File_ReOpen_Attempts;
+	bool				USE_HIGH_PERFORMANCE_MODE;
+	FILE*				Log_File_Ptr;
+	const char*			API_Folder_Path;
+	uMint				SPEED_DIVIDER;	// this is mostly for Speed control... a bigger number means the program will run slower but use up less resources... hopefully
 }	
 Parametres;
 
 
 
 struct 	Parametres 	Global_settings;
-struct 			Tile;
-struct 			Co_Ordinates;
-struct 			Cell_Visitor;
+struct 				Tile;
+struct 				Co_Ordinates;
+struct 				Cell_Visitor;
 
 
 
 //	Function Declarations should go here:	- - - - - - - - - - - - - -
+//	-	-	-	-	File IO.h	-	-	-	-	//
 
 void LOG(const char*, Importance, Error_Types, bool);
 void LOG(std::string, Importance, Error_Types, bool);
@@ -221,3 +244,17 @@ void Log_To_File(const char*, bool);
 void Log_To_File(const char*);
 void Log_To_File(std::string);
 int Get_Value_From_Settings(const char*);
+
+//	-	-	End of File IO.h Functions	-	-	//
+
+
+
+//	-	-	-	-	 World.h 	-	-	-	-	//
+
+Co_Ordinates Int_To_Co_Ordinates(uInt);
+
+
+uInt Co_Ordinates_to_Int(Co_Ordinates);
+
+//	-	-	End of World.h Functions	-	-	//
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
