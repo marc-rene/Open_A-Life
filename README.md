@@ -1,7 +1,7 @@
 # Welcome
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="git/Yellow_on_Black.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="git/Yellow.svg">
   <source media="(prefers-color-scheme: light)" srcset="git/Black_on_Yellow.svg">
   <img alt="OAL Logo" src="git/Black_on_Yellow.svg">
 </picture>
