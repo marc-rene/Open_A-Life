@@ -1,5 +1,10 @@
 # Welcome
-![Open A-Life Logo](git/logo.svg)
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="git/Yellow.svg">
+  <source media="(prefers-color-scheme: light)" srcset="git/Black_Yellow2.svg">
+  <img alt="OAL Logo" src="git/Black_Yellow2.svg">
+</picture>
 ## What is Open A-Life?
 Open A-Life is an attempt at a modular and open source version of the A-Life system found in the S.T.A.L.K.E.R video game franchise, designed to be easily embedded into any application under the Apache 2.0 license!
 
