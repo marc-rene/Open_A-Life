@@ -2,8 +2,8 @@
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="git/Yellow_on_black.svg">
-  <source media="(prefers-color-scheme: light)" srcset="git/Just_Black.svg">
-  <img alt="OAL Logo" src="git/Black_on_yellow.svg">
+  <source media="(prefers-color-scheme: light)" srcset="git/Black_on_yellow.svg">
+  <img alt="OAL Logo" src="git/Just_Black.svg">
 </picture>
 
 ## What is Open A-Life?
