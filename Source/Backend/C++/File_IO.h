@@ -78,20 +78,20 @@ Parametres Default_Parametres()
 {
 	Parametres temp_options;
 
-	temp_options.HOW_MANY_FACTIONS_START	= 	10;
-	temp_options.HOW_MANY_AGENTS_START		= 	10;
-	temp_options.MAX_NUMBER_OF_FACTIONS		= 	20;
-	temp_options.MAX_NUMBER_OF_AGENTS		= 	20;
-	temp_options.LOG_LEVEL					= 	3;
-	temp_options.WORLD_WIDTH				= 	10;
-	temp_options.WORLD_HEIGHT				= 	10;
-	temp_options.World_Wrap_Setting			=	Any_Wrap;
-	temp_options.File_ReOpen_Attempts		= 	5;
-	temp_options.USE_HIGH_PERFORMANCE_MODE 	= 	true;
-	temp_options.WORLD_SIZE					= 	temp_options.WORLD_WIDTH * temp_options.WORLD_HEIGHT;
-	temp_options.Log_File_Ptr				= 	fopen(LOG_FILE, "a");
-	temp_options.API_Folder_Path 			= 	DEFAULT_API_FOLDER_PATH;
-	temp_options.SPEED_DIVIDER				= 	1;
+	temp_options.HOW_MANY_FACTIONS_START	=	10;
+	temp_options.HOW_MANY_AGENTS_START	=	10;
+	temp_options.MAX_NUMBER_OF_FACTIONS	=	20;
+	temp_options.MAX_NUMBER_OF_AGENTS	=	20;
+	temp_options.LOG_LEVEL			=	3;
+	temp_options.WORLD_WIDTH		=	10;
+	temp_options.WORLD_HEIGHT		=	10;
+	temp_options.World_Wrap_Setting		=	Any_Wrap;
+	temp_options.File_ReOpen_Attempts	=	5;
+	temp_options.USE_HIGH_PERFORMANCE_MODE 	=	true;
+	temp_options.WORLD_SIZE			=	temp_options.WORLD_WIDTH * temp_options.WORLD_HEIGHT;
+	temp_options.Log_File_Ptr		=	fopen(LOG_FILE, "a");
+	temp_options.API_Folder_Path 		=	DEFAULT_API_FOLDER_PATH;
+	temp_options.SPEED_DIVIDER		=	1;
 
 	return temp_options;
 }
@@ -107,7 +107,7 @@ bool Check_File_Is_Open(FILE* file_to_check, const char* file_name, const char* 
 	
 
 	if (pause_duration != 0)
-		{	do_sleep = true;		}
+		{	do_sleep = true;	}
 
 
 	//	Time to check! //
@@ -123,7 +123,7 @@ bool Check_File_Is_Open(FILE* file_to_check, const char* file_name, const char* 
 			if ( (file_to_check=fopen(file_name, mode)) != NULL)	// file opened successfully
 			{
 				if (debugging)
-					{	LOG( ("%s opened successfully at last!", file_name) );	}
+				{	LOG( ("%s opened successfully at last!", file_name) );	}
 				
 				return true;
 			}
@@ -142,7 +142,9 @@ bool Check_File_Is_Open(FILE* file_to_check, const char* file_name, const char* 
 
 		if (file_to_check == NULL)
 		{
-			LOG( ("THERE WAS AN ERROR OPENING %s", file_name), SEVERE_ERROR );
+			std::string fns(file_name);
+			std::string message = "THERE WAS AN ERROR OPENING " + fns;
+			LOG(message, SEVERE_ERROR );
 			
 			return false;
 		}//end if
@@ -180,9 +182,7 @@ bool Check_File_Exists(const char* file_name, bool create_if_doesnt_exist)
 		if (file_to_check == NULL)
 		{
 			if (Check_File_Is_Open(file_to_check, file_name, "r", 1, false) )
-			{
-				return true;
-			}
+				{	return true;	}
 
 			else
 			{

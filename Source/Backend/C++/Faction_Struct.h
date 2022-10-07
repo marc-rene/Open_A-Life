@@ -14,7 +14,7 @@
 struct FACTION
 {
 	uShort 			ID;
-	const char* 	Name;
-	Faction_Types	Type;
-	Endgame_Aims	Objective;
+	const char* 		Name;
+	Faction_Types		Type;
+	Endgame_Aims		Objective;
 };

@@ -46,7 +46,7 @@
 
 int main(int argument_count,	const char** API_Folder_Path_argument) 
 {
-	Global_settings = Default_Parametres(); 				// 	These are our default values
+	Global_settings = Default_Parametres(); 		// 	These are our default values
 	Global_settings.Log_File_Ptr = fopen(LOG_FILE, "a");	// 	Make sure our Log File pointer is up and running!
 	//goto Testing;	
 
