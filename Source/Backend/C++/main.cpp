@@ -1,7 +1,7 @@
 #include "File_IO.h"
 #include "UTILITY_ITEMS.h"
 #include "World.h"
-
+#include "logo.h"
 
 
 
@@ -46,9 +46,11 @@
 
 int main(int argument_count,	const char** API_Folder_Path_argument) 
 {
+	//print_logo(2);
+
 	Global_settings = Default_Parametres(); 		// 	These are our default values
 	Global_settings.Log_File_Ptr = fopen(LOG_FILE, "a");	// 	Make sure our Log File pointer is up and running!
-	//goto Testing;	
+	goto Testing;	
 
 	Log_To_File("#########################################################\n\n\n", false);
 	Log_To_File("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -", false);
@@ -79,6 +81,16 @@ int main(int argument_count,	const char** API_Folder_Path_argument)
 
 
 	
+	print_logo(0);
+	SLEEP(2);
+	print_logo(1);
+	SLEEP(2);
+	print_logo(2);
+	SLEEP(2);
+	print_logo(3);
+	SLEEP(2);
+	print_logo(4);
+	SLEEP(2);
 
 
 
