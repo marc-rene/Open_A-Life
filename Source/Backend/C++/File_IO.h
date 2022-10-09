@@ -93,6 +93,8 @@ Parametres Default_Parametres()
 	temp_options.API_Folder_Path 		=	DEFAULT_API_FOLDER_PATH;
 	temp_options.SPEED_DIVIDER		=	1;
 
+	
+
 	return temp_options;
 }
 
@@ -399,15 +401,11 @@ void Log_To_File(const char* message, bool include_time)
 	fputc('\n', Global_settings.Log_File_Ptr);
 }
 
-
-//	verified works
 void Log_To_File(const char* message)
 {
 	Log_To_File(message, true);
 }
 
-
-//	Verified works
 void Log_To_File(std::string message)
 {
 	const char* charred_message = message.c_str();
@@ -420,35 +418,14 @@ void Log_To_File(std::string message)
 //	Verified Works, not happy with invalid value detection
 int Get_Value_From_Settings(const char* setting_to_search_for)
 {
-	char OAL_config_path[FILE_PATH_BUFFER_SIZE];
 
-	Get_File_Path(Global_settings.API_Folder_Path, CONFIG_FILE, OAL_config_path);
+	std::string setting_stringed(setting_to_search_for); 	// std::string version of our setting		
 
+	Global_settings.Config_File.seekg(SEEK_SET);		// Make sure we're reading from the start!
 
-	// make sure it's found first
-	if ( Check_File_Exists(OAL_config_path, false) == false)
-	{
-		LOG("WE CANT FIND THE OAL CONFIG FILE", SEVERE_ERROR);
-	}
-
-	std::ifstream config_file(OAL_config_path);
-	
-	if (config_file.is_open() )
-	{
-		LOG("Successfully found and opened the config", no_importance, no_error, false);
-	}
-	else
-	{
-		LOG("ERROR OPENING CONFIG FILE", SEVERE_ERROR);
-		exit(1); 	// exit
-	}
-
-	//	-	-	-	-	-	-	-	-	-
 	//		Now lets get that value!
-
-
 	std::string temp_string;
-	while (std::getline(config_file, temp_string) ) 	// Go throught the file line by line
+	while (std::getline(Global_settings.Config_File, temp_string) ) 	// Go throught the file line by line
 	{
 		// Check our string if we found it!!!
 		if(temp_string.find(setting_to_search_for) != std::string::npos)
@@ -479,7 +456,6 @@ int Get_Value_From_Settings(const char* setting_to_search_for)
 
 			// Our value lies betweem = and ;
 			std::string extraction_string = temp_string.substr( (equal_index+1), (end_index-equal_index) );  
-			std::string setting_stringed(setting_to_search_for); // std::string version of our setting
 			
 			chunky value = 0;
 			
@@ -502,9 +478,12 @@ int Get_Value_From_Settings(const char* setting_to_search_for)
 		}
 	}
 	
+
 	// We shouldn't ever reach here
-	LOG("ERROR GETTING VALUE FROM SETTINGS", MILD_IMPORTANCE, MILD_ERROR, true);
-	printf("\n%s Threw an error in value retrival", setting_to_search_for);
+	std::string end_error_message = "HEY! HUGE Error getting value for " + setting_stringed;
+	LOG(end_error_message, MILD_ERROR);
+
 	return 0;
 }
+
 

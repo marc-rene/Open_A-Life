@@ -206,6 +206,8 @@ typedef struct Parametres	// MAKE SURE THAT THERE'S ONLY THE ONE
 	uMint				File_ReOpen_Attempts;
 	bool				USE_HIGH_PERFORMANCE_MODE;
 	FILE*				Log_File_Ptr;
+	std::ifstream			Config_File;
+	bool				Config_file_is_open;
 	const char*			API_Folder_Path;
 	uMint				SPEED_DIVIDER;		//	this is mostly for Speed control... a bigger number means the program will run slower but use up less resources... hopefully
 }	

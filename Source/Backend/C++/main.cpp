@@ -46,11 +46,13 @@
 
 int main(int argument_count,	const char** API_Folder_Path_argument) 
 {
-	//print_logo(2);
-
 	Global_settings = Default_Parametres(); 		// 	These are our default values
 	Global_settings.Log_File_Ptr = fopen(LOG_FILE, "a");	// 	Make sure our Log File pointer is up and running!
-	goto Testing;	
+
+	//print_logo(0, 'f', 'j'); 	// Print the OAL logo to the log file... this MAY Get annoying
+	print_logo(1, 'f', 's'); 	// Print the OAL logo to the Screen
+	SLEEP(1);
+	//goto Testing;	
 
 	Log_To_File("#########################################################\n\n\n", false);
 	Log_To_File("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -", false);
@@ -75,22 +77,13 @@ int main(int argument_count,	const char** API_Folder_Path_argument)
 	Get_Set_Global_Settings();
 
 
-
+	
 	//////////////////	DEBUGING CODE GOES HERE	//////////////////
 	Testing:
 
 
 	
-	print_logo(0);
-	SLEEP(2);
-	print_logo(1);
-	SLEEP(2);
-	print_logo(2);
-	SLEEP(2);
-	print_logo(3);
-	SLEEP(2);
-	print_logo(4);
-	SLEEP(2);
+
 
 
 

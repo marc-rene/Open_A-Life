@@ -17,4 +17,11 @@ struct FACTION
 	const char* 		Name;
 	Faction_Types		Type;
 	Endgame_Aims		Objective;
+
+
+
+	FACTION()
+	{
+		
+	}
 };
