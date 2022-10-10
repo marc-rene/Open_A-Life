@@ -124,6 +124,8 @@ The API folder is where all of our API files shall be. The required files and th
 
  - **Status.log**: This file should be written to by our backend. It should involve the status of the backend and notify the frontend of it's own operation, such as *Working normally* or *Severe error X encountered... Exiting*
 
+ - **Relations.csv**: How does everyone like eachother? Should just be a simple matrix
+ 
  - **What.ToDo**: This file will be read by our backend and it will determine all of it's actions based on the code it recieves. The code lookup table can be found below:
  
 
