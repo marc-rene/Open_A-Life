@@ -1,7 +1,8 @@
-#include "File_IO.h"
-#include "UTILITY_ITEMS.h"
-#include "World.h"
-#include "logo.h"
+#include 	"File_IO.hpp"
+#include 	"UTILITY_ITEMS.hpp"
+#include 	"World.h"
+#include 	"logo.h"
+#include 	"Faction_Definition.hpp"
 
 
 
@@ -46,21 +47,37 @@
 
 int main(int argument_count,	const char** API_Folder_Path_argument) 
 {
-	Global_settings = Default_Parametres(); 		// 	These are our default values
-	Global_settings.Log_File_Ptr = fopen(LOG_FILE, "a");	// 	Make sure our Log File pointer is up and running!
+	Global_settings = Default_Parametres(); 	// These are our default values
+							// Also gets our Log File pointer is up in read mode!
 
-	//print_logo(0, 'f', 'j'); 	// Print the OAL logo to the log file... this MAY Get annoying
-	print_logo(1, 'f', 's'); 	// Print the OAL logo to the Screen
-	SLEEP(1);
-	//goto Testing;	
+	if (Global_settings.Log_File_Ptr == NULL)	// Log file doesn't exist, need to make one
+	{
+		printf("\nCreating new Log file!");
+		SLEEP(1);
+		Global_settings.Log_File_Ptr = fopen(LOG_FILE, "a");
+		print_logo(0, 'e', 'b'); 	// Print logo to both screen and log file
+	}
+	else	// The file does exist! We want to append to it though
+	{
+		printf("\nFile already exists...!");
+		SLEEP(1);
+		fclose(Global_settings.Log_File_Ptr);
+		Global_settings.Log_File_Ptr = fopen(LOG_FILE, "a");
+		print_logo(0, 'e', 's'); 	// Print logo to just the screen... forget the log file
+	}
+	
+	NAP(200);
+	
+	//Step 1: Introductions!
+	Log_To_File("\n\n#######################################################################################################################\n\n", false);
+	Log_To_File("\t\t- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -", false);
+	Log_To_File("\t       |                    Backend ", false, false);
+	Log_To_File( OAL_VERSION, false, false);
+	Log_To_File(" Started! Wish us luck!                      |", false, true);
+	Log_To_File("\t\t- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n", false);
 
-	Log_To_File("#########################################################\n\n\n", false);
-	Log_To_File("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -", false);
-	Log_To_File("Backend Started! Wish us luck!");
-	Log_To_File("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -", false);
 
-
-	//	Check our Arguments!
+	//Step 2: Check our Application Arguments!
 	if (argument_count == 1) 	// No arguments given is 1, Giving an arguement is 2+... QUE???
 		{	API_Folder_Path_argument[1] = DEFAULT_API_FOLDER_PATH;	}
 	
@@ -73,17 +90,17 @@ int main(int argument_count,	const char** API_Folder_Path_argument)
 	Log_To_File(API_Folder_Path_argument[1], false);
 
 
-	// Step 1: What does our .ALC have to say?
+	// Step 2: What does our .ALC have to say?
 	Get_Set_Global_Settings();
 
+	// Step 3: Init our What.ToDo thread
+	std::thread what_todo_thr(Check_ToDo_File);
+	what_todo_thr.detach();
 
-	
 	//////////////////	DEBUGING CODE GOES HERE	//////////////////
 	Testing:
 
-
-	
-
+	//print_logo(0, 'e', 's');
 
 
 
@@ -94,5 +111,12 @@ int main(int argument_count,	const char** API_Folder_Path_argument)
 	//////////////////////////////////////////////////////////////
 
 	getchar(); // Get an enter
+	what_todo_thr.~thread();
+
+
+
+	Log_To_File("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~   BACKEND HAS ENDED   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", true);
+	Log_To_File("\n- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ", false);
+
 	return 0;
 }

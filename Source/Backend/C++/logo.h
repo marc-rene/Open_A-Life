@@ -1,8 +1,8 @@
-#include "Declarations.h"
+#include 	"Declarations.hpp"
 
 
 
-void print_logo(unsigned __int8 size, int language_i, char spam_log_file)
+void print_logo(uMint size, int language_i, char spam_log_file)
 {
 	//	Arts[0]		=	Small logo
 	//	Arts[1]		=	Medium logo
@@ -23,6 +23,8 @@ void print_logo(unsigned __int8 size, int language_i, char spam_log_file)
 	//	Arts[13]	=	Medium French subtitle
 	//	Arts[14]	=	Large French subtitle
 	//	Arts[15]	=	X-Large French subtitle
+
+	const int how_many_arrays_to_make = 16; 	// 4 sizes, 3 languages + logo, = 4 * 4 = 16
 
 	const int small_rows	= 58;
 	const int med_rows 	= 76;
@@ -47,7 +49,7 @@ void print_logo(unsigned __int8 size, int language_i, char spam_log_file)
 	const int subtitle_f_l		= 58;
 	const int subtitle_f_xl		= 71;
 	
-	const int row_counts[16] = 
+	const int row_counts[how_many_arrays_to_make] = 
 	{
 		small_rows,	med_rows,	large_rows,	xlarge_rows,
 		subtitle_e_s,	subtitle_e_m,	subtitle_e_l,	subtitle_e_xl,
@@ -56,7 +58,7 @@ void print_logo(unsigned __int8 size, int language_i, char spam_log_file)
 	};
 
 
-	const char* Arts[16][150]	=	
+	const char* Arts[how_many_arrays_to_make][150]	=	
 	{
 		{
 		"MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM",
@@ -1259,7 +1261,6 @@ void print_logo(unsigned __int8 size, int language_i, char spam_log_file)
 
 	}; //We've designed all our logos and sizes
 
-	
 
 	const char** current_logo 	= Arts[size];
 	const char** subtitle 		= Arts[4 + (4 * language_i) + size];
@@ -1269,45 +1270,57 @@ void print_logo(unsigned __int8 size, int language_i, char spam_log_file)
 	// Main logo
 	for (int i = 0; i < row_counts[size]; i++)
 	{
-		// JUST the log file
-		if (spam_log_file == 'j')
-			{	Log_To_File(current_logo[i], false);	}
-			
-		// Just the SCREEN
-		if (spam_log_file == 's')
-			{	printf("%s\n", current_logo[i]);	}
+		switch (spam_log_file)
+		{
+			// JUST the log file
+			case 'j':
+				Log_To_File(current_logo[i], false);
+				break;
 
-		// Do BOTH	
-		if (spam_log_file == 'b')
-		{	
-			printf("%s\n", current_logo[i]);	
-			Log_To_File(current_logo[i], false);
-		}		
-	}
+			// Just the SCREEN
+			case 's':
+				printf("%s\n", current_logo[i]);
+				break;
+			
+			// Do BOTH	
+			default:
+				printf("%s\n", current_logo[i]);	
+				Log_To_File(current_logo[i], false);
+				break;
+		}//end switch	
+	}//end for
+
 
 	// Localised Subtitle
 	for (int i = 0; i < row_counts[4 + (4 * language_i) + size]; i++)
 	{
-		// JUST the log file
-		if (spam_log_file == 'j')
-			{	Log_To_File(subtitle[i], false);	}
-			
-		// Just the SCREEN
-		if (spam_log_file == 's')
-			{	printf("%s\n", subtitle[i]);	}
+		switch (spam_log_file)
+		{
+			// JUST the log file
+			case 'j':
+				Log_To_File(subtitle[i], false);
+				break;
 
-		// Do BOTH	
-		if (spam_log_file == 'b')
-		{	
-			printf("%s\n", subtitle[i]);	
-			Log_To_File(subtitle[i], false);
-		}
-	}
+			// Just the SCREEN
+			case 's':
+				printf("%s\n", subtitle[i]);
+				break;
+			
+			// Do BOTH	
+			default:
+				printf("%s\n", subtitle[i]);	
+				Log_To_File(subtitle[i], false);
+				break;
+		}//end switch	
+	}//end for
+
+	// Don't Worry, Memory deallocation occurs automatically when we go out of scope 
+	// so no need to free the arts array.. thank god!
 }
 
 
 
-void print_logo(unsigned __int8 size, char language)
+void print_logo(uMint size, char language)
 {
 	switch (language)
 	{
@@ -1327,12 +1340,12 @@ void print_logo(unsigned __int8 size, char language)
 	}
 }
 
-void print_logo(unsigned __int8 size, int language)
+void print_logo(uMint size, int language)
 {
 	print_logo(size, language, 's');
 }
 
-void print_logo(unsigned __int8 size, char language, char spam_log)
+void print_logo(uMint size, char language, char spam_log)
 {
 	switch (language)
 	{
