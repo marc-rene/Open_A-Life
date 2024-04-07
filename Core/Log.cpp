@@ -24,11 +24,11 @@ namespace Core
 			CoreLogger = spdlog::stdout_color_mt("Core");
 			CoreLogger->set_level(spdlog::level::trace);
 			
-			SUCCESSc("Core Logger has been initialised");
+			SUCCESSc("Core Logger has been initialised, {}", SUCCESS_msg);
 		}
 		catch (std::exception ex)
 		{
-			std::cout << "### ERROR : CORE LOGGER COULD NOT BE INITIALISED ###" << std::endl;
+			std::cout << "### " << FAILURE_msg << " : CORE LOGGER COULD NOT BE INITIALISED ###" << std::endl;
 			std::cout << ex.what() << std::endl;
 			return false;
 		}
@@ -37,20 +37,20 @@ namespace Core
 		{
 			EngineLogger = spdlog::stdout_color_mt("Engine");
 			EngineLogger->set_level(spdlog::level::trace);
-			SUCCESSe("Engine Logger has been initialised");
+			SUCCESSe("Engine Logger has been initialised, {}", SUCCESS_msg);
 		}
 		catch (std::exception ex)
 		{
-			std::cout << "### ERROR : ENGINE LOGGER COULD NOT BE INITIALISED ###" << std::endl;
+			std::cout << "### " << FAILURE_msg << " : ENGINE LOGGER COULD NOT BE INITIALISED ###" << std::endl;
 			std::cout << ex.what() << std::endl;
 			return false;
 		}
 
-		INFOc("Info Log Style");
-		SUCCESSc("Success Log Style");
-		WARNc("Warning Log Style");
-		ERRORc("CORE Error Log Style");
-		ERRORe("Engine Error Log Style");
+		//INFOc("Info Log Style");
+		//SUCCESSc("Success Log Style"); 
+		//WARNc("Warning Log Style");
+		//ERRORc("CORE Error Log Style");
+		//ERRORe("Engine Error Log Style");
 
 
 		return true;

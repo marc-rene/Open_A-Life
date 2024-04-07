@@ -9,7 +9,12 @@ project "Core"
 
    includedirs
    {
-      "Source"
+      "Source",
+      "$(SolutionDir)Core",
+      "$(SolutionDir)Core\\Source",
+      "$(SolutionDir)Core\\Source\\Core",
+      "$(SolutionDir)Core\\ThirdParty\\csv\\single_include",
+      "$(SolutionDir)Core\\ThirdParty\\spdlog\\include"
    }
 
    targetdir ("../Binaries/" .. OutputDir .. "/%{prj.name}")

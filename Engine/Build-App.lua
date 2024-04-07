@@ -12,7 +12,12 @@ project "Engine"
       "Source",
 
 	  -- Include Core
-	  "../Core/Source"
+	  "../Core/Source",
+      "$(SolutionDir)Core",
+      "$(SolutionDir)Core\\Source",
+      "$(SolutionDir)Core\\Source\\Core",
+      "$(SolutionDir)Core\\ThirdParty\\csv\\single_include",
+      "$(SolutionDir)Core\\ThirdParty\\spdlog\\include"
    }
 
    links

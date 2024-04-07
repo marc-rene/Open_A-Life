@@ -16,6 +16,7 @@ namespace Core
 
 		try
 		{
+			TIMER_START;
 			const char* test_file_name = "Test CSV Check.csv";
 			std::ofstream test_file = std::ofstream(test_file_name);
 
@@ -52,15 +53,18 @@ namespace Core
 			}
 			else { throw std::runtime_error("CSV Parse Test Failed"); }
 
-			INFOc("Cleaning up CSV Test Files");
 
 			std::remove(test_file_name);
+			TIMER_ELAPSEDc("CSV Test passed in {:.4} seconds, GREAT SUCCESS");
+
 
 		}
 
 		catch (std::exception& ex)
 		{
 			ERRORc("ERROR : CSV Failed test {}", ex.what());
+
+			return false;
 		}
 
 
