@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core.h"  
-
+#include "Type_Definitions.hpp"
 
 namespace Core
 {
@@ -9,7 +9,7 @@ namespace Core
 	{
 	public:
 
-		static bool test_file_io();
+		static mint test_file_io();
 
 	};
 }

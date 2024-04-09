@@ -2,27 +2,59 @@
 #include "Log.h"
 #include "File_Wizard.h"
 #include <future>
-
+#include <chrono>
 #include <iostream>
+
+using namespace std::chrono_literals;
+
 
 
 namespace Core {
 
 	void Initialise()
 	{
-		// Initalise the Core and Engine Logger
-		bool log_success = Log::Init();
-		if (log_success == false)
+		std::map<std::string, std::future<mint>> core_initialisation_futures;
+
+
+		// --- STEP 1 : Initalise the Core and Engine Logger FIRST -----------------------------------
+		// 
+		// Pray that we have a return code that IS 0
+
+		if (Log::Init() != 0)
 		{
 			// Logger Init returned 1, great disaster
 			exit(1);
 		}
 
-		// Test Our CSV abilities real quick async
-		std::future<bool> csv_test_future = std::async(std::launch::async, File_Wizard::test_file_io);
-		csv_test_future.wait();
-		bool csv_success = csv_test_future.get();
-		if (csv_success == false)
+
+
+		// --- STEP 2 : Now we need to add to our futures,,, lets make this Async!!! -----------------
+		//
+
+		core_initialisation_futures["CSV TEST"] = std::async(std::launch::async, File_Wizard::test_file_io);
+
+
+
+
+
+		// --- STEP 3 : Now... we wait for everything to finish --------------------------------------
+		for (const auto& [key, future] : core_initialisation_futures)
+		{
+			switch (std::future_status status = future.wait_for(10s); status)
+			{
+				case std::future_status::deferred:
+					WARNc("Future for {} is returned as deferred... wtf?", key);
+					break;
+				case std::future_status::timeout:
+					ERRORc("Future for {} has timed out... Great Disaster", key);
+					break;
+				case std::future_status::ready:
+					INFOc("Future for {} completed ok!", key);
+					break;
+			}
+		}
+
+		if (core_initialisation_futures["CSV TEST"].get() != 0)
 		{
 			exit(1);
 		};

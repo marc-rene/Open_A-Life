@@ -10,7 +10,7 @@
 
 namespace Core
 {
-	bool File_Wizard::test_file_io()
+	mint File_Wizard::test_file_io()
 	{
 		INFOc("Testing CSV file IO");
 
@@ -56,20 +56,18 @@ namespace Core
 
 			std::remove(test_file_name);
 			TIMER_ELAPSEDc("CSV Test passed in {:.4} seconds, GREAT SUCCESS");
-
-
 		}
 
 		catch (std::exception& ex)
 		{
 			ERRORc("ERROR : CSV Failed test {}", ex.what());
 
-			return false;
+			return 1;
 		}
 
 
 
-		return true;
+		return 0;
 
 	}
 

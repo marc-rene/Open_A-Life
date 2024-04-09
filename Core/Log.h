@@ -4,7 +4,7 @@
 #include "spdlog/sinks/stdout_color_sinks.h"
 #include "spdlog/sinks/rotating_file_sink.h"
 #include "spdlog/stopwatch.h"
-
+#include "Type_Definitions.hpp"
 #include <memory>
 
 
@@ -17,7 +17,7 @@ namespace Core
 	class Log
 	{
 	public:
-		static bool Init();
+		static mint Init();
 
 		inline static std::shared_ptr<spdlog::logger>& GetCoreLogger()
 		{

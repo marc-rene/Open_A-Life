@@ -11,16 +11,18 @@ namespace Core
 
 
 
-	bool Log::Init()
+	mint Log::Init()
 	{
 		spdlog::set_pattern("%^[%T] %n: %v%$");
 		try {
+
 			/*
 			// Create a file rotating logger with 5 MB size max and 3 rotated files
 			auto max_size = 1048576 * 5;
 			auto max_files = 3;
 			CoreLogger = spdlog::rotating_logger_mt("Core", "Logs/Log_History.log", max_size, max_files);
 			*/
+
 			CoreLogger = spdlog::stdout_color_mt("Core");
 			CoreLogger->set_level(spdlog::level::trace);
 			
@@ -30,7 +32,7 @@ namespace Core
 		{
 			std::cout << "### " << FAILURE_msg << " : CORE LOGGER COULD NOT BE INITIALISED ###" << std::endl;
 			std::cout << ex.what() << std::endl;
-			return false;
+			return 1;
 		}
 
 		try
@@ -43,7 +45,7 @@ namespace Core
 		{
 			std::cout << "### " << FAILURE_msg << " : ENGINE LOGGER COULD NOT BE INITIALISED ###" << std::endl;
 			std::cout << ex.what() << std::endl;
-			return false;
+			return 2;
 		}
 
 		//INFOc("Info Log Style");
@@ -53,7 +55,7 @@ namespace Core
 		//ERRORe("Engine Error Log Style");
 
 
-		return true;
+		return 0;
 	}
 
 }
