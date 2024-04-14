@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Source\Core\Core.cpp" />
+    <ClCompile Include="File_Wizard.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Log.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\Core\Core.h" />
+    <ClInclude Include="File_Wizard.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Log.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Type_Definitions.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Modules">
+      <UniqueIdentifier>{6dd2b8db-553d-482f-90cb-bd92df3e161c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
