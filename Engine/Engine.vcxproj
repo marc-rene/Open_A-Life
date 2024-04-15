@@ -79,7 +79,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>WINDOWS;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Source;$(SolutionDir)Core\Source\Core;$(SolutionDir)Core;$(SolutionDir)Core\ThirdParty\spdlog\include;$(SolutionDir)Core\ThirdParty\csv\single_include;$(SolutionDir)Core\Source;..\Core\Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Core;$(SolutionDir)Core\Source;$(SolutionDir)Core\Source\Core;$(SolutionDir)Core\ThirdParty\spdlog\include;$(SolutionDir)Core\ThirdParty\csv\single_include;$(SolutionDir)Core\ThirdParty\mINI\src\mini;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>

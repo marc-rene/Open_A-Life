@@ -7,10 +7,17 @@
 #include "csv.hpp"
 #include "string"
 #include "array"
+#include "ini.h"
+#include <stdlib.h>
 
 namespace Core
 {
-	mint File_Wizard::test_file_io()
+	void File_Wizard::List_Environment_Vars()
+	{
+		// TODO : Get Settings file path, Where all intermediate CSV files will be read from, etc...
+	}
+
+	mint File_Wizard::test_csv_io()
 	{
 		INFOc("Testing CSV file IO");
 
@@ -61,14 +68,75 @@ namespace Core
 		catch (std::exception& ex)
 		{
 			ERRORc("ERROR : CSV Failed test {}", ex.what());
-
 			return 1;
 		}
-
-
 
 		return 0;
 
 	}
+
+
+	mint File_Wizard::test_ini_io()
+	{
+		try
+		{
+			TIMER_START;
+			const char* test_file_name = "Test INI check.ini";
+
+			// create a file instance
+			mINI::INIFile ini_file(test_file_name);
+
+			// create a data structure
+			mINI::INIStructure ini_structure;
+
+			// populate the structure
+			ini_structure["test"]["Value 1"] = "20";
+			ini_structure["test"]["Value 2"] = "100";
+			ini_structure["2nd Section"]["Value 3"] = "43";
+
+			// generate an INI file (overwrites any previous file)
+			ini_file.generate(ini_structure, true);
+
+			std::string temp_read = ini_structure.get("test").get("VaLuE 1");
+
+			// Test 1 - Getting values succeeds?
+			if (ini_structure.get("test").has("Value 1") == true && temp_read.compare("20") == 0)
+			{
+				SUCCESSc("INI Test 1/3 passed");
+			}
+			else { throw std::runtime_error("INI Parse Test Failed"); }
+
+			// Test 2 - Does the "has" method work?
+			if (ini_structure.get("test").has("Value 3") == false && ini_structure.get("2nd sEcTiOn").has("Value 3") == true)
+			{
+				SUCCESSc("INI Test 2/3 passed");
+			}
+			else {
+
+				throw std::runtime_error(std::format("value 3 of test section returned {} and value 3 of 2nd section returned {}", ini_structure.get("test").has("Value 3"), ini_structure.get("2nd sEcTiOn").has("Value 3")));
+			}
+
+			// Test 3 - Does INI update work?
+			ini_structure["TeSt"]["vAlUe 2"] = "9999";
+			if (ini_structure.get("test").get("Value 2").compare("9999") == 0)
+			{
+				SUCCESSc("INI Test 3/3 passed");
+			}
+			else { throw std::runtime_error("INI Parse Test Failed"); }
+
+			TIMER_ELAPSEDc("INI Test passed in {:.4} seconds, GREAT SUCCESS");
+
+			std::remove(test_file_name);
+		}
+		catch (const std::exception& ex)
+		{
+			ERRORc("ERROR : INI Failed test {}", ex.what());
+			return 1;
+		}
+
+		return 0;
+	}
+
+
 
 }
