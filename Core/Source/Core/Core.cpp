@@ -18,14 +18,16 @@ namespace Core {
 
 		// --- STEP 1 : Initalise the Core and Engine Logger FIRST -----------------------------------
 		// 
-		// Pray that we have a return code that IS 0
 
 		if (Log::Init() != 0)
 		{
-			// Logger Init returned 1, great disaster
+			exit(1);	// Logger Init returned 1, great disaster
+		}
+		
+		if (File_Wizard::Init() != 0)
+		{
 			exit(1);
 		}
-
 
 
 		// --- STEP 2 : Now we need to add to our futures,,, lets make this Async!!! -----------------

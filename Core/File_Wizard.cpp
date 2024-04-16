@@ -12,10 +12,132 @@
 
 namespace Core
 {
+	static dir_path Settings_Folder_Path;
+	static dir_path Data_Folder_Path;
+
+	static bool Already_Initialised = false;
+
+
 	void File_Wizard::List_Environment_Vars()
 	{
-		// TODO : Get Settings file path, Where all intermediate CSV files will be read from, etc...
+		INFOc("Current Working Directory is {}", std::filesystem::current_path().string() );
+		
+		// Settings
+		if (std::filesystem::is_directory(Settings_Folder_Path))
+			INFOc("Settings Folder is : {}", Settings_Folder_Path.string() );
+		else
+			ERRORc("NO VALID FOLDER FOR SETTINGS IS SET!");
+		
+		// Data
+		if (std::filesystem::is_directory(Data_Folder_Path))
+			INFOc("Data Folder is : {}", Data_Folder_Path.string() );
+		else
+			ERRORc("NO VALID FOLDER FOR DATA IS SET!");
+
 	}
+
+	mint File_Wizard::Init()
+	{
+		if (Already_Initialised == true)
+		{
+			WARNc("File Wizard has already been initialised, Ignoring...");
+			return 0;
+		}
+		try
+		{
+			Settings_Folder_Path = "Settings";
+			Data_Folder_Path = "Data";
+
+			// Settings
+			if (std::filesystem::is_directory(Settings_Folder_Path) && std::filesystem::exists(Settings_Folder_Path) )
+				INFOc("Settings folder already exists");
+			else
+				std::filesystem::create_directory(Settings_Folder_Path);
+			
+			// Data
+			if (std::filesystem::is_directory(Data_Folder_Path) && std::filesystem::exists(Data_Folder_Path) )
+				INFOc("Data folder already exists");
+			else
+				std::filesystem::create_directory(Data_Folder_Path);
+			
+
+			List_Environment_Vars();
+			Already_Initialised = true;
+			return 0;
+		}
+		catch (const std::exception& ex)
+		{
+			ERRORc("ERROR WHEN INITIALISING FILE WIZARD : {}", ex.what());
+			return 1;
+		}
+	}
+
+	
+
+	std::vector<std::string> File_Wizard::Get_CSV_Column_Data(file_path CSV_File, const char* Column_Name, const unsigned int allocation_size)
+	{
+		mint file_found_status = 0;
+		file_path new_file_path = CSV_File;
+
+		// Step 1 : Check and see if this file even exists??
+		do
+		{
+			if (std::filesystem::exists(CSV_File))
+			{
+				file_found_status = 99; // Safety
+				break;
+			}
+
+			else if (std::filesystem::exists(Data_Folder_Path / CSV_File))
+			{
+				file_found_status = 99;
+				new_file_path = Data_Folder_Path / CSV_File;
+				WARNc("{} could only be found in the Data folder, assuming this is the right one ", CSV_File.string());
+				break;
+			}
+
+			else if (std::filesystem::exists(Settings_Folder_Path / CSV_File))
+			{
+				file_found_status = 99;
+				new_file_path = Settings_Folder_Path / CSV_File;
+				WARNc("{} could only be found in the Settings folder, assuming this is the right one ", CSV_File.string());
+				break;
+			}
+
+			else if (file_found_status == 2) // we failed
+			{
+				ERRORc("COULDN'T FIND CSV FILE {}", CSV_File.string());
+				file_found_status = 99; // just incase return doesn't stop operation
+				return std::vector<std::string>();
+				
+			}
+			else
+			{
+				WARNc("COULDN'T FIND CSV FILE {}, going to try again but with .csv extention", CSV_File.string());
+				file_found_status = 2;
+				CSV_File += ".csv"; // try again
+			}
+		} while (file_found_status != 99);
+		
+
+		
+		// Step 2 : Awesome lets get it
+		INFOc("Trying to open CSV File : {}", new_file_path.string());
+		csv::CSVReader reader(new_file_path.string());
+		
+		std::vector<std::string> entries_buffer;
+		entries_buffer.reserve(allocation_size); 
+
+		for (csv::CSVRow& row : reader) { // Input iterator
+			entries_buffer.push_back(row[Column_Name].get<std::string>());
+		}
+
+		return entries_buffer;
+	}
+
+	
+
+
 
 	mint File_Wizard::test_csv_io()
 	{
@@ -60,7 +182,7 @@ namespace Core
 			}
 			else { throw std::runtime_error("CSV Parse Test Failed"); }
 
-
+		
 			std::remove(test_file_name);
 			TIMER_ELAPSEDc("CSV Test passed in {:.4} seconds, GREAT SUCCESS");
 		}
@@ -139,4 +261,15 @@ namespace Core
 
 
 
+}
+
+
+
+// Overloads
+namespace Core
+{
+	std::vector<std::string> File_Wizard::Get_CSV_Column_Data(const char* CSV_File, const char* Column_Name, const unsigned int allocation_size)
+	{
+		return Get_CSV_Column_Data(file_path(CSV_File), Column_Name, allocation_size);
+	}
 }
