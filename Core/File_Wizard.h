@@ -15,6 +15,9 @@ namespace Core
 		static mint test_csv_io();
 		static mint test_ini_io();
 		static mint Set_Folder_Path(std::string, dir_path);
+		static mint Transfer_File(file_path, dir_path);
+		static mint Transfer_Folder_Content(dir_path, dir_path);
+		static std::string Get_Setting(std::string, std::string);
 
 		
 		static std::vector<std::string> Get_CSV_Column_Data(file_path, const char*, const unsigned int);

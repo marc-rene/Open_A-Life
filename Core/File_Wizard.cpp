@@ -10,6 +10,7 @@
 #include "ini.h"
 #include <stdlib.h>
 #include <map>
+#include <mutex>
 
 
 namespace Core
@@ -20,6 +21,9 @@ namespace Core
 	};
 	static bool Init_Required = true;
 
+	static dir_path* Settings_Folder_Ref = &OAL_Folders["Settings Folder"];
+	static dir_path* Data_Folder_Ref = &OAL_Folders["Data Folder"];
+	static std::string Core_Settings_File_Name = "OAL Core Settings.ini";
 
 	void File_Wizard::List_Environment_Vars()
 	{
@@ -41,7 +45,7 @@ namespace Core
 		for (auto& folder : OAL_Folders)
 		{
 			if (std::filesystem::is_directory(folder.second))
-				INFOc("Settings Folder is : {}", folder.second.string());
+				INFOc("{} is : {}", folder.first, folder.second.string());
 
 			else
 				ERRORc("NO VALID FOLDER FOR {} IS SET!", folder.second.string());
@@ -65,6 +69,20 @@ namespace Core
 				else
 					if (create_folders_immidiatly)
 						std::filesystem::create_directory(folder.second);
+			}
+
+			// Do we have our Settings File ???
+			if (std::filesystem::exists(file_path(*Settings_Folder_Ref / Core_Settings_File_Name).string()) == false)	// Does't exist
+			{
+				WARNc("No {} File found in {} folder... Creating one now", Core_Settings_File_Name, Settings_Folder_Ref->string());
+				std::ofstream OAL_Core_Settings = std::ofstream(file_path(*Settings_Folder_Ref / Core_Settings_File_Name));
+				
+				OAL_Core_Settings << "------------------------------------------------------"	<< std::endl;
+				OAL_Core_Settings << "Copyright : Coming soon...                            "	<< std::endl;
+				OAL_Core_Settings << "------------------------------------------------------"	<< std::endl;
+				OAL_Core_Settings << "                                                      "	<< std::endl;
+
+				OAL_Core_Settings.close();
 			}
 
 			Init_Required = false;
@@ -91,13 +109,27 @@ namespace Core
 				key.second = new_path;
 				INFOc("{} now set to {}", folder_to_edit, new_path.string());
 				Init_Required = true;
-				Init();
+				Init(true);
 				return 0;
 			}
 		}
 
 		WARNc("HEY! {} ain't a valid key! Pain in my Asshole ", folder_to_edit);
 		return 1;
+	}
+
+	std::string File_Wizard::Get_Setting(std::string Section, std::string Key)
+	{
+		//__std_atomic_get_mutex("Settings");
+		// Todo : add mutex
+		mINI::INIFile settings(file_path(*Settings_Folder_Ref / Core_Settings_File_Name).string());
+		mINI::INIStructure ini_structure;
+
+		settings.read(ini_structure);
+
+		INFOc("Value for {} is {} ", Key, ini_structure.get(Section).get(Key));
+		
+		return ini_structure.get(Section).get(Key);
 	}
 
 	std::vector<std::string> File_Wizard::Get_CSV_Column_Data(file_path CSV_File, const char* Column_Name, const unsigned int allocation_size)
@@ -143,7 +175,22 @@ namespace Core
 		return entries_buffer;
 	}
 
+	mint File_Wizard::Transfer_File(file_path source_file, dir_path target_folder)
+	{
+		if (std::filesystem::exists(source_file))
+		{
+			WARNc("HEY! {} is not a valid file!", source_file.string());
+			return 1;
+		}
 
+		return !std::filesystem::copy_file(source_file, target_folder); // copy file returns true == success, File_Wizard expects 0 == success
+	}
+
+	mint File_Wizard::Transfer_Folder_Content(dir_path source_folder, dir_path target_folder)
+	{
+		// TODO : Fill this out with iterator
+		return 1;
+	}
 
 
 
