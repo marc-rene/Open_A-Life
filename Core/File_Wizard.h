@@ -11,9 +11,10 @@ namespace Core
 	{
 	public:
 		static void List_Environment_Vars();
-		static mint Init();
+		static mint Init(bool = true);
 		static mint test_csv_io();
 		static mint test_ini_io();
+		static mint Set_Folder_Path(std::string, dir_path);
 
 		
 		static std::vector<std::string> Get_CSV_Column_Data(file_path, const char*, const unsigned int);

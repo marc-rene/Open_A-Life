@@ -1,4 +1,4 @@
-project "Engine"
+project "Example Engine"
    kind "ConsoleApp"
    language "C++"
    cppdialect "C++20"

@@ -9,60 +9,65 @@
 #include "array"
 #include "ini.h"
 #include <stdlib.h>
+#include <map>
+
 
 namespace Core
 {
-	static dir_path Settings_Folder_Path;
-	static dir_path Data_Folder_Path;
-
-	static bool Already_Initialised = false;
+	static std::unordered_map<std::string, dir_path> OAL_Folders{
+		{"Settings Folder", dir_path("Settings")},
+		{"Data Folder", dir_path("Data")}
+	};
+	static bool Init_Required = true;
 
 
 	void File_Wizard::List_Environment_Vars()
 	{
-		INFOc("Current Working Directory is {}", std::filesystem::current_path().string() );
-		
+		INFOc("Current Working Directory is {}", std::filesystem::current_path().string());
+
+		/*
 		// Settings
 		if (std::filesystem::is_directory(Settings_Folder_Path))
 			INFOc("Settings Folder is : {}", Settings_Folder_Path.string() );
 		else
 			ERRORc("NO VALID FOLDER FOR SETTINGS IS SET!");
-		
 		// Data
 		if (std::filesystem::is_directory(Data_Folder_Path))
 			INFOc("Data Folder is : {}", Data_Folder_Path.string() );
 		else
 			ERRORc("NO VALID FOLDER FOR DATA IS SET!");
+			*/
 
+		for (auto& folder : OAL_Folders)
+		{
+			if (std::filesystem::is_directory(folder.second))
+				INFOc("Settings Folder is : {}", folder.second.string());
+
+			else
+				ERRORc("NO VALID FOLDER FOR {} IS SET!", folder.second.string());
+		}
 	}
 
-	mint File_Wizard::Init()
+	mint File_Wizard::Init(bool create_folders_immidiatly)
 	{
-		if (Already_Initialised == true)
+		if (Init_Required == false)
 		{
 			WARNc("File Wizard has already been initialised, Ignoring...");
 			return 0;
 		}
 		try
 		{
-			Settings_Folder_Path = "Settings";
-			Data_Folder_Path = "Data";
 
-			// Settings
-			if (std::filesystem::is_directory(Settings_Folder_Path) && std::filesystem::exists(Settings_Folder_Path) )
-				INFOc("Settings folder already exists");
-			else
-				std::filesystem::create_directory(Settings_Folder_Path);
-			
-			// Data
-			if (std::filesystem::is_directory(Data_Folder_Path) && std::filesystem::exists(Data_Folder_Path) )
-				INFOc("Data folder already exists");
-			else
-				std::filesystem::create_directory(Data_Folder_Path);
-			
+			for (auto& folder : OAL_Folders)
+			{
+				if (std::filesystem::is_directory(folder.second) && std::filesystem::exists(folder.second))
+					INFOc("{} folder already exists", folder.first);
+				else
+					if (create_folders_immidiatly)
+						std::filesystem::create_directory(folder.second);
+			}
 
-			List_Environment_Vars();
-			Already_Initialised = true;
+			Init_Required = false;
 			return 0;
 		}
 		catch (const std::exception& ex)
@@ -72,7 +77,28 @@ namespace Core
 		}
 	}
 
-	
+	mint File_Wizard::Set_Folder_Path(std::string folder_to_edit, dir_path new_path)
+	{
+		bool valid_key = false;
+
+		// Did the idiot enter the right Key??
+		for (auto& key : OAL_Folders)
+		{
+			//TODO : LOWERCASE the strings first
+			if (folder_to_edit.compare(key.first) == 0)
+			{
+				valid_key = true;
+				key.second = new_path;
+				INFOc("{} now set to {}", folder_to_edit, new_path.string());
+				Init_Required = true;
+				Init();
+				return 0;
+			}
+		}
+
+		WARNc("HEY! {} ain't a valid key! Pain in my Asshole ", folder_to_edit);
+		return 1;
+	}
 
 	std::vector<std::string> File_Wizard::Get_CSV_Column_Data(file_path CSV_File, const char* Column_Name, const unsigned int allocation_size)
 	{
@@ -80,53 +106,35 @@ namespace Core
 		file_path new_file_path = CSV_File;
 
 		// Step 1 : Check and see if this file even exists??
-		do
+		if (std::filesystem::exists(CSV_File))
+			file_found_status = 1; // Safety
+		
+
+		for (auto& folder : OAL_Folders)
 		{
-			if (std::filesystem::exists(CSV_File))
-			{
-				file_found_status = 99; // Safety
+			if (std::filesystem::exists(folder.second / CSV_File) && file_found_status <= 0) {
+				file_found_status = 1;
+				new_file_path = folder.second / CSV_File;
+				WARNc("{} could only be found in the {} folder, assuming this is the right one ", CSV_File.string(), folder.first);
 				break;
 			}
+		}
 
-			else if (std::filesystem::exists(Data_Folder_Path / CSV_File))
-			{
-				file_found_status = 99;
-				new_file_path = Data_Folder_Path / CSV_File;
-				WARNc("{} could only be found in the Data folder, assuming this is the right one ", CSV_File.string());
-				break;
-			}
 
-			else if (std::filesystem::exists(Settings_Folder_Path / CSV_File))
-			{
-				file_found_status = 99;
-				new_file_path = Settings_Folder_Path / CSV_File;
-				WARNc("{} could only be found in the Settings folder, assuming this is the right one ", CSV_File.string());
-				break;
-			}
+		if (file_found_status <= 0) // we failed
+		{
+			ERRORc("COULDN'T FIND CSV FILE {}", CSV_File.string());
+			return std::vector<std::string>();
+		}
 
-			else if (file_found_status == 2) // we failed
-			{
-				ERRORc("COULDN'T FIND CSV FILE {}", CSV_File.string());
-				file_found_status = 99; // just incase return doesn't stop operation
-				return std::vector<std::string>();
-				
-			}
-			else
-			{
-				WARNc("COULDN'T FIND CSV FILE {}, going to try again but with .csv extention", CSV_File.string());
-				file_found_status = 2;
-				CSV_File += ".csv"; // try again
-			}
-		} while (file_found_status != 99);
-		
 
-		
+
 		// Step 2 : Awesome lets get it
 		INFOc("Trying to open CSV File : {}", new_file_path.string());
 		csv::CSVReader reader(new_file_path.string());
-		
+
 		std::vector<std::string> entries_buffer;
-		entries_buffer.reserve(allocation_size); 
+		entries_buffer.reserve(allocation_size);
 
 		for (csv::CSVRow& row : reader) { // Input iterator
 			entries_buffer.push_back(row[Column_Name].get<std::string>());
@@ -135,7 +143,7 @@ namespace Core
 		return entries_buffer;
 	}
 
-	
+
 
 
 
@@ -182,7 +190,7 @@ namespace Core
 			}
 			else { throw std::runtime_error("CSV Parse Test Failed"); }
 
-		
+
 			std::remove(test_file_name);
 			TIMER_ELAPSEDc("CSV Test passed in {:.4} seconds, GREAT SUCCESS");
 		}

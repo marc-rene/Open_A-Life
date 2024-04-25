@@ -24,7 +24,8 @@ namespace Core {
 			exit(1);	// Logger Init returned 1, great disaster
 		}
 		
-		if (File_Wizard::Init() != 0)
+		
+		if (File_Wizard::Init(true) != 0)
 		{
 			exit(1);
 		}
