@@ -8,6 +8,9 @@
     <ClCompile Include="Log.cpp">
       <Filter>Modules</Filter>
     </ClCompile>
+    <ClCompile Include="Director.cpp">
+      <Filter>Modules\Director</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Core\Core.h" />
@@ -18,10 +21,16 @@
       <Filter>Modules</Filter>
     </ClInclude>
     <ClInclude Include="Type_Definitions.hpp" />
+    <ClInclude Include="Director.h">
+      <Filter>Modules\Director</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Modules">
       <UniqueIdentifier>{6dd2b8db-553d-482f-90cb-bd92df3e161c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Modules\Director">
+      <UniqueIdentifier>{6800b402-42d2-4d5e-b391-becb8eccf9c8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

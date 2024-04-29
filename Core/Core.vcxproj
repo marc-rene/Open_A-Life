@@ -94,7 +94,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Core;$(SolutionDir)Core\Source;$(SolutionDir)Core\Source\Core;$(SolutionDir)Core\ThirdParty\spdlog\include;$(SolutionDir)Core\ThirdParty\csv\single_include;$(SolutionDir)Core\ThirdParty\mINI\src\mini;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -138,12 +138,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Director.h" />
     <ClInclude Include="File_Wizard.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="Source\Core\Core.h" />
     <ClInclude Include="Type_Definitions.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Director.cpp" />
     <ClCompile Include="File_Wizard.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="Source\Core\Core.cpp" />

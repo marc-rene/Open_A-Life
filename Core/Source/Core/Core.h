@@ -7,5 +7,6 @@
 namespace Core {
 
 	void Initialise();
+	void Print_CPU_Details();
 
 }

@@ -3,7 +3,6 @@
 #include <exception>
 #include <fstream>
 #include <iostream>
-#include "Log.h"
 #include "csv.hpp"
 #include "string"
 #include "array"
@@ -19,28 +18,24 @@ namespace Core
 		{"Settings Folder", dir_path("Settings")},
 		{"Data Folder", dir_path("Data")}
 	};
-	static bool Init_Required = true;
+	static bool			Init_Required = true;
 
-	static dir_path* Settings_Folder_Ref = &OAL_Folders["Settings Folder"];
-	static dir_path* Data_Folder_Ref = &OAL_Folders["Data Folder"];
-	static std::string Core_Settings_File_Name = "OAL Core Settings.ini";
+	static dir_path*	Settings_Folder_Ref = &OAL_Folders["Settings Folder"];
+	static dir_path*	Data_Folder_Ref = &OAL_Folders["Data Folder"];
 
-	void File_Wizard::List_Environment_Vars()
+	static std::string	Core_Settings_File_Name = "OAL Core Settings.ini";
+
+	static std::mutex	Settings_File_Mutex;
+	static std::mutex	OAL_Folders_Mutex;
+
+	static mINI::INIFile settings_ini_file(file_path(*Settings_Folder_Ref / Core_Settings_File_Name).string());
+	static mINI::INIStructure	settings_struct;
+
+	void		File_Wizard::List_Environment_Vars()
 	{
-		INFOc("Current Working Directory is {}", std::filesystem::current_path().string());
+		mutex_lock folder_lock(OAL_Folders_Mutex);
 
-		/*
-		// Settings
-		if (std::filesystem::is_directory(Settings_Folder_Path))
-			INFOc("Settings Folder is : {}", Settings_Folder_Path.string() );
-		else
-			ERRORc("NO VALID FOLDER FOR SETTINGS IS SET!");
-		// Data
-		if (std::filesystem::is_directory(Data_Folder_Path))
-			INFOc("Data Folder is : {}", Data_Folder_Path.string() );
-		else
-			ERRORc("NO VALID FOLDER FOR DATA IS SET!");
-			*/
+		INFOc("Current Working Directory is {}", std::filesystem::current_path().string());
 
 		for (auto& folder : OAL_Folders)
 		{
@@ -52,7 +47,7 @@ namespace Core
 		}
 	}
 
-	mint File_Wizard::Init(bool create_folders_immidiatly)
+	mint		File_Wizard::Init(bool create_folders_immidiatly)
 	{
 		if (Init_Required == false)
 		{
@@ -61,6 +56,8 @@ namespace Core
 		}
 		try
 		{
+			mutex_lock OAL_Folder_lock(OAL_Folders_Mutex);
+			mutex_lock Settings_lock(Settings_File_Mutex);
 
 			for (auto& folder : OAL_Folders)
 			{
@@ -72,19 +69,22 @@ namespace Core
 			}
 
 			// Do we have our Settings File ???
-			if (std::filesystem::exists(file_path(*Settings_Folder_Ref / Core_Settings_File_Name).string()) == false)	// Does't exist
+			file_path temp_settings_path = file_path(*Settings_Folder_Ref / Core_Settings_File_Name);
+			if (std::filesystem::exists(temp_settings_path.string()) == false)	// Does't exist
 			{
 				WARNc("No {} File found in {} folder... Creating one now", Core_Settings_File_Name, Settings_Folder_Ref->string());
-				std::ofstream OAL_Core_Settings = std::ofstream(file_path(*Settings_Folder_Ref / Core_Settings_File_Name));
-				
-				OAL_Core_Settings << "------------------------------------------------------"	<< std::endl;
-				OAL_Core_Settings << "Copyright : Coming soon...                            "	<< std::endl;
-				OAL_Core_Settings << "------------------------------------------------------"	<< std::endl;
-				OAL_Core_Settings << "                                                      "	<< std::endl;
+				std::ofstream OAL_Core_Settings = std::ofstream(temp_settings_path);
+
+				OAL_Core_Settings << "------------------------------------------------------" << std::endl;
+				OAL_Core_Settings << "Copyright : Coming soon...                            " << std::endl;
+				OAL_Core_Settings << "------------------------------------------------------" << std::endl;
+				OAL_Core_Settings << "                                                      " << std::endl;
 
 				OAL_Core_Settings.close();
 			}
 
+			settings_ini_file = mINI::INIFile(temp_settings_path.string());
+			settings_ini_file.read(settings_struct);
 			Init_Required = false;
 			return 0;
 		}
@@ -95,22 +95,33 @@ namespace Core
 		}
 	}
 
-	mint File_Wizard::Set_Folder_Path(std::string folder_to_edit, dir_path new_path)
+	mint		File_Wizard::Set_Folder_Path(std::string folder_to_edit, dir_path new_path)
 	{
 		bool valid_key = false;
 
-		// Did the idiot enter the right Key??
+		std::lock_guard<std::mutex> lock(OAL_Folders_Mutex);
+
+		// Did you enter the right Key??
 		for (auto& key : OAL_Folders)
 		{
 			//TODO : LOWERCASE the strings first
-			if (folder_to_edit.compare(key.first) == 0)
+			std::string folder_to_edit_lower = folder_to_edit;
+			std::string key_lower = key.first;
+
+			for (auto& c : folder_to_edit_lower)
+				c = tolower(c);
+
+			for (auto& c : key_lower)
+				c = tolower(c);
+
+			if (folder_to_edit_lower.compare(key_lower) == 0)
 			{
 				valid_key = true;
 				key.second = new_path;
 				INFOc("{} now set to {}", folder_to_edit, new_path.string());
 				Init_Required = true;
 				Init(true);
-				return 0;
+				return 0; // unlocks OAL Folder Mutex
 			}
 		}
 
@@ -120,19 +131,32 @@ namespace Core
 
 	std::string File_Wizard::Get_Setting(std::string Section, std::string Key)
 	{
-		//__std_atomic_get_mutex("Settings");
-		// Todo : add mutex
-		mINI::INIFile settings(file_path(*Settings_Folder_Ref / Core_Settings_File_Name).string());
-		mINI::INIStructure ini_structure;
+		settings_ini_file.read(settings_struct);
 
-		settings.read(ini_structure);
+		INFOc("Value for {} is {} ", Key, settings_struct.get(Section).get(Key));
 
-		INFOc("Value for {} is {} ", Key, ini_structure.get(Section).get(Key));
-		
-		return ini_structure.get(Section).get(Key);
+		if (settings_struct[Section].has(Key))
+			return settings_struct[Section][Key];
+
+		else
+		{
+			WARNc("{} is NOT in the {} section in Settings file", Key, Section);
+			return "N/A";
+		}
 	}
 
-	std::vector<std::string> File_Wizard::Get_CSV_Column_Data(file_path CSV_File, const char* Column_Name, const unsigned int allocation_size)
+	
+	bool		File_Wizard::Set_Setting(std::string Section, std::string Key, std::string Value)
+	{
+		mutex_lock setting_lock(Settings_File_Mutex);
+
+		settings_ini_file.read(settings_struct);
+		settings_struct[Section][Key] = Value;
+		
+		return settings_ini_file.write(settings_struct);
+	}
+
+	std::vector<std::string>	File_Wizard::Get_CSV_Column_Data(file_path CSV_File, const char* Column_Name, const unsigned int allocation_size)
 	{
 		mint file_found_status = 0;
 		file_path new_file_path = CSV_File;
@@ -140,7 +164,7 @@ namespace Core
 		// Step 1 : Check and see if this file even exists??
 		if (std::filesystem::exists(CSV_File))
 			file_found_status = 1; // Safety
-		
+
 
 		for (auto& folder : OAL_Folders)
 		{
@@ -175,7 +199,7 @@ namespace Core
 		return entries_buffer;
 	}
 
-	mint File_Wizard::Transfer_File(file_path source_file, dir_path target_folder)
+	mint		File_Wizard::Transfer_File(file_path source_file, dir_path target_folder)
 	{
 		if (std::filesystem::exists(source_file))
 		{
@@ -186,14 +210,28 @@ namespace Core
 		return !std::filesystem::copy_file(source_file, target_folder); // copy file returns true == success, File_Wizard expects 0 == success
 	}
 
-	mint File_Wizard::Transfer_Folder_Content(dir_path source_folder, dir_path target_folder)
+	mint		File_Wizard::Transfer_Folder_Content(dir_path source_folder, dir_path target_folder)
 	{
 		// TODO : Fill this out with iterator
 		return 1;
 	}
 
+}
 
 
+
+// Overloads
+namespace Core
+{
+	std::vector<std::string> File_Wizard::Get_CSV_Column_Data(const char* CSV_File, const char* Column_Name, const unsigned int allocation_size)
+	{
+		return Get_CSV_Column_Data(file_path(CSV_File), Column_Name, allocation_size);
+	}
+}
+
+// Testing
+namespace Core
+{
 	mint File_Wizard::test_csv_io()
 	{
 		INFOc("Testing CSV file IO");
@@ -251,7 +289,6 @@ namespace Core
 		return 0;
 
 	}
-
 
 	mint File_Wizard::test_ini_io()
 	{
@@ -312,19 +349,5 @@ namespace Core
 		}
 
 		return 0;
-	}
-
-
-
-}
-
-
-
-// Overloads
-namespace Core
-{
-	std::vector<std::string> File_Wizard::Get_CSV_Column_Data(const char* CSV_File, const char* Column_Name, const unsigned int allocation_size)
-	{
-		return Get_CSV_Column_Data(file_path(CSV_File), Column_Name, allocation_size);
 	}
 }
