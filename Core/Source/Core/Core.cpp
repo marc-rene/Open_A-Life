@@ -6,6 +6,7 @@
 #include <chrono>
 #include <iostream>
 
+#define THREAD_STRESS_TEST_SIZE 15
 
 using namespace std::chrono_literals;
 
@@ -40,7 +41,9 @@ namespace Core {
 
 		core_initialisation_futures["CSV TEST"] = std::async(std::launch::async, File_Wizard::test_csv_io);
 		core_initialisation_futures["INI TEST"] = std::async(std::launch::async, File_Wizard::test_ini_io);
-		core_initialisation_futures["THREAD TEST"] = std::async(std::launch::async, Director::stress_test_threads, 20);
+		//core_initialisation_futures["THREAD TEST SERIAL"] = std::async(std::launch::async, Director::stress_test_thread_SERIAL, 8);
+		//core_initialisation_futures["THREAD TEST DEFFER"] = std::async(std::launch::async, Director::stress_test_threads, false, 8);
+		core_initialisation_futures["THREAD TEST ASYNC"] = std::async(std::launch::async, Director::stress_test_threads, true, 8);
 
 
 
@@ -58,7 +61,7 @@ namespace Core {
 
 			case std::future_status::timeout:
 
-				if (key.compare("THREAD TEST") == 0)
+				if (key.find("THREAD TEST") != std::string::npos)
 					WARNc("Thread Stress Test is taking a while... OPTIMISATION NEEDED... ");
 
 				else
