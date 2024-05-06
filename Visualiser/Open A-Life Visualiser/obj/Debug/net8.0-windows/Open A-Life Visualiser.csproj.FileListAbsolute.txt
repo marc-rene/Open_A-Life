@@ -1,0 +1,21 @@
+C:\Other\GIT\Open_A-Life\Visualiser\Open A-Life Visualiser\bin\Debug\net8.0-windows\Open A-Life Visualiser.exe
+C:\Other\GIT\Open_A-Life\Visualiser\Open A-Life Visualiser\bin\Debug\net8.0-windows\Open A-Life Visualiser.deps.json
+C:\Other\GIT\Open_A-Life\Visualiser\Open A-Life Visualiser\bin\Debug\net8.0-windows\Open A-Life Visualiser.runtimeconfig.json
+C:\Other\GIT\Open_A-Life\Visualiser\Open A-Life Visualiser\bin\Debug\net8.0-windows\Open A-Life Visualiser.dll
+C:\Other\GIT\Open_A-Life\Visualiser\Open A-Life Visualiser\bin\Debug\net8.0-windows\Open A-Life Visualiser.pdb
+C:\Other\GIT\Open_A-Life\Visualiser\Open A-Life Visualiser\obj\Debug\net8.0-windows\MainWindow.g.cs
+C:\Other\GIT\Open_A-Life\Visualiser\Open A-Life Visualiser\obj\Debug\net8.0-windows\App.g.cs
+C:\Other\GIT\Open_A-Life\Visualiser\Open A-Life Visualiser\obj\Debug\net8.0-windows\Open A-Life Visualiser_MarkupCompile.cache
+C:\Other\GIT\Open_A-Life\Visualiser\Open A-Life Visualiser\obj\Debug\net8.0-windows\Open A-Life Visualiser_MarkupCompile.lref
+C:\Other\GIT\Open_A-Life\Visualiser\Open A-Life Visualiser\obj\Debug\net8.0-windows\MainWindow.baml
+C:\Other\GIT\Open_A-Life\Visualiser\Open A-Life Visualiser\obj\Debug\net8.0-windows\Open A-Life Visualiser.g.resources
+C:\Other\GIT\Open_A-Life\Visualiser\Open A-Life Visualiser\obj\Debug\net8.0-windows\Open A-Life Visualiser.GeneratedMSBuildEditorConfig.editorconfig
+C:\Other\GIT\Open_A-Life\Visualiser\Open A-Life Visualiser\obj\Debug\net8.0-windows\Open A-Life Visualiser.AssemblyInfoInputs.cache
+C:\Other\GIT\Open_A-Life\Visualiser\Open A-Life Visualiser\obj\Debug\net8.0-windows\Open A-Life Visualiser.AssemblyInfo.cs
+C:\Other\GIT\Open_A-Life\Visualiser\Open A-Life Visualiser\obj\Debug\net8.0-windows\Open A-Life Visualiser.csproj.CoreCompileInputs.cache
+C:\Other\GIT\Open_A-Life\Visualiser\Open A-Life Visualiser\obj\Debug\net8.0-windows\Open A-Life Visualiser.sourcelink.json
+C:\Other\GIT\Open_A-Life\Visualiser\Open A-Life Visualiser\obj\Debug\net8.0-windows\Open A-Life Visualiser.dll
+C:\Other\GIT\Open_A-Life\Visualiser\Open A-Life Visualiser\obj\Debug\net8.0-windows\refint\Open A-Life Visualiser.dll
+C:\Other\GIT\Open_A-Life\Visualiser\Open A-Life Visualiser\obj\Debug\net8.0-windows\Open A-Life Visualiser.pdb
+C:\Other\GIT\Open_A-Life\Visualiser\Open A-Life Visualiser\obj\Debug\net8.0-windows\Open A-Life Visualiser.genruntimeconfig.cache
+C:\Other\GIT\Open_A-Life\Visualiser\Open A-Life Visualiser\obj\Debug\net8.0-windows\ref\Open A-Life Visualiser.dll

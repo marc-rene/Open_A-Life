@@ -90,7 +90,8 @@ namespace Core
 			//Now we check if we have data to work with
 			if (std::filesystem::exists(*Data_Folder_Ref) == false)
 			{
-				mkdir(Data_Folder_Ref->string().c_str);
+				WARNc("{} doesn't exist, creating it now")
+				mkdir(Data_Folder_Ref->string().c_str());
 			}
 
 			Init_Required = false;
