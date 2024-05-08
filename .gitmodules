@@ -7,3 +7,6 @@
 [submodule "Core/ThirdParty/mINI"]
 	path = Core/ThirdParty/mINI
 	url = https://github.com/metayeti/mINI
+[submodule "Core/ThirdParty/GameNetworkingSockets"]
+	path = Core/ThirdParty/GameNetworkingSockets
+	url = https://github.com/ValveSoftware/GameNetworkingSockets
