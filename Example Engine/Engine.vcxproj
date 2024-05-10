@@ -80,7 +80,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>WINDOWS;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Core;$(SolutionDir)Core\Source;$(SolutionDir)Core\Source\Core;$(SolutionDir)Core\ThirdParty\spdlog\include;$(SolutionDir)Core\ThirdParty\csv\single_include;$(SolutionDir)Core\ThirdParty\mINI\src\mini;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Core;$(SolutionDir)Core\Source;$(SolutionDir)Core\Source\Core;$(SolutionDir)Core\ThirdParty\spdlog\include;$(SolutionDir)Core\ThirdParty\csv\single_include;$(SolutionDir)Core\ThirdParty\mINI\src\mini;$(SolutionDir)Core\ThirdParty\CppNet;C:\Other\GIT\Open_A-Life\Core\ThirdParty\CppNet\x64\Debug;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -98,7 +98,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>WINDOWS;RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Core;$(SolutionDir)Core\Source;$(SolutionDir)Core\Source\Core;$(SolutionDir)Core\ThirdParty\spdlog\include;$(SolutionDir)Core\ThirdParty\csv\single_include;$(SolutionDir)Core\ThirdParty\mINI\src\mini;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Core;$(SolutionDir)Core\Source;$(SolutionDir)Core\Source\Core;$(SolutionDir)Core\ThirdParty\spdlog\include;$(SolutionDir)Core\ThirdParty\csv\single_include;$(SolutionDir)Core\ThirdParty\mINI\src\mini;$(SolutionDir)Core\ThirdParty\CppNet;C:\Other\GIT\Open_A-Life\Core\ThirdParty\CppNet\x64\Debug;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -128,7 +128,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>WINDOWS;DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Source;..\Core\Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Core;$(SolutionDir)Core\Source;$(SolutionDir)Core\Source\Core;$(SolutionDir)Core\ThirdParty\spdlog\include;$(SolutionDir)Core\ThirdParty\csv\single_include;$(SolutionDir)Core\ThirdParty\mINI\src\mini;$(SolutionDir)Core\ThirdParty\CppNet;C:\Other\GIT\Open_A-Life\Core\ThirdParty\CppNet\x64\Debug;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>None</DebugInformationFormat>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>

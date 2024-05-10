@@ -7,7 +7,3 @@
 [submodule "Core/ThirdParty/mINI"]
 	path = Core/ThirdParty/mINI
 	url = https://github.com/metayeti/mINI
-
-[submodule "Core/ThirdParty/CppNet"]
-	path = Core/ThirdParty/CppNet
-	url = https://github.com/caozhiyi/CppNet

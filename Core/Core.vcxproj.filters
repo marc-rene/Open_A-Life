@@ -2,27 +2,33 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="Source\Core\Core.cpp" />
-    <ClCompile Include="File_Wizard.cpp">
-      <Filter>Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="Log.cpp">
-      <Filter>Modules</Filter>
-    </ClCompile>
     <ClCompile Include="Director.cpp">
       <Filter>Modules\Director</Filter>
+    </ClCompile>
+    <ClCompile Include="File_Wizard.cpp">
+      <Filter>Modules\File Wizard</Filter>
+    </ClCompile>
+    <ClCompile Include="Log.cpp">
+      <Filter>Modules\Logging</Filter>
+    </ClCompile>
+    <ClCompile Include="Packet_Ninja.cpp">
+      <Filter>Modules\Network</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Core\Core.h" />
-    <ClInclude Include="File_Wizard.h">
-      <Filter>Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Log.h">
-      <Filter>Modules</Filter>
-    </ClInclude>
     <ClInclude Include="Type_Definitions.hpp" />
     <ClInclude Include="Director.h">
       <Filter>Modules\Director</Filter>
+    </ClInclude>
+    <ClInclude Include="File_Wizard.h">
+      <Filter>Modules\File Wizard</Filter>
+    </ClInclude>
+    <ClInclude Include="Log.h">
+      <Filter>Modules\Logging</Filter>
+    </ClInclude>
+    <ClInclude Include="Packet_Ninja.h">
+      <Filter>Modules\Network</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -31,6 +37,15 @@
     </Filter>
     <Filter Include="Modules\Director">
       <UniqueIdentifier>{6800b402-42d2-4d5e-b391-becb8eccf9c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Modules\File Wizard">
+      <UniqueIdentifier>{452b69cc-2960-445b-9d6c-6f59fbd742ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Modules\Logging">
+      <UniqueIdentifier>{15d7d48d-a594-4766-ac14-f032fe3d328b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Modules\Network">
+      <UniqueIdentifier>{e1a9d7b5-6ebd-4d14-937b-8edaf2b27cd0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

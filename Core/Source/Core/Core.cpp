@@ -2,11 +2,12 @@
 #include "Log.h"
 #include "File_Wizard.h"
 #include "Director.h"
+#include "Packet_Ninja.h"
+
 #include <future>
 #include <chrono>
 #include <iostream>
 
-#define THREAD_STRESS_TEST_SIZE 15
 
 using namespace std::chrono_literals;
 
@@ -36,15 +37,16 @@ namespace Core {
 		}
 
 
+		Packet_Ninja::Init();
+		Packet_Ninja::Test_Send_Packets();
+
 		// --- STEP 2 : Now we need to add to our futures,,, lets make this Async!!! -----------------
 		//
 
 		core_initialisation_futures["CSV TEST"] = std::async(std::launch::async, File_Wizard::test_csv_io);
 		core_initialisation_futures["INI TEST"] = std::async(std::launch::async, File_Wizard::test_ini_io);
-		//core_initialisation_futures["THREAD TEST SERIAL"] = std::async(std::launch::async, Director::stress_test_thread_SERIAL, 8);
-		//core_initialisation_futures["THREAD TEST DEFFER"] = std::async(std::launch::async, Director::stress_test_threads, false, 8);
-		core_initialisation_futures["THREAD TEST ASYNC"] = std::async(std::launch::async, Director::stress_test_threads, true, 8);
-
+		core_initialisation_futures["THREAD TEST ASYNC"] = std::async(std::launch::async, Director::stress_test_threads, true, 7);
+		
 
 
 
