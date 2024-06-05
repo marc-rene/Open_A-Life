@@ -17,7 +17,9 @@
 
 //#endif
 
+enum class State {
 
+};
 
 namespace Core
 {
@@ -26,10 +28,18 @@ namespace Core
 	public:
 		static mint Init();
 		
+		static mint Create_Socket(mint preffered_port);
+
 		static mint Wait_For_Connection();
 		
-		
-		static mint Test_Send_Packets();
+		static mint On_Connection_Established();
+
+		static mint Send_Generic_String(const char* data);
+		static mint Send_Value(const char* key, const char* value);
+		static mint Send_Controlled_Message(StateFlag current_state );
+
+		static mint On_Message_Recieved();
+
 
 		//#if is_windows_os
 		

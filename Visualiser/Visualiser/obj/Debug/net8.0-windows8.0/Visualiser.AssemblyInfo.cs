@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyDescriptionAttribute("A Visualiser for the OAL Engine")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fe2d4bcd471676d03c05aa3d969bd430b69619f8")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bf123ed2a8e95c42f8bd6f8284aa11d92a480232")]
 [assembly: System.Reflection.AssemblyProductAttribute("Visualiser")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Visualiser")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
