@@ -12,13 +12,13 @@
 using namespace std::chrono_literals;
 
 
-
 namespace Core {
 
 	void Initialise()
 	{
+		// - Variable Declarations always at top - -
 		std::map<std::string, std::future<mint>> core_initialisation_futures;
-
+		// - - - - - - - - - - - - - - - - - - - - -
 
 		// --- STEP 1 : Initalise the Core and Engine Logger FIRST -----------------------------------
 		// 
@@ -37,10 +37,15 @@ namespace Core {
 		}
 
 
+		// --- STEP 2 : Set up Packet Ninja. Packet Ninja is OAL custom networking library for sending/recieving TCP over network!!! -----------------
+		/*	NOT WORKING YET 
+		
 		Packet_Ninja::Init();
 		Packet_Ninja::Test_Send_Packets();
+		*/
 
-		// --- STEP 2 : Now we need to add to our futures,,, lets make this Async!!! -----------------
+
+		// --- STEP 3 : Now we need to add to our futures,,, lets make this Async!!! -----------------
 		//
 
 		core_initialisation_futures["CSV TEST"] = std::async(std::launch::async, File_Wizard::test_csv_io);
@@ -50,7 +55,7 @@ namespace Core {
 
 
 
-		// --- STEP 3 : Now... we wait for everything to finish --------------------------------------
+		// --- STEP 4 : Now... we wait for everything to finish --------------------------------------
 		for (const auto& [key, future] : core_initialisation_futures)
 		{
 			std::future_status status = future.wait_for(10s);

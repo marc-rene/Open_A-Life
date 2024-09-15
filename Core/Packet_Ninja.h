@@ -40,6 +40,7 @@ namespace Core
 
 		static mint On_Message_Recieved();
 
+		static mint Test_Send_Packets();
 
 		//#if is_windows_os
 		
