@@ -4,6 +4,7 @@ Binaries/
 
 # Files
 *.log
+*.txt
 Makefile
 
 # Exclude

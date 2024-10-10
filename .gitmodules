@@ -7,3 +7,6 @@
 [submodule "Core/ThirdParty/mINI"]
 	path = Core/ThirdParty/mINI
 	url = https://github.com/metayeti/mINI
+[submodule "imgui"]
+	path = "Example Engine/imgui"
+	url = https://github.com/ocornut/imgui.git
