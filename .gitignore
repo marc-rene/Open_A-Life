@@ -8,4 +8,4 @@ Binaries/
 Makefile
 
 # Exclude
-!Vendor/Binaries
+!Setup/Binaries
