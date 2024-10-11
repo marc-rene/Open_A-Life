@@ -1,4 +1,4 @@
-#include "File_Wizard.h"
+/*#include "File_Wizard.h"
 #include "Core.h"
 #include <exception>
 #include <fstream>
@@ -359,4 +359,4 @@ namespace Core
 
 		return 0;
 	}
-}
+}*/

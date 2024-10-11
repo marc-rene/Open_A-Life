@@ -1,6 +1,7 @@
 # Directories
 .vs/
 Binaries/
+Example/imgui/examples
 
 # Files
 *.log

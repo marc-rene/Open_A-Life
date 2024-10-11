@@ -1,4 +1,4 @@
-#pragma once
+/*#pragma once
 
 #include "Core.h"  
 #include "Type_Definitions.hpp"
@@ -28,3 +28,4 @@ namespace Core
 		static mint test_ini_io();
 	};
 }
+*/

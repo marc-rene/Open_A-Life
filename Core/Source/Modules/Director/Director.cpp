@@ -1,3 +1,4 @@
+/*
 #include "Director.h"
 #include "Core.h"
 #include <mutex>
@@ -5,7 +6,6 @@
 #include <chrono>
 #include <cmath>
 #include <fstream>
-
 namespace Core
 {
 
@@ -193,4 +193,4 @@ namespace Core
 
 		return 0;
 	}
-}
+}*/

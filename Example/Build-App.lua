@@ -9,21 +9,24 @@ project "Example"
 
    includedirs
    {
-      "Source",
-
-	  -- Include Core
-	  "../Core/Source",
-      "$(SolutionDir)Core",
-      "$(SolutionDir)Core\\Source",
-      "$(SolutionDir)Core\\Source\\Core",
-      "$(SolutionDir)Core\\ThirdParty\\csv\\single_include",
-      "$(SolutionDir)Core\\ThirdParty\\spdlog\\include",
-      "$(SolutionDir)Example\\imgui"
+        "Source",
+        "imgui",
+        "imgui\\backends",
+        -- Include Core
+        "../Core/Source",
+        "$(SolutionDir)Core",
+        "$(SolutionDir)Core\\Source",
+        "$(SolutionDir)Core\\Source\\Core",
+        "$(SolutionDir)Core\\ThirdParty\\csv\\single_include",
+        "$(SolutionDir)Core\\ThirdParty\\spdlog\\include",
+        "$(SolutionDir)Example\\imgui",
+        "$(SolutionDir)Example\\imgui\\backends"
    }
 
    links
    {
       "Core"
+      "d3d9"
    }
 
    -- Create virtual paths for modules

@@ -1,41 +1,41 @@
 ﻿#include "Core.h"
-#include "Log.h"
-#include "File_Wizard.h"
-#include "Director.h"
-#include "Packet_Ninja.h"
+//#include "Log.h"
+//#include "File_Wizard.h"
+//#include "Director.h"
+//#include "Packet_Ninja.h"
 
-#include <future>
-#include <chrono>
-#include <iostream>
+//#include <future>
+//#include <chrono>
+//#include <iostream>
 
 
-using namespace std::chrono_literals;
+//using namespace std::chrono_literals;
 
 
 namespace Core {
-
+	
 	void Initialise()
 	{
 		// - Variable Declarations always at top - -
-		std::map<std::string, std::future<mint>> core_initialisation_futures;
+		//std::map<std::string, std::future<mint>> core_initialisation_futures;
 		// - - - - - - - - - - - - - - - - - - - - -
 
 		// --- STEP 1 : Initalise the Core and Engine Logger FIRST -----------------------------------
 		// 
 
-		if (Log::Init() != 0)
-		{
-			exit(1);	// Logger Init returned 1, great disaster
-		}
-		
-		INFOc("Open A-Life Core starting!");
-		Print_CPU_Details();
-
-		if (File_Wizard::Init(true) != 0)
-		{
-			exit(1);
-		}
-
+		//if (Log::Init() != 0)
+		//{
+		//	exit(1);	// Logger Init returned 1, great disaster
+		//}
+		//
+		//INFOc("Open A-Life Core starting!");
+		//Print_CPU_Details();
+		//
+		//if (File_Wizard::Init(true) != 0)
+		//{
+		//	exit(1);
+		//}
+	
 
 		// --- STEP 2 : Set up Packet Ninja. Packet Ninja is OAL custom networking library for sending/recieving TCP over network!!! -----------------
 		/*	NOT WORKING YET 
@@ -47,14 +47,14 @@ namespace Core {
 
 		// --- STEP 3 : Now we need to add to our futures,,, lets make this Async!!! -----------------
 		//
-
-		core_initialisation_futures["CSV TEST"] = std::async(std::launch::async, File_Wizard::test_csv_io);
-		core_initialisation_futures["INI TEST"] = std::async(std::launch::async, File_Wizard::test_ini_io);
-		core_initialisation_futures["THREAD TEST ASYNC"] = std::async(std::launch::async, Director::stress_test_threads, true, 7);
+	
+		//core_initialisation_futures["CSV TEST"] = std::async(std::launch::async, File_Wizard::test_csv_io);
+		//core_initialisation_futures["INI TEST"] = std::async(std::launch::async, File_Wizard::test_ini_io);
+		//core_initialisation_futures["THREAD TEST ASYNC"] = std::async(std::launch::async, Director::stress_test_threads, true, 7);
 		
 
 
-
+		/*
 		// --- STEP 4 : Now... we wait for everything to finish --------------------------------------
 		for (const auto& [key, future] : core_initialisation_futures)
 		{
@@ -94,12 +94,14 @@ namespace Core {
 				exit(1);
 			}
 		}
+		*/
 	}
 
 
 	// Thank you https://stackoverflow.com/a/850812
 	void Print_CPU_Details()
 	{
+		/*
 		int CPUInfo[4] = { -1 };
 		unsigned   nExIds, i = 0;
 		char CPUBrandString[0x40];
@@ -126,7 +128,7 @@ namespace Core {
 		status.dwLength = sizeof(status);
 		GlobalMemoryStatusEx(&status);
 		INFOc("Total RAM available : ~{}GB", status.ullTotalPhys / 1024000000 );
-
+		*/
 		return;
 	}
 };
