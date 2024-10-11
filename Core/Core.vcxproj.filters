@@ -1,51 +1,84 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="Source\Core\Core.cpp" />
-    <ClCompile Include="Director.cpp">
-      <Filter>Modules\Director</Filter>
-    </ClCompile>
-    <ClCompile Include="File_Wizard.cpp">
-      <Filter>Modules\File Wizard</Filter>
-    </ClCompile>
-    <ClCompile Include="Log.cpp">
-      <Filter>Modules\Logging</Filter>
-    </ClCompile>
-    <ClCompile Include="Packet_Ninja.cpp">
-      <Filter>Modules\Network</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Source\Core\Core.h" />
-    <ClInclude Include="Type_Definitions.hpp" />
-    <ClInclude Include="Director.h">
-      <Filter>Modules\Director</Filter>
-    </ClInclude>
-    <ClInclude Include="File_Wizard.h">
-      <Filter>Modules\File Wizard</Filter>
-    </ClInclude>
-    <ClInclude Include="Log.h">
-      <Filter>Modules\Logging</Filter>
-    </ClInclude>
-    <ClInclude Include="Packet_Ninja.h">
-      <Filter>Modules\Network</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
+    <Filter Include="Core">
+      <UniqueIdentifier>{2EB4837C-1AEB-840D-C3D7-6A10AFED000F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Private">
+      <UniqueIdentifier>{1899373D-04FC-C6E1-AD81-FF9799C39264}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Public">
+      <UniqueIdentifier>{9C17B08D-08CD-2883-91C1-225AFD751F87}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Modules">
-      <UniqueIdentifier>{6dd2b8db-553d-482f-90cb-bd92df3e161c}</UniqueIdentifier>
+      <UniqueIdentifier>{DE144435-4AF4-C2D0-530C-4EA7BF6A2932}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Modules\Director">
-      <UniqueIdentifier>{6800b402-42d2-4d5e-b391-becb8eccf9c8}</UniqueIdentifier>
+    <Filter Include="Modules\Private">
+      <UniqueIdentifier>{C8A9E575-3435-533A-3D46-D62EA950AF3A}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Modules\File Wizard">
-      <UniqueIdentifier>{452b69cc-2960-445b-9d6c-6f59fbd742ba}</UniqueIdentifier>
+    <Filter Include="Modules\Private\Director">
+      <UniqueIdentifier>{3369D5D1-1F8E-2452-48D9-09E2345D2370}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Modules\Logging">
-      <UniqueIdentifier>{15d7d48d-a594-4766-ac14-f032fe3d328b}</UniqueIdentifier>
+    <Filter Include="Modules\Private\File Wizard">
+      <UniqueIdentifier>{C87FA91D-348D-D703-BD73-D3EE2980A3BA}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Modules\Network">
-      <UniqueIdentifier>{e1a9d7b5-6ebd-4d14-937b-8edaf2b27cd0}</UniqueIdentifier>
+    <Filter Include="Modules\Private\Gossiper">
+      <UniqueIdentifier>{030CCE67-EF30-1DE8-187C-027804001C06}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Modules\Private\Packet Ninja">
+      <UniqueIdentifier>{FFC9B7E0-EB84-A78C-943C-20D780D6F11C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Modules\Public">
+      <UniqueIdentifier>{4CD2860B-38A0-7A11-2134-EB370DA15676}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Modules\Public\Director">
+      <UniqueIdentifier>{3766B608-A39D-FE9F-ACA7-62C3185E2599}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Modules\Public\File Wizard">
+      <UniqueIdentifier>{4C8E47F3-389E-F3C3-A157-58E28D86E25C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Modules\Public\Gossiper">
+      <UniqueIdentifier>{0709AF9E-7340-F735-7C4A-5B59E8001E2F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Modules\Public\Packet Ninja">
+      <UniqueIdentifier>{03A9176A-6FB6-4550-F89C-413B64A91107}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\Core\Core.h">
+      <Filter>Core\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Type_Definitions.hpp">
+      <Filter>Core\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Modules\Director\Director.h">
+      <Filter>Modules\Public\Director</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Modules\File Wizard\File_Wizard.h">
+      <Filter>Modules\Public\File Wizard</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Modules\Gossiper\Log.h">
+      <Filter>Modules\Public\Gossiper</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Modules\Packet Ninja\Packet_Ninja.h">
+      <Filter>Modules\Public\Packet Ninja</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\Core\Core.cpp">
+      <Filter>Core\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Modules\Director\Director.cpp">
+      <Filter>Modules\Private\Director</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Modules\File Wizard\File_Wizard.cpp">
+      <Filter>Modules\Private\File Wizard</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Modules\Gossiper\Log.cpp">
+      <Filter>Modules\Private\Gossiper</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Modules\Packet Ninja\Packet_Ninja.cpp">
+      <Filter>Modules\Private\Packet Ninja</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

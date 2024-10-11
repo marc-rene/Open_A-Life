@@ -2,7 +2,7 @@
 workspace "OAL Backend"
    architecture "x64"
    configurations { "Debug", "Release", "Dist" }
-   startproject "Example Engine"
+   startproject "Example"
 
    -- Workspace-wide build options for MSVC
    filter "system:windows"
@@ -14,4 +14,4 @@ group "Core"
 	include "Core/Build-Core.lua"
 group ""
 
-include "Example Engine/Build-App.lua"
+include "Example/Build-App.lua"
