@@ -7,3 +7,7 @@
 [submodule "Core/ThirdParty/mINI"]
 	path = Core/ThirdParty/mINI
 	url = https://github.com/metayeti/mINI
+[submodule "Example/imgui"]
+	path = Example/imgui
+	url = https://github.com/ocornut/imgui.git
+	branch = docking
