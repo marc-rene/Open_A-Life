@@ -6,6 +6,11 @@ Example/imgui/examples
 # Files
 *.log
 *.txt
+*.vcxproj
+*.vcxproj.user
+*.vcxproj.filters
+*.sln
+*.temp
 Makefile
 
 # Exclude
