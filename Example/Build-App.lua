@@ -5,7 +5,7 @@ project "Example"
    targetdir "Binaries/%{cfg.buildcfg}"
    staticruntime "off"
 
-   files { "Source/**.h", "Source/**.cpp", "Source/**.hpp", "imgui/**.cpp", "imgui/**.h", "imgui/**.hpp" }
+   files { "Source/**.h", "Source/**.cpp", "Source/**.hpp", "imgui/**.cpp", "imgui/**.h", "imgui/**.hpp", "misc/Styles/**.cpp", "misc/Styles/**.h", "misc/Styles/**.hpp" }
 
    includedirs
    {
@@ -20,7 +20,8 @@ project "Example"
         "$(SolutionDir)Core\\ThirdParty\\csv\\single_include",
         "$(SolutionDir)Core\\ThirdParty\\spdlog\\include",
         "$(SolutionDir)Example\\imgui",
-        "$(SolutionDir)Example\\imgui\\backends"
+        "$(SolutionDir)Example\\imgui\\backends",
+        "$(SolutionDir)Example\\misc\\Styles"
    }
 
 
@@ -82,7 +83,8 @@ project "Example"
 
    -- Create virtual paths for modules
    vpaths {
-    ["Visualiser/*"] = { "imgui/**.cpp", "imgui/**.h", "imgui/**.hpp" }
+    ["Visualiser/*"] = { "imgui/**.cpp", "imgui/**.h", "imgui/**.hpp" },
+    ["Visualiser/misc"] = {"misc/Styles/**.cpp", "misc/Styles/**.h"}
     }
 
    targetdir ("../Binaries/" .. OutputDir .. "/%{prj.name}")

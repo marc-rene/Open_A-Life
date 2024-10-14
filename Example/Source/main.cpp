@@ -4,6 +4,8 @@
 #include <d3d9.h>
 #include <tchar.h>
 
+#include "custom_styles.h"
+
 // Data
 static LPDIRECT3D9              g_pD3D = nullptr;
 static LPDIRECT3DDEVICE9        g_pd3dDevice = nullptr;
@@ -50,8 +52,19 @@ int main(int, char**)
     //io.ConfigViewportsNoTaskBarIcon = true;
     
 
+    bool show_another_style = false;
     // Setup Dear ImGui style
-    ImGui::StyleColorsDark();
+    ImGui::SetStyleMode(NULL, show_another_style);
+    ImGui::GetStyle().WindowPadding = ImVec2(15, 15);
+    ImGui::GetStyle().WindowRounding = 5.0f;
+    ImGui::GetStyle().FrameRounding = 4.0f;
+    ImGui::GetStyle().ItemSpacing = ImVec2(12, 8);
+    ImGui::GetStyle().ItemInnerSpacing = ImVec2(8, 6);
+    ImGui::GetStyle().IndentSpacing = 25.0f;
+    ImGui::GetStyle().ScrollbarSize = 15.0f;
+    ImGui::GetStyle().ScrollbarRounding = 9.0f;
+    ImGui::GetStyle().GrabRounding = 3.0f;
+    ImGui::GetStyle().SeparatorTextPadding = ImVec2(25.0f, 5.0f);
     
 
     // When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
@@ -67,24 +80,16 @@ int main(int, char**)
     ImGui_ImplDX9_Init(g_pd3dDevice);
 
     // Load Fonts
-    // - If no fonts are loaded, dear imgui will use the default font. You can also load multiple fonts and use ImGui::PushFont()/PopFont() to select them.
-    // - AddFontFromFileTTF() will return the ImFont* so you can store it if you need to select the font among multiple.
-    // - If the file cannot be loaded, the function will return a nullptr. Please handle those errors in your application (e.g. use an assertion, or display an error and quit).
-    // - The fonts will be rasterized at a given size (w/ oversampling) and stored into a texture when calling ImFontAtlas::Build()/GetTexDataAsXXXX(), which ImGui_ImplXXXX_NewFrame below will call.
-    // - Use '#define IMGUI_ENABLE_FREETYPE' in your imconfig file to use Freetype for higher quality font rendering.
-    // - Read 'docs/FONTS.md' for more instructions and details.
-    // - Remember that in C/C++ if you want to include a backslash \ in a string literal you need to write a double backslash \\ !
-    //io.Fonts->AddFontDefault();
-    //io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\segoeui.ttf", 18.0f);
-    //io.Fonts->AddFontFromFileTTF("../../misc/fonts/DroidSans.ttf", 16.0f);
-    //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Roboto-Medium.ttf", 16.0f);
-    //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Cousine-Regular.ttf", 15.0f);
-    //ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, nullptr, io.Fonts->GetGlyphRangesJapanese());
-    //IM_ASSERT(font != nullptr);
+    io.Fonts->Clear();
+    io.Fonts->AddFontFromFileTTF("misc\\Fonts\\static\\OpenSans-Light.ttf", 18);
+    io.Fonts->AddFontFromFileTTF("misc\\Fonts\\static\\OpenSans-Regular.ttf", 32);
+    io.Fonts->AddFontFromFileTTF("misc\\Fonts\\static\\OpenSans-Light.ttf", 32);
+    io.Fonts->AddFontFromFileTTF("misc\\Fonts\\static\\OpenSans-Regular.ttf", 11);
+    io.Fonts->AddFontFromFileTTF("misc\\Fonts\\static\\OpenSans-Bold.ttf", 11);
+    io.Fonts->Build();
 
     // Our state
     bool show_demo_window = true;
-    bool show_another_window = false;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
     // Main loop
@@ -145,7 +150,7 @@ int main(int, char**)
 
             ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
             ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-            ImGui::Checkbox("Another Window", &show_another_window);
+            ImGui::Checkbox("Another Window", &show_another_style);
 
             ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
             ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
@@ -159,15 +164,9 @@ int main(int, char**)
             ImGui::End();
         }
 
-        // 3. Show another simple window.
-        if (show_another_window)
-        {
-            ImGui::Begin("Another Window", &show_another_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
-            ImGui::Text("Hello from another window!");
-            if (ImGui::Button("Close Me"))
-                show_another_window = false;
-            ImGui::End();
-        }
+        
+        ImGui::SetStyleMode(NULL, show_another_style);
+        
 
         // Rendering
         ImGui::EndFrame();
