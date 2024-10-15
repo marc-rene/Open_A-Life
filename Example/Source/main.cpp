@@ -165,7 +165,7 @@ int main(int, char**)
         }
 
         
-        ImGui::SetStyleMode(NULL, show_another_style);
+        //ImGui::SetStyleMode(NULL, show_another_style);
         
 
         // Rendering

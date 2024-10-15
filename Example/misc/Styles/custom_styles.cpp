@@ -11,11 +11,11 @@
 
 static ImVec4 Primary;
 static ImVec4 Secondary;
-static ImVec4 Text;
-static ImVec4 Text_disabled;
+static ImVec4 Font;
 static ImVec4 Accent            (0.92f, 0.18f, 0.29f, 0.70f);
 static ImVec4 Accent_lighten    (Accent);
 static ImVec4 Accent_darken     (Accent);
+static ImVec4 Important         (0.78f, 0.18f, 0.92f, 1.00f);
 
 
 
@@ -25,47 +25,54 @@ void ImGui::SetStyleMode(ImGuiStyle* dst, bool useDarkMode)
 {
     ImVec4* c = ImGui::GetStyle().Colors;
     
-    // - - - - - - - - - - - - - - - - - - - - - - -    DARK MODE - - - - - - - - | - - - LIGHT MODE - - - - - -   
-    Primary = useDarkMode ?                     ImVec4(0.13f, 0.14f, 0.17f, 1.0f) : ImVec4(1.00f, 0.91f, 0.82f, 1.0f);
-    Secondary = useDarkMode ?                   ImVec4(0.20f, 0.22f, 0.27f, 1.0f) : ImVec4(1.00f, 0.82f, 0.61f, 1.0f);
-    
+    // - - - - - - - - - - - - - - - - - - - - - - -    DARK MODE - - - - - - - - - | - - - LIGHT MODE - - - - - -   
+    Primary = useDarkMode ?                     ImVec4(0.13f, 0.14f, 0.17f, 1.00f)  : ImVec4(0.92f, 0.91f, 0.88f, 0.70f);
+    Secondary = useDarkMode ?                   ImVec4(0.20f, 0.22f, 0.27f, 1.00f)  : ImVec4(1.00f, 0.98f, 0.95f, 1.00f);
+    Font = useDarkMode ?                        ImVec4(0.90f, 0.94f, 0.91f, 1.00f)  : ImVec4(0.20f, 0.29f, 0.28f, 1.00f);
     Accent_lighten.w    = useDarkMode ? 1.00f : 0.45f;
     Accent_darken.w     = useDarkMode ? 0.45f : 1.00f;
 
-    c[ImGuiCol_Text] = useDarkMode ?            ImVec4(0.40f, 0.39f, 0.38f, 1.00f) : ImVec4(0.86f, 0.93f, 0.89f, 0.78f);    
-    c[ImGuiCol_TextDisabled] = useDarkMode ?    ImVec4(0.40f, 0.39f, 0.38f, 0.77f) : ImVec4(0.86f, 0.93f, 0.89f, 0.28f);    
-    c[ImGuiCol_WindowBg] = useDarkMode?         ImVec4(0.92f, 0.91f, 0.88f, 0.70f) : ImVec4(0.13f, 0.14f, 0.17f, 1.00f);    
-    c[ImGuiCol_PopupBg] = useDarkMode ?         ImVec4(0.92f, 0.91f, 0.88f, 0.92f) : ImVec4(0.20f, 0.22f, 0.27f, 0.90f);    
-    c[ImGuiCol_Border] = useDarkMode ?          ImVec4(0.84f, 0.83f, 0.80f, 0.65f) : ImVec4(0.31f, 0.31f, 1.00f, 0.00f);    
-    c[ImGuiCol_BorderShadow] = useDarkMode ?    ImVec4(0.92f, 0.91f, 0.88f, 0.00f) : ImVec4(0.00f, 0.00f, 0.00f, 0.00f);    
-    c[ImGuiCol_FrameBg] = useDarkMode ?         ImVec4(1.00f, 0.98f, 0.95f, 1.00f) : ImVec4(0.20f, 0.22f, 0.27f, 1.00f);    
-    c[ImGuiCol_FrameBgHovered] = useDarkMode ?  ImVec4(0.99f, 1.00f, 0.40f, 0.78f) : ImVec4(0.92f, 0.18f, 0.29f, 0.78f);    
-    c[ImGuiCol_FrameBgActive] = useDarkMode ?   ImVec4(0.26f, 1.00f, 0.00f, 1.00f) : ImVec4(0.92f, 0.18f, 0.29f, 1.00f);    
-    c[ImGuiCol_TitleBg] = useDarkMode ?         ImVec4(1.00f, 0.98f, 0.95f, 1.00f) : ImVec4(0.20f, 0.22f, 0.27f, 1.00f);    
-    c[ImGuiCol_TitleBgCollapsed] = useDarkMode? ImVec4(1.00f, 0.98f, 0.95f, 0.75f) : ImVec4(0.20f, 0.22f, 0.27f, 0.75f);    
-    c[ImGuiCol_TitleBgActive] = useDarkMode ?   ImVec4(0.25f, 1.00f, 0.00f, 1.00f) : ImVec4(0.92f, 0.18f, 0.29f, 1.00f);    
-    c[ImGuiCol_MenuBarBg] = useDarkMode ?       ImVec4(1.00f, 0.98f, 0.95f, 0.47f) : ImVec4(0.20f, 0.22f, 0.27f, 0.47f);    
-    c[ImGuiCol_ScrollbarBg] = useDarkMode ?     ImVec4(1.00f, 0.98f, 0.95f, 1.00f) : ImVec4(0.20f, 0.22f, 0.27f, 1.00f);    
-    c[ImGuiCol_ScrollbarGrab] = useDarkMode ?   ImVec4(0.00f, 0.00f, 0.00f, 0.21f) : ImVec4(0.09f, 0.15f, 0.16f, 1.00f);    
-    c[ImGuiCol_ScrollbarGrabHovered] = useDarkMode ? ImVec4(0.90f, 0.91f, 0.00f, 0.78f) : ImVec4(0.92f, 0.18f, 0.29f, 0.78f);    
-    c[ImGuiCol_ScrollbarGrabActive] = useDarkMode ? ImVec4(0.25f, 1.00f, 0.00f, 1.00f) : ImVec4(0.92f, 0.18f, 0.29f, 1.00f);    
-    c[ImGuiCol_SliderGrab] = useDarkMode ?      ImVec4(0.00f, 0.00f, 0.00f, 0.14f) : ImVec4(0.47f, 0.77f, 0.83f, 0.14f);    
-    c[ImGuiCol_SliderGrabActive] = useDarkMode? ImVec4(0.25f, 1.00f, 0.00f, 1.00f) : ImVec4(0.92f, 0.18f, 0.29f, 1.00f);    
-    c[ImGuiCol_Button] = useDarkMode ?          ImVec4(0.00f, 0.00f, 0.00f, 0.14f) : ImVec4(0.47f, 0.77f, 0.83f, 0.14f);    
-    c[ImGuiCol_ButtonHovered] = useDarkMode ?   ImVec4(0.99f, 1.00f, 0.22f, 0.86f) : ImVec4(0.92f, 0.18f, 0.29f, 0.86f);    
-    c[ImGuiCol_ButtonActive] = useDarkMode ?    ImVec4(0.25f, 1.00f, 0.00f, 1.00f) : ImVec4(0.92f, 0.18f, 0.29f, 1.00f);    
-    c[ImGuiCol_HeaderHovered] = Accent;
+    c[ImGuiCol_Text] = Font;    
+    c[ImGuiCol_TextDisabled] = useDarkMode ?    ImVec4(0.86f, 0.93f, 0.89f, 0.28f)  : ImVec4(0.40f, 0.39f, 0.38f, 0.77f);    
+    c[ImGuiCol_WindowBg] = Primary;    
+    c[ImGuiCol_PopupBg] = Secondary;    
+    c[ImGuiCol_Border] = Accent;    
+    c[ImGuiCol_BorderShadow] = Secondary;    
+    c[ImGuiCol_FrameBg] = Secondary;    
+    c[ImGuiCol_FrameBgHovered] = Accent;    
+    c[ImGuiCol_FrameBgActive] = Secondary;   
+    c[ImGuiCol_Tab] = Primary;
+    c[ImGuiCol_TabSelected] = Accent;
+    c[ImGuiCol_TabHovered] = Secondary;
+    c[ImGuiCol_TabDimmed] = Primary;
+    c[ImGuiCol_TabSelectedOverline] = Important;
+    c[ImGuiCol_TabDimmedSelected] = Secondary;
+    c[ImGuiCol_TitleBg] = Primary;    
+    c[ImGuiCol_TitleBgCollapsed] = Secondary;    
+    c[ImGuiCol_TitleBgActive] = Secondary;    
+    c[ImGuiCol_MenuBarBg] = Accent;    
+    c[ImGuiCol_ScrollbarBg] = Primary;    
+    c[ImGuiCol_ScrollbarGrab] = Accent_darken;    
+    c[ImGuiCol_ScrollbarGrabHovered] = Accent;    
+    c[ImGuiCol_ScrollbarGrabActive] = Accent_lighten;    
+    c[ImGuiCol_SliderGrab] = Accent;    
+    c[ImGuiCol_SliderGrabActive] = Accent_darken;    
+    c[ImGuiCol_Button] = Accent_lighten;    
+    c[ImGuiCol_ButtonHovered] = Accent;    
+    c[ImGuiCol_ButtonActive] = Accent_darken;    
+    c[ImGuiCol_ResizeGrip] = Accent;
+    c[ImGuiCol_ResizeGripHovered] = Accent_lighten;
+    c[ImGuiCol_ResizeGripActive] = Accent_darken;
+    c[ImGuiCol_PlotLines] = useDarkMode ?       ImVec4(0.86f, 0.93f, 0.89f, 0.63f) : ImVec4(0.40f, 0.39f, 0.38f, 0.63f);
+    c[ImGuiCol_PlotLinesHovered] = useDarkMode? ImVec4(0.92f, 0.18f, 0.29f, 1.00f) : ImVec4(0.25f, 1.00f, 0.00f, 1.00f);
+    c[ImGuiCol_PlotHistogram] = useDarkMode ?   ImVec4(0.86f, 0.93f, 0.89f, 0.63f) : ImVec4(0.40f, 0.39f, 0.38f, 0.63f);
+    c[ImGuiCol_PlotHistogramHovered] = useDarkMode ? ImVec4(0.92f, 0.18f, 0.29f, 1.00f) : ImVec4(0.25f, 1.00f, 0.00f, 1.00f);
+    c[ImGuiCol_TextSelectedBg] = Accent_lighten;
+    c[ImGuiCol_HeaderHovered] = Accent; 
     c[ImGuiCol_HeaderActive] = Accent_darken;
-    c[ImGuiCol_ResizeGrip] = useDarkMode ?      ImVec4(0.00f, 0.00f, 0.00f, 0.04f) : ImVec4(0.47f, 0.77f, 0.83f, 0.04f);
-    c[ImGuiCol_ResizeGripHovered] = useDarkMode ? ImVec4(0.25f, 1.00f, 0.00f, 0.78f) : ImVec4(0.92f, 0.18f, 0.29f, 0.78f);
-    c[ImGuiCol_ResizeGripActive] = useDarkMode ? ImVec4(0.25f, 1.00f, 0.00f, 1.00f) : ImVec4(0.92f, 0.18f, 0.29f, 1.00f);
-    c[ImGuiCol_PlotLines] = useDarkMode ?       ImVec4(0.40f, 0.39f, 0.38f, 0.63f) : ImVec4(0.86f, 0.93f, 0.89f, 0.63f);
-    c[ImGuiCol_PlotLinesHovered] = useDarkMode? ImVec4(0.25f, 1.00f, 0.00f, 1.00f) : ImVec4(0.92f, 0.18f, 0.29f, 1.00f);
-    c[ImGuiCol_PlotHistogram] = useDarkMode ?   ImVec4(0.40f, 0.39f, 0.38f, 0.63f) : ImVec4(0.86f, 0.93f, 0.89f, 0.63f);
-    c[ImGuiCol_PlotHistogramHovered] = useDarkMode ? ImVec4(0.25f, 1.00f, 0.00f, 1.00f) : ImVec4(0.92f, 0.18f, 0.29f, 1.00f);
-    c[ImGuiCol_TextSelectedBg] = useDarkMode ?  ImVec4(0.25f, 1.00f, 0.00f, 0.43f) : ImVec4(0.92f, 0.18f, 0.29f, 0.43f);
     c[ImGuiCol_CheckMark]              = Accent;    
-    c[ImGuiCol_Header]                 = Accent_darken;
+    c[ImGuiCol_Header]                 = Accent_lighten;
+    c[ImGuiCol_DockingPreview] = Important;
     c[ImGuiCol_Separator]              = ImVec4(0.14f, 0.16f, 0.19f, 1.00f);   // Unsure, fix later
     c[ImGuiCol_SeparatorHovered]       = ImVec4(0.92f, 0.18f, 0.29f, 0.78f);   // Unsure, fix later
     c[ImGuiCol_SeparatorActive]        = ImVec4(0.92f, 0.18f, 0.29f, 1.00f);   // Unsure, fix later
