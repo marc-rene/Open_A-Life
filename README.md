@@ -129,8 +129,8 @@ The Libraries in question as they are now are as follows:
 # Installation
 
   
-
-Please run the relevant setup-script found in the ``.\Scripts\`` folder.
+1. It is **strongly** recommended that you use ``git clone --recursive`` to make sure that all dependencies are downloaded
+2. Please run the relevant setup-script found in the ``.\Scripts\`` folder.
 
   
 
