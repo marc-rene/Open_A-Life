@@ -3,6 +3,9 @@
 #include "imgui_impl_win32.h"
 #include <d3d9.h>
 #include <tchar.h>
+#include <winrt/Windows.UI.ViewManagement.h>
+
+
 
 #include "custom_styles.h"
 
@@ -52,7 +55,7 @@ int main(int, char**)
     //io.ConfigViewportsNoTaskBarIcon = true;
     
 
-    bool show_another_style = false;
+    bool show_another_style = true;
     // Setup Dear ImGui style
     ImGui::SetStyleMode(NULL, show_another_style);
     ImGui::GetStyle().WindowPadding = ImVec2(15, 15);
@@ -90,7 +93,7 @@ int main(int, char**)
 
     // Our state
     bool show_demo_window = true;
-    ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+    ImVec4 clear_color = ImGui::GetStyle().Colors[ImGuiCol_WindowBg];
 
     // Main loop
     bool done = false;
@@ -165,8 +168,9 @@ int main(int, char**)
         }
 
         
-        //ImGui::SetStyleMode(NULL, show_another_style);
-        
+        ImGui::SetStyleMode(NULL, show_another_style);
+        clear_color = ImGui::GetStyle().Colors[ImGuiCol_WindowBg];
+
 
         // Rendering
         ImGui::EndFrame();
