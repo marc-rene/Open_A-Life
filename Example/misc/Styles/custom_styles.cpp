@@ -25,6 +25,18 @@ void ImGui::SetStyleMode(ImGuiStyle* dst, bool useDarkMode)
 {
     ImVec4* c = ImGui::GetStyle().Colors;
     
+    ImGui::GetStyle().WindowPadding = ImVec2(15, 15);
+    ImGui::GetStyle().WindowRounding = 5.0f;
+    ImGui::GetStyle().FrameRounding = 4.0f;
+    ImGui::GetStyle().ItemSpacing = ImVec2(12, 8);
+    ImGui::GetStyle().ItemInnerSpacing = ImVec2(8, 6);
+    ImGui::GetStyle().IndentSpacing = 25.0f;
+    ImGui::GetStyle().ScrollbarSize = 15.0f;
+    ImGui::GetStyle().ScrollbarRounding = 9.0f;
+    ImGui::GetStyle().GrabRounding = 3.0f;
+    ImGui::GetStyle().SeparatorTextPadding = ImVec2(25.0f, 5.0f);
+
+
     // - - - - - - - - - - - - - - - - - - - - - - -    DARK MODE - - - - - - - - - | - - - LIGHT MODE - - - - - -   
     Primary = useDarkMode ?                     ImVec4(0.13f, 0.14f, 0.17f, 1.00f)  : ImVec4(0.93f, 0.93f, 0.96f, 1.00f);
     Secondary = useDarkMode ?                   ImVec4(0.20f, 0.22f, 0.27f, 1.00f)  : ImVec4(0.70f, 0.72f, 0.77f, 1.00f);
@@ -45,7 +57,7 @@ void ImGui::SetStyleMode(ImGuiStyle* dst, bool useDarkMode)
     c[ImGuiCol_TabSelected] = Accent;
     c[ImGuiCol_TabHovered] = Accent_lighten;
     c[ImGuiCol_TabDimmed] = Primary;
-    c[ImGuiCol_TabDimmedSelected] = Accent_lighten;
+    c[ImGuiCol_TabDimmedSelected] = Accent;
     c[ImGuiCol_TabDimmedSelectedOverline] = Secondary;
     c[ImGuiCol_TitleBg] = Primary;    
     c[ImGuiCol_TitleBgCollapsed] = Secondary;    

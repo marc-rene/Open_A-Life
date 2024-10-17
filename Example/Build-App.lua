@@ -76,7 +76,7 @@ project "Example"
    links
    {
       "Core",
-      "d3d9"
+      "d3d11"
    }
 
    
