@@ -4,7 +4,8 @@
 #include <d3d11.h>
 #include <tchar.h>
 
-#include "custom_styles.h"
+#include "Windows/All_Windows.h"
+#include "Styles/custom_styles.h"
 
 // Data
 static ID3D11Device* g_pd3dDevice = nullptr;
@@ -87,6 +88,7 @@ int main(int, char**)
     // Our state
     bool show_demo_window = true;
     ImVec4 clear_color = ImGui::GetStyle().Colors[ImGuiCol_WindowBg];
+    networking_settings current_session_network_settings(0, 0);
 
 
     // Main loop
@@ -123,7 +125,7 @@ int main(int, char**)
             CreateRenderTarget();
         }
 
-        // Use Dark mode???
+        // Use Dark mode??? (windows only atm)
         if (elapsed_frames % 500 == 0)
         {
             elapsed_frames = 0;
@@ -151,6 +153,8 @@ int main(int, char**)
         // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
         if (show_demo_window)
             ImGui::ShowDemoWindow(&show_demo_window);
+
+        ImGui::Parent_Window(&show_demo_window, &current_session_network_settings);
 
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
         {

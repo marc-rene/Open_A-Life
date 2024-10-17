@@ -8,25 +8,12 @@
 //-----------------------------------------------------------------------------
 
 
-
-static ImVec4 Primary;
-static ImVec4 Secondary;
-static ImVec4 Font;
-static ImVec4 Accent            (0.92f, 0.18f, 0.29f, 0.70f);
-static ImVec4 Accent_lighten    (Accent);
-static ImVec4 Accent_darken     (Accent);
-static ImVec4 Important         (0.78f, 0.18f, 0.92f, 1.00f);
-
-
-
-
-// FIX
 void ImGui::SetStyleMode(ImGuiStyle* dst, bool useDarkMode)
 {
     ImVec4* c = ImGui::GetStyle().Colors;
     
     ImGui::GetStyle().WindowPadding = ImVec2(15, 15);
-    ImGui::GetStyle().WindowRounding = 5.0f;
+    ImGui::GetStyle().WindowRounding = 10.0f;
     ImGui::GetStyle().FrameRounding = 4.0f;
     ImGui::GetStyle().ItemSpacing = ImVec2(12, 8);
     ImGui::GetStyle().ItemInnerSpacing = ImVec2(8, 6);

@@ -5,7 +5,7 @@ project "Example"
    targetdir "Binaries/%{cfg.buildcfg}"
    staticruntime "off"
 
-   files { "Source/**.h", "Source/**.cpp", "Source/**.hpp", "imgui/**.cpp", "imgui/**.h", "imgui/**.hpp", "misc/Styles/**.cpp", "misc/Styles/**.h", "misc/Styles/**.hpp" }
+   files { "Source/**.h", "Source/**.cpp", "Source/**.hpp", "imgui/**.cpp", "imgui/**.h", "imgui/**.hpp", "misc/Styles/**.cpp", "misc/Styles/**.h", "misc/Styles/**.hpp", "misc/Windows/**.cpp", "misc/Windows/**.h" }
 
    includedirs
    {
@@ -21,7 +21,7 @@ project "Example"
         "$(SolutionDir)Core\\ThirdParty\\spdlog\\include",
         "$(SolutionDir)Example\\imgui",
         "$(SolutionDir)Example\\imgui\\backends",
-        "$(SolutionDir)Example\\misc\\Styles"
+        "$(SolutionDir)Example\\misc"
    }
 
 
