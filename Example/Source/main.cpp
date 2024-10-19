@@ -4,6 +4,8 @@
 #include <d3d11.h>
 #include <tchar.h>
 
+#include <future>
+#include <chrono>
 #include "Windows/All_Windows.h"
 #include "Styles/custom_styles.h"
 
@@ -20,6 +22,7 @@ bool CreateDeviceD3D(HWND hWnd);
 void CleanupDeviceD3D();
 void CreateRenderTarget();
 void CleanupRenderTarget();
+void UseDarkMode(bool*, std::thread::id);
 LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 
@@ -40,9 +43,7 @@ int main(int, char**)
         return 1;
     }
 
-    // How many frames have been rendered since the last reset?
-    unsigned int elapsed_frames = 0;
-
+    bool done = false;
 
     // Show the window
     ::ShowWindow(hwnd, SW_SHOWDEFAULT);
@@ -59,10 +60,11 @@ int main(int, char**)
     
 
     bool use_dark_mode = true;
+    
     // Setup Dear ImGui style
     ImGui::SetStyleMode(NULL, use_dark_mode);
-    
-    
+    std::future<void> DarkModeCheckThread = std::async(std::launch::async, UseDarkMode, &done, std::this_thread::get_id());
+
 
     // When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
     ImGuiStyle& style = ImGui::GetStyle();
@@ -88,11 +90,11 @@ int main(int, char**)
     // Our state
     bool show_demo_window = true;
     ImVec4 clear_color = ImGui::GetStyle().Colors[ImGuiCol_WindowBg];
-    networking_settings current_session_network_settings(0, 0);
+    //networking_settings current_session_network_settings(0, 0);
 
 
     // Main loop
-    bool done = false;
+    
     while (!done)
     {
         // Poll and handle messages (inputs, window resize, etc.)
@@ -125,25 +127,7 @@ int main(int, char**)
             CreateRenderTarget();
         }
 
-        // Use Dark mode??? (windows only atm)
-        if (elapsed_frames % 500 == 0)
-        {
-            elapsed_frames = 0;
-            DWORD value = 0;
-            DWORD valueSize = sizeof(value);
-            LSTATUS status = RegGetValue(HKEY_CURRENT_USER,
-                L"Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize",
-                L"AppsUseLightTheme",
-                RRF_RT_REG_DWORD, // Expecting a DWORD value
-                nullptr,
-                &value,
-                &valueSize);
-
-            if (status == ERROR_SUCCESS) {
-                use_dark_mode = (value == 0); // 0 means dark mode, 1 means light mode
-            }
-            ImGui::SetStyleMode(NULL, use_dark_mode);
-        }
+        
 
         // Start the Dear ImGui frame
         ImGui_ImplDX11_NewFrame();
@@ -154,7 +138,6 @@ int main(int, char**)
         if (show_demo_window)
             ImGui::ShowDemoWindow(&show_demo_window);
 
-        ImGui::Parent_Window(&show_demo_window, &current_session_network_settings);
 
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
         {
@@ -201,14 +184,13 @@ int main(int, char**)
         HRESULT hr = g_pSwapChain->Present(1, 0);   // Present with vsync
         //HRESULT hr = g_pSwapChain->Present(0, 0); // Present without vsync
         g_SwapChainOccluded = (hr == DXGI_STATUS_OCCLUDED);
-        elapsed_frames++;
     }
 
     // Cleanup
     ImGui_ImplDX11_Shutdown();
     ImGui_ImplWin32_Shutdown();
     ImGui::DestroyContext();
-
+    
     CleanupDeviceD3D();
     ::DestroyWindow(hwnd);
     ::UnregisterClassW(wc.lpszClassName, wc.hInstance);
@@ -313,4 +295,37 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
         break;
     }
     return ::DefWindowProcW(hWnd, msg, wParam, lParam);
+}
+
+
+
+
+void UseDarkMode(bool* done, std::thread::id main_thread_id)
+{
+    while (*done == false)
+    {
+        DWORD value = 0;
+        DWORD valueSize = sizeof(value);
+        LSTATUS status = RegGetValue(HKEY_CURRENT_USER,
+            L"Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize",
+            L"AppsUseLightTheme",
+            RRF_RT_REG_DWORD, // Expecting a DWORD value
+            nullptr,
+            &value,
+            &valueSize);
+
+    
+        if (status == ERROR_SUCCESS) {
+            ImGui::SetStyleMode(NULL, value == 0);
+        }
+
+        // Different Thread, we can sleep
+        if (std::this_thread::get_id() != main_thread_id)
+        {
+            std::this_thread::sleep_for(std::chrono::seconds(2));
+        }
+    }
+
+    printf("No longer checking for dark/light mode changes");
+    return;
 }

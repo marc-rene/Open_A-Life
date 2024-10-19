@@ -83,8 +83,9 @@ project "Example"
 
    -- Create virtual paths for modules
    vpaths {
-    ["Visualiser/*"] = { "imgui/**.cpp", "imgui/**.h", "imgui/**.hpp" },
-    ["Visualiser/misc"] = {"misc/Styles/**.cpp", "misc/Styles/**.h"}
+    ["Visualiser/ImGui"] = { "imgui/**.cpp", "imgui/**.h", "imgui/**.hpp" },
+    ["Visualiser/misc"] = {"misc/Styles/**.cpp", "misc/Styles/**.h"},
+    ["Visualiser/Windows"] = {"misc/Windows/**.cpp", "misc/Windows/**.h" }
     }
 
    targetdir ("../Binaries/" .. OutputDir .. "/%{prj.name}")

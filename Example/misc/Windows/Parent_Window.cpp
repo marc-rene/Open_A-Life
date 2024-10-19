@@ -1,6 +1,6 @@
 #include "All_Windows.h"
 #include "Styles/custom_styles.h"
-
+/*
 void ImGui::Parent_Window(bool* p_open, networking_settings* nSettings )
 {
     ImGuiWindowFlags main_window_flags = 0;
@@ -38,7 +38,7 @@ void ImGui::Parent_Window(bool* p_open, networking_settings* nSettings )
                 ImGui::PushStyleColor(ImGuiCol_Text, Success);
                 ImGui::MenuItem("Not Connected", NULL, false, false);
                 ImGui::PopStyleColor();
-            }*/
+            }
             ImGui::Separator();
             ImGui::MenuItem("Listen on port");
 
@@ -55,4 +55,4 @@ void ImGui::Parent_Window(bool* p_open, networking_settings* nSettings )
             
     ImGui::PopStyleVar();
     ImGui::End();
-}
+}*/

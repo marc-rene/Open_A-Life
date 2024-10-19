@@ -3,13 +3,13 @@
 #include <filesystem>
 
 #define mint		__int8
-#define uMint		unsigned __int8
+#define uMint		uint8_t
 #define file_path	std::filesystem::path
 #define dir_path	std::filesystem::path
 #define mutex_lock	std::lock_guard<std::mutex>
 #define BIT(x)		(1 << x)
 
-enum class EState : uint8_t
+enum class EState : uMint
 {
 	// Send to Frontend
 	CRITICAL_FAILURE	= 1 << 0,	//	00000001
@@ -26,36 +26,33 @@ enum class EState : uint8_t
 	__nothing__yet_2	= 1 << 7	//	10000000	
 };
 
-struct StateFlag
+
+//Sets flag to true
+static void set_flag(uMint* BitFlagDst, uMint new_flag)
 {
-	//Sets flag to true
-	void set_flag(EState flag)
-	{
-		Flag_Value |= (uint8_t)flag;
-	}
+	*BitFlagDst |= (uMint)new_flag;
+}
 
-	//Sets flag to false
-	void remove_flag(EState flag)
-	{
-		Flag_Value &= ~(uint8_t)flag;
-	}
+//Sets flag to false
+static void remove_flag(uMint* BitFlagDst, uMint removing_flag)
+{
+	*BitFlagDst &= ~(uMint)removing_flag;
+}
 
-	//Sets a flag value from true to false and vice versa
-	void flip_flag(EState flag)
-	{
-		Flag_Value ^= (uint8_t)flag;
-	}
+//Sets a flag value from true to false and vice versa
+static void flip_flag(uMint* BitFlagDst, uMint flag_to_flip)
+{
+	*BitFlagDst ^= (uMint)flag_to_flip;
+}
 
-	//Check whether a flag is set to true
-	bool has_flag(EState flag)
-	{
-		return (Flag_Value & (uint8_t)flag) == (uint8_t)flag;
-	}
+//Check whether a flag is set to true
+static bool has_flag(uMint* BitFlagDst, uMint flag_to_check)
+{
+	return (*BitFlagDst & (uMint)flag_to_check) == (uMint)flag_to_check;
+}
 
-	bool has_any_flags(EState multiFlag)
-	{
-		return (Flag_Value & (uint8_t)multiFlag) != 0;
-	}
+static bool has_any_flags(uMint* BitFlagDst, uMint all_flags)
+{
+	return (*BitFlagDst & (uMint)all_flags) != 0;
+}
 
-	uint8_t Flag_Value = 0;
-};
