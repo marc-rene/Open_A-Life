@@ -94,7 +94,6 @@ int main(int, char**)
 
 
     // Main loop
-    
     while (!done)
     {
         // Poll and handle messages (inputs, window resize, etc.)
@@ -126,8 +125,6 @@ int main(int, char**)
             g_ResizeWidth = g_ResizeHeight = 0;
             CreateRenderTarget();
         }
-
-        
 
         // Start the Dear ImGui frame
         ImGui_ImplDX11_NewFrame();

@@ -36,7 +36,7 @@ namespace Core
 
 		static mint Send_Generic_String(const char* data);
 		static mint Send_Value(const char* key, const char* value);
-		static mint Send_Controlled_Message(StateFlag current_state );
+		//static mint Send_Controlled_Message(StateFlag current_state );
 
 		static mint On_Message_Recieved();
 

@@ -16,7 +16,7 @@ bool Tests::test_type_definitions_flag_functionality()
     assert(!has_flag((uMint*)&test_flag, (uMint)EState::CRITICAL_FAILURE));
 
     //Set multiple flags at once
-    /*
+    
     set_flag((EFlagValue)((int)EFlagValue::Flag1 | (int)EFlagValue::Flag2)); //Flag = 3 (00000011)
     assert(flag.HasFlag(EFlagValue::Flag1));
     assert(flag.HasFlag(EFlagValue::Flag2));
