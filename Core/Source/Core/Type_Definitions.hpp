@@ -4,6 +4,8 @@
 
 #define mint		__int8
 #define uMint		uint8_t
+#define short		__int16
+#define uShort		uint16_t
 #define file_path	std::filesystem::path
 #define dir_path	std::filesystem::path
 #define mutex_lock	std::lock_guard<std::mutex>

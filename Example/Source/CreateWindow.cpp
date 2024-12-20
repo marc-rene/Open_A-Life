@@ -55,7 +55,8 @@ int CreateAppWindow(Core::OPEN_ALIFE_CORE* ALIFE_CORE)
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // Enable Docking
     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;       // Enable Multi-Viewport / Platform Windows
-    //gio.ConfigViewportsNoDecoration = false;  //LEAVE ALONE
+    //io.ConfigViewportsNoDecoration = false;  //LEAVE ALONE
+    io.ConfigWindowsMoveFromTitleBarOnly = true;  //LEAVE ALONE
     
 
 
