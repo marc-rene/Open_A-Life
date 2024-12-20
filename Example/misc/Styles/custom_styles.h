@@ -7,7 +7,9 @@
 //-----------------------------------------------------------------------------
 
 static ImVec4 Primary;
+static ImVec4 PrimaryOff;
 static ImVec4 Secondary;
+static ImVec4 SecondaryOff;
 static ImVec4 Font;
 static ImVec4 Accent(0.92f, 0.18f, 0.29f, 0.70f); // #eb2e4a
 static ImVec4 Accent_lighten(Accent);

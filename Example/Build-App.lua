@@ -12,8 +12,8 @@ project "Example"
         "Source",
         "imgui",
         "imgui\\backends",
+
         -- Include Core
-        "../Core/Source",
         "$(SolutionDir)Core",
         "$(SolutionDir)Core\\Source",
         "$(SolutionDir)Core\\Source\\Core",

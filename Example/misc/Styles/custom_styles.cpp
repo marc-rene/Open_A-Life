@@ -25,12 +25,14 @@ void ImGui::SetStyleMode(ImGuiStyle* dst, bool useDarkMode)
 
 
     // - - - - - - - - - - - - - - - - - - - - - - -    DARK MODE - - - - - - - - - | - - - LIGHT MODE - - - - - -   
+    const float slight_offset = 1.3f;
     Primary = useDarkMode ?                     ImVec4(0.13f, 0.14f, 0.17f, 1.00f)  : ImVec4(0.93f, 0.93f, 0.96f, 1.00f);
+    PrimaryOff =                                ImVec4(Primary.x * slight_offset, Primary.y* slight_offset, Primary.z* slight_offset, Primary.w);
     Secondary = useDarkMode ?                   ImVec4(0.20f, 0.22f, 0.27f, 1.00f)  : ImVec4(0.70f, 0.72f, 0.77f, 1.00f);
+    SecondaryOff =                              ImVec4(Secondary.x * slight_offset, Secondary.y * slight_offset, Secondary.z * slight_offset, Secondary.w);
     Font = useDarkMode ?                        ImVec4(0.90f, 0.94f, 0.91f, 1.00f)  : ImVec4(0.20f, 0.29f, 0.28f, 1.00f);
     Accent_lighten.w    = useDarkMode ? 0.90f : 0.45f;
     Accent_darken.w     = useDarkMode ? 0.45f : 0.90f;
-    const float slight_offset = 1.3f;
 
     c[ImGuiCol_Text] = Font;    
     c[ImGuiCol_TextDisabled] = useDarkMode ?    ImVec4(0.86f, 0.93f, 0.89f, 0.28f)  : ImVec4(0.40f, 0.39f, 0.38f, 0.77f);    
@@ -41,7 +43,7 @@ void ImGui::SetStyleMode(ImGuiStyle* dst, bool useDarkMode)
     c[ImGuiCol_FrameBg] = Secondary;    
     c[ImGuiCol_FrameBgHovered] = Accent_darken;    
     c[ImGuiCol_FrameBgActive] = Accent_lighten;   
-    c[ImGuiCol_Tab] = ImVec4(Primary.x* slight_offset, Primary.y * slight_offset, Primary.z * slight_offset, Primary.w);
+    c[ImGuiCol_Tab] = PrimaryOff;
     c[ImGuiCol_TabSelected] = Accent;
     c[ImGuiCol_TabHovered] = Accent_lighten;
     c[ImGuiCol_TabDimmed] = Primary;
@@ -74,7 +76,7 @@ void ImGui::SetStyleMode(ImGuiStyle* dst, bool useDarkMode)
     c[ImGuiCol_CheckMark]              = Accent;    
     c[ImGuiCol_Header]                 = Accent_lighten;
     c[ImGuiCol_DockingPreview] = Accent;
-    c[ImGuiCol_Separator]              = Secondary;   // Unsure, fix later
+    c[ImGuiCol_Separator]              = SecondaryOff;   // Unsure, fix later
     c[ImGuiCol_SeparatorHovered]       = Accent_darken;   // Unsure, fix later
     c[ImGuiCol_SeparatorActive]        = Accent_lighten;   // Unsure, fix later
     c[ImGuiCol_TableHeaderBg] = useDarkMode ? Accent_darken : Accent_lighten;

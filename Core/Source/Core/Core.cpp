@@ -14,6 +14,7 @@
 
 namespace Core {
 	
+
 	void Initialise()
 	{
 		// - Variable Declarations always at top - -

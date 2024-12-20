@@ -9,7 +9,9 @@
 #define mutex_lock	std::lock_guard<std::mutex>
 #define BIT(x)		(1 << x)
 
-enum class EState : uMint
+#define ASYNC_MODE std::launch::async
+
+enum EState
 {
 	// Send to Frontend
 	CRITICAL_FAILURE	= 1 << 0,	//	00000001
