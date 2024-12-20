@@ -30,6 +30,7 @@ void ImGui::SetStyleMode(ImGuiStyle* dst, bool useDarkMode)
     Font = useDarkMode ?                        ImVec4(0.90f, 0.94f, 0.91f, 1.00f)  : ImVec4(0.20f, 0.29f, 0.28f, 1.00f);
     Accent_lighten.w    = useDarkMode ? 0.90f : 0.45f;
     Accent_darken.w     = useDarkMode ? 0.45f : 0.90f;
+    const float slight_offset = 1.3f;
 
     c[ImGuiCol_Text] = Font;    
     c[ImGuiCol_TextDisabled] = useDarkMode ?    ImVec4(0.86f, 0.93f, 0.89f, 0.28f)  : ImVec4(0.40f, 0.39f, 0.38f, 0.77f);    
@@ -40,15 +41,15 @@ void ImGui::SetStyleMode(ImGuiStyle* dst, bool useDarkMode)
     c[ImGuiCol_FrameBg] = Secondary;    
     c[ImGuiCol_FrameBgHovered] = Accent_darken;    
     c[ImGuiCol_FrameBgActive] = Accent_lighten;   
-    c[ImGuiCol_Tab] = Primary;
+    c[ImGuiCol_Tab] = ImVec4(Primary.x* slight_offset, Primary.y * slight_offset, Primary.z * slight_offset, Primary.w);
     c[ImGuiCol_TabSelected] = Accent;
     c[ImGuiCol_TabHovered] = Accent_lighten;
     c[ImGuiCol_TabDimmed] = Primary;
     c[ImGuiCol_TabDimmedSelected] = Accent;
     c[ImGuiCol_TabDimmedSelectedOverline] = Secondary;
-    c[ImGuiCol_TitleBg] = Primary;    
+    c[ImGuiCol_TitleBg] = useDarkMode ? Primary : Secondary;
     c[ImGuiCol_TitleBgCollapsed] = Secondary;    
-    c[ImGuiCol_TitleBgActive] = Secondary;    
+    c[ImGuiCol_TitleBgActive] = useDarkMode ? Secondary : Primary;    
     c[ImGuiCol_TabSelectedOverline] = c[ImGuiCol_TitleBgActive];
     c[ImGuiCol_MenuBarBg] = Accent;    
     c[ImGuiCol_ScrollbarBg] = Primary;    

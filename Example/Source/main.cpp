@@ -319,7 +319,7 @@ void UseDarkMode(bool* done, std::thread::id main_thread_id)
         // Different Thread, we can sleep
         if (std::this_thread::get_id() != main_thread_id)
         {
-            std::this_thread::sleep_for(std::chrono::seconds(2));
+            std::this_thread::sleep_for(std::chrono::seconds(3));
         }
     }
 
