@@ -1,5 +1,6 @@
 #include "CreateWindow.h"
-#include "Core.h"
+#include "Windows/All_Windows.h"
+#include "Core/Core.h"
 
 // Main code
 int main(int, char**)

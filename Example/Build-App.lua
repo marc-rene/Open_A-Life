@@ -16,7 +16,6 @@ project "Example"
         -- Include Core
         "$(SolutionDir)Core",
         "$(SolutionDir)Core\\Source",
-        "$(SolutionDir)Core\\Source\\Core",
         "$(SolutionDir)Core\\ThirdParty\\csv\\single_include",
         "$(SolutionDir)Core\\ThirdParty\\spdlog\\include",
         "$(SolutionDir)Example\\imgui",
