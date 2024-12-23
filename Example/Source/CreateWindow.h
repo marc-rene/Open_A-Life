@@ -12,6 +12,6 @@
 
 #include "Core.h"
 
-int CreateAppWindow(Core::OPEN_ALIFE_CORE*);
+int CreateAppWindow(Core::OPEN_ALIFE*);
 
 

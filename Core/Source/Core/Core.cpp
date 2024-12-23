@@ -1,25 +1,21 @@
-﻿#include "Core.h"
+﻿#include "Core/Core.h"
 //#include "Log.h"
 //#include "File_Wizard.h"
 //#include "Director.h"
 //#include "Packet_Ninja.h"
 
-//#include <future>
-//#include <chrono>
-//#include <iostream>
+#include <future>
+#include <chrono>
+#include <iostream>
+#include <map>
 
 
-//using namespace std::chrono_literals;
 
-
-namespace Core {
-	
-
-	void Initialise()
+void Core::OPEN_ALIFE::Initialise()
 	{
 		// - Variable Declarations always at top - -
-		//std::map<std::string, std::future<mint>> core_initialisation_futures;
-		// - - - - - - - - - - - - - - - - - - - - -
+		std::map<std::string, std::future<mint>> core_initialisation_futures;
+		 - - - - - - - - - - - - - - - - - - - - -
 
 		// --- STEP 1 : Initalise the Core and Engine Logger FIRST -----------------------------------
 		// 
@@ -36,11 +32,11 @@ namespace Core {
 		//{
 		//	exit(1);
 		//}
-	
+
 
 		// --- STEP 2 : Set up Packet Ninja. Packet Ninja is OAL custom networking library for sending/recieving TCP over network!!! -----------------
-		/*	NOT WORKING YET 
-		
+		/*	NOT WORKING YET
+
 		Packet_Ninja::Init();
 		Packet_Ninja::Test_Send_Packets();
 		*/
@@ -48,11 +44,11 @@ namespace Core {
 
 		// --- STEP 3 : Now we need to add to our futures,,, lets make this Async!!! -----------------
 		//
-	
+
 		//core_initialisation_futures["CSV TEST"] = std::async(std::launch::async, File_Wizard::test_csv_io);
 		//core_initialisation_futures["INI TEST"] = std::async(std::launch::async, File_Wizard::test_ini_io);
 		//core_initialisation_futures["THREAD TEST ASYNC"] = std::async(std::launch::async, Director::stress_test_threads, true, 7);
-		
+
 
 
 		/*
@@ -96,11 +92,12 @@ namespace Core {
 			}
 		}
 		*/
+		return;
 	}
 
 
 	// Thank you https://stackoverflow.com/a/850812
-	void Print_CPU_Details()
+void Core::OPEN_ALIFE::Print_CPU_Details()
 	{
 		/*
 		int CPUInfo[4] = { -1 };
@@ -132,5 +129,5 @@ namespace Core {
 		*/
 		return;
 	}
-};
+
 

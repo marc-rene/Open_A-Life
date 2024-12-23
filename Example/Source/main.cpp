@@ -5,7 +5,7 @@
 // Main code
 int main(int, char**)
 {
-    Core::OPEN_ALIFE_CORE ExampleCore;
+    Core::OPEN_ALIFE ExampleCore;
     
 
     CreateAppWindow(&ExampleCore);
