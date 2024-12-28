@@ -19,7 +19,7 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 
 // Create Our Window
-int CreateAppWindow(Core::OPEN_ALIFE_CORE* ALIFE_CORE)
+int CreateAppWindow(ALIFE_PAIRING* ALIFE_CORE)
 {
     // Create application window
     //ImGui_ImplWin32_EnableDpiAwareness();

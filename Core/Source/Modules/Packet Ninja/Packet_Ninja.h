@@ -1,6 +1,6 @@
 #pragma once
-#include "Core.h" 
-#include "Type_Definitions.hpp"
+#include "Core/Core.h" 
+#include "Core/Type_Definitions.hpp"
 
 
 namespace Core

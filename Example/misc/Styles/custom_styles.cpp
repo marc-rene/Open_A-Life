@@ -31,8 +31,8 @@ void ImGui::SetStyleMode(ImGuiStyle* dst, bool useDarkMode)
     Secondary = useDarkMode ?                   ImVec4(0.20f, 0.22f, 0.27f, 1.00f)  : ImVec4(0.70f, 0.72f, 0.77f, 1.00f);
     SecondaryOff =                              ImVec4(Secondary.x * slight_offset, Secondary.y * slight_offset, Secondary.z * slight_offset, Secondary.w);
     Font = useDarkMode ?                        ImVec4(0.90f, 0.94f, 0.91f, 1.00f)  : ImVec4(0.20f, 0.29f, 0.28f, 1.00f);
-    Accent_lighten.w    = useDarkMode ? 0.90f : 0.45f;
-    Accent_darken.w     = useDarkMode ? 0.45f : 0.90f;
+    Accent_lighten.w    = useDarkMode ?         0.90f                               : 0.45f;
+    Accent_darken.w     = useDarkMode ?         0.45f                               : 0.90f;
 
     c[ImGuiCol_Text] = Font;    
     c[ImGuiCol_TextDisabled] = useDarkMode ?    ImVec4(0.86f, 0.93f, 0.89f, 0.28f)  : ImVec4(0.40f, 0.39f, 0.38f, 0.77f);    

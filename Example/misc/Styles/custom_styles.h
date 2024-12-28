@@ -16,8 +16,9 @@ static ImVec4 Accent_lighten(Accent);
 static ImVec4 Accent_darken(Accent);
 
 static ImVec4 Success(Accent);
-static ImVec4 Warning(1.00f, 0.78f, 0.18f, 1.00f);
-static ImVec4 Danger(0.28f, 0.37f, 1.00f, 1.00f);
+static ImVec4 DangerColour(1.0f, 0.835f, 0.278f, 1.00f);
+static ImVec4 WarningColour(0.28f, 0.37f, 1.00f, 1.00f);
+static ImVec4 CoolColour(0.408f, 0.439f, 0.667f, 1.00f);
 
 namespace ImGui
 {

@@ -5,8 +5,9 @@
 // Main code
 int main(int, char**)
 {
-    Core::OPEN_ALIFE_CORE ExampleCore;
-    
+    ALIFE_PAIRING ExampleCore;
+    ExampleCore.Director = ALIFE_CoreObject("Director");
+    ExampleCore.Packet_Ninja = ALIFE_CoreObject("Packet Ninja");
 
     CreateAppWindow(&ExampleCore);
     

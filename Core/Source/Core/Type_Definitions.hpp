@@ -13,6 +13,15 @@
 
 #define ASYNC_MODE std::launch::async
 
+enum ELogLevel : uMint
+{
+	Verbose = BIT(0),	
+	Info = BIT(1),	// Kinda important
+	Warning = BIT(2),
+	Error	= BIT(3),
+	CRITICAL = BIT(4)
+};
+
 enum EState
 {
 	// Send to Frontend

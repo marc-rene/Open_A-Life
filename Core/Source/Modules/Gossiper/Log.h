@@ -1,10 +1,10 @@
 #pragma once
-#include "Core.h"  
+#include "Core/Core.h"  
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
 #include "spdlog/sinks/rotating_file_sink.h"
 #include "spdlog/stopwatch.h"
-#include "Type_Definitions.hpp"
+#include "Core/Type_Definitions.hpp"
 #include <memory>
 
 

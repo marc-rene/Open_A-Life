@@ -1,6 +1,6 @@
 
 #include "Director.h"
-#include "Core.h"
+#include "Core/Core.h"
 #include <mutex>
 #include <future>
 #include <chrono>
@@ -8,10 +8,3 @@
 #include <fstream>
 
 
-namespace Core
-{
-	Director::Director()
-	{
-		
-	}
-}
