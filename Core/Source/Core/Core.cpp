@@ -1,16 +1,15 @@
-﻿#include "Core.h"
-#include <stdint.h>
+﻿#include "Core/Core.h"
 //#include "Log.h"
 //#include "File_Wizard.h"
 //#include "Director.h"
 //#include "Packet_Ninja.h"
 
-//#include <future>
-//#include <chrono>
-//#include <iostream>
+#include <future>
+#include <chrono>
+#include <iostream>
+#include <map>
 
 
-//using namespace std::chrono_literals;
 
 
 
@@ -18,7 +17,7 @@
 	
 /*
 	// Thank you https://stackoverflow.com/a/850812
-	void Print_CPU_Details()
+void Core::OPEN_ALIFE::Print_CPU_Details()
 	{
 		int CPUInfo[4] = { -1 };
 		unsigned   nExIds, i = 0;
