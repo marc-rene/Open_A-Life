@@ -10,8 +10,8 @@
 #include "Windows/All_Windows.h"
 #include "Styles/custom_styles.h"
 
-#include "Core.h"
+#include "Core/Core.h"
 
-int CreateAppWindow(Core::OPEN_ALIFE*);
+int CreateAppWindow(ALIFE_PAIRING*);
 
 
