@@ -27,7 +27,7 @@ struct ConsoleLogger
         Commands.push_back("CLASSIFY");
         AutoScroll = true;
         ScrollToBottom = false;
-        AddLog("Welcome to Dear ImGui!");
+        //AddLog("Welcome to Dear ImGui!");
     }
     ~ConsoleLogger()
     {
@@ -48,7 +48,43 @@ struct ConsoleLogger
             ImGui::MemFree(Items[i]);
         Items.clear();
     }
+    
 
+    void    AddLog(ELogLevel verbosity_level, const char* fmt, va_list args) IM_FMTARGS(2)
+    {
+        char buf[1024] = "";
+        static std::string precede;
+
+        switch (verbosity_level)
+        {
+        case Verbose:
+            precede = " [Verbose] ";
+            break;
+
+        case Info:
+            precede = "  [Info]   ";
+            break;
+
+        case Warning:
+            precede = " [Warning] ";
+            break;
+
+        case Error:
+            precede = "  [ERROR]  ";
+            break;
+
+        default:
+            break;
+        }
+
+        precede.append(fmt);
+        vsnprintf(buf, IM_ARRAYSIZE(buf), precede.c_str(), args);
+        buf[IM_ARRAYSIZE(buf) - 1] = 0;
+        va_end(args);
+        Items.push_back(Strdup(buf));
+    }
+
+    /*
     void    AddLog(const char* fmt, ...) IM_FMTARGS(2)
     {
         // FIXME-OPT
@@ -60,10 +96,11 @@ struct ConsoleLogger
         va_end(args);
         Items.push_back(Strdup(buf));
     }
+    */
 
     void    Draw(const char* title, bool* p_open)
-    {
-        ImGui::SetNextWindowSize(ImVec2(520, 600), ImGuiCond_FirstUseEver);
+    {   
+        //ImGui::SetNextWindowSize(ImVec2(520, 600), ImGuiCond_FirstUseEver);
         if (!ImGui::Begin(title, p_open))
         {
             ImGui::End();
@@ -85,14 +122,15 @@ struct ConsoleLogger
         ImGui::PushItemWidth(100.0f);
         ImGui::Combo("Log Level", &LogLevel, "Verbose\0Normal\0Warning\0Errors\0[Debug all]\0");
         ImGui::PopItemWidth();
-        /*ImGui::SameLine();
+        
+        ImGui::SameLine();
         if (ImGui::SmallButton("Debug: add text")) { 
-            AddLog("Testing random text yay"); 
-            AddLog("[Verbose]\tfdsa");
-            AddLog("[Info]\tfffff");
-            AddLog("[Warning]\ttttttt");
-            AddLog("[ERROR]\tEEEE");
-        }*/
+            AddLog(Verbose, "This is Log 1, no test" );
+            AddLog(Verbose, "This is Log %d, 2 delimiter?", 2);
+            AddLog(Verbose, "This is Log %c, 3 delimiter?", '3');
+            AddLog(Verbose, "This is Log %s, 4 delimiter?", "44");
+
+        }
         ImGui::SameLine();
         if (ImGui::SmallButton("Clear")) { ClearLog(); }
         ImGui::SameLine();
@@ -186,12 +224,43 @@ struct ConsoleLogger
     }
 };
 
+// TODO: FIX THIS REDEFINITION MADNESS!
+static ConsoleLogger* consolePtr;
+void ALIFE_CoreObject::Log(ELogLevel verbosity_level, const char* fmt, va_list args)
+{
+    if (ReadyToLog)
+        consolePtr->AddLog(verbosity_level, fmt, args);
+    
+    return;
+}
 
 void ImGui::Core_Window(ALIFE_PAIRING* core) {
+    
+    /* Awful Debug */
+    static int iters;
+    /* ----------- */
     static ConsoleLogger console;
     static bool stayopen = true;
+    consolePtr = &console;
+
     
-    core->Director.Verbose(args) = console.AddLog(args);
+
+    //core->Director.Verbose(args) = console.AddLog(args);
 
     console.Draw("Core Logger", &stayopen);
+    core->Director.Init_Log();
+    iters++;
+
+    if (iters % 60 == 0)
+        core->Director.Verbose("YES!");
+
+    if (iters % 110 == 0)
+        core->Director.Info("YES %d!", 2);
+
+    if (iters % 260 == 0)
+        core->Director.Warn("YES! %s", "Yes");
+
+    if (iters % 360 == 0)
+        core->Director.Error("YES! %s %s %s", "oui", "da", "dope");
 }
+

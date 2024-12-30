@@ -66,17 +66,16 @@ ALIFE_CoreObject::ALIFE_CoreObject(const char* object_name)
 	Name = valid_name ? object_name : "Unnamed";
 	
 	Init_Log(object_name);
+	/*
 	if (valid_name)
 		Warn("No name was given for this A-LIFE Object... changing it to %s", Name);
 	
 	else
 		Verbose("Creating %s Object now", Name);
-}
+		*/
+		}
 
-void ALIFE_CoreObject::Log(ELogLevel verbosity_level, const char* fmt, va_list args)
-{
-	
-}
+
 
 void ALIFE_CoreObject::Init_Log()
 {
@@ -85,6 +84,7 @@ void ALIFE_CoreObject::Init_Log()
 
 void ALIFE_CoreObject::Init_Log(const char* new_logger_name)
 {
+	ReadyToLog = true;
 }
 
 void ALIFE_CoreObject::Verbose(const char* fmt, ...)
@@ -111,6 +111,7 @@ void ALIFE_CoreObject::Warn(const char* fmt, ...)
 	__crt_va_end(args);
 }
 
+// Oh crap...
 void ALIFE_CoreObject::Error(const char* fmt, ...)
 {
 	va_list args;
@@ -119,10 +120,3 @@ void ALIFE_CoreObject::Error(const char* fmt, ...)
 	__crt_va_end(args);
 }
 
-void ALIFE_CoreObject::OhShit(const char* fmt, ...)
-{
-	va_list args;
-	__crt_va_start(args, fmt);
-	Log(ELogLevel::CRITICAL, fmt, args);
-	__crt_va_end(args);
-}

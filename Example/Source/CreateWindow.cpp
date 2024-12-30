@@ -80,12 +80,16 @@ int CreateAppWindow(ALIFE_PAIRING* ALIFE_CORE)
 
     // Load Fonts
     io.Fonts->Clear();
+    io.Fonts->AddFontFromFileTTF("misc\\Fonts\\static\\OpenSans-Regular.ttf", 18);
     io.Fonts->AddFontFromFileTTF("misc\\Fonts\\static\\OpenSans-Light.ttf", 18);
-    io.Fonts->AddFontFromFileTTF("misc\\Fonts\\static\\OpenSans-Regular.ttf", 32);
-    io.Fonts->AddFontFromFileTTF("misc\\Fonts\\static\\OpenSans-Light.ttf", 32);
-    io.Fonts->AddFontFromFileTTF("misc\\Fonts\\static\\OpenSans-Regular.ttf", 11);
+    io.Fonts->AddFontFromFileTTF("misc\\Fonts\\static\\OpenSans-Regular.ttf", 22);
     io.Fonts->AddFontFromFileTTF("misc\\Fonts\\static\\OpenSans-Bold.ttf", 11);
     io.Fonts->Build();
+
+    io.ConfigDockingWithShift = true;
+    io.ConfigDockingTransparentPayload = true;
+    io.ConfigViewportsNoTaskBarIcon = true;
+    io.ConfigViewportsNoDecoration = false;
 
     // Our state
     ImVec4 clear_color;
