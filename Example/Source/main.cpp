@@ -5,7 +5,7 @@
 // Main code
 int main(int, char**)
 {
-    ALIFE_PAIRING ExampleCore;
+    ALIFE_SCENARIO ExampleCore;
     ExampleCore.Director = ALIFE_CoreObject("Director");
     ExampleCore.Packet_Ninja = ALIFE_CoreObject("Packet Ninja");
 

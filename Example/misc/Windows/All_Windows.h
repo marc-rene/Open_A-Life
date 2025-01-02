@@ -8,7 +8,7 @@
 
 namespace ImGui
 {
-	void Core_Window(ALIFE_PAIRING* Core_ref);
+	void Core_Window(ALIFE_SCENARIO* Core_ref);
 	void Parent_Window(bool* p_open);
 }
 

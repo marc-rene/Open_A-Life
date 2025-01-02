@@ -1,4 +1,4 @@
-#include "Windows/All_Windows.h"
+﻿#include "Windows/All_Windows.h"
 #include "Styles/custom_styles.h"
 
 
@@ -58,19 +58,19 @@ struct ConsoleLogger
         switch (verbosity_level)
         {
         case Verbose:
-            precede = " [Verbose] ";
+            precede = "\t[-]\t";
             break;
 
         case Info:
-            precede = "  [Info]   ";
+            precede = "\t[+]\t";
             break;
 
         case Warning:
-            precede = " [Warning] ";
+            precede = "\t[!!!]\t";
             break;
 
         case Error:
-            precede = "  [ERROR]  ";
+            precede = " [ERROR]\t ";
             break;
 
         default:
@@ -78,25 +78,14 @@ struct ConsoleLogger
         }
 
         precede.append(fmt);
-        vsnprintf(buf, IM_ARRAYSIZE(buf), precede.c_str(), args);
+        const char* tempStr = precede.c_str();
+        vsnprintf(buf, IM_ARRAYSIZE(buf), tempStr, args);
         buf[IM_ARRAYSIZE(buf) - 1] = 0;
         va_end(args);
         Items.push_back(Strdup(buf));
     }
 
-    /*
-    void    AddLog(const char* fmt, ...) IM_FMTARGS(2)
-    {
-        // FIXME-OPT
-        char buf[1024];
-        va_list args;
-        va_start(args, fmt);
-        vsnprintf(buf, IM_ARRAYSIZE(buf), fmt, args);
-        buf[IM_ARRAYSIZE(buf) - 1] = 0;
-        va_end(args);
-        Items.push_back(Strdup(buf));
-    }
-    */
+  
 
     void    Draw(const char* title, bool* p_open)
     {   
@@ -123,14 +112,6 @@ struct ConsoleLogger
         ImGui::Combo("Log Level", &LogLevel, "Verbose\0Normal\0Warning\0Errors\0[Debug all]\0");
         ImGui::PopItemWidth();
         
-        ImGui::SameLine();
-        if (ImGui::SmallButton("Debug: add text")) { 
-            AddLog(Verbose, "This is Log 1, no test" );
-            AddLog(Verbose, "This is Log %d, 2 delimiter?", 2);
-            AddLog(Verbose, "This is Log %c, 3 delimiter?", '3');
-            AddLog(Verbose, "This is Log %s, 4 delimiter?", "44");
-
-        }
         ImGui::SameLine();
         if (ImGui::SmallButton("Clear")) { ClearLog(); }
         ImGui::SameLine();
@@ -166,17 +147,17 @@ struct ConsoleLogger
                 switch (LogLevel)
                 {
                 case 0: // -Verbose
-                    if (strstr(item, "[Verbose]")) { break; }
+                    if (strstr(item, "[-]")) { break; }
                     [[fallthrough]];
                 case 1: // -Info
-                    if (strstr(item, "[Info]")) { 
+                    if (strstr(item, "[+]")) { 
                         color = WarningColour; 
                         has_color = true; 
                         break;
                     }
                     [[fallthrough]];
                 case 2: // -Warning
-                    if (strstr(item, "[Warning]")) {
+                    if (strstr(item, "[!!!]")) {
                         color = DangerColour;
                         has_color = true;
                         break;
@@ -228,13 +209,37 @@ struct ConsoleLogger
 static ConsoleLogger* consolePtr;
 void ALIFE_CoreObject::Log(ELogLevel verbosity_level, const char* fmt, va_list args)
 {
-    if (ReadyToLog)
-        consolePtr->AddLog(verbosity_level, fmt, args);
+    std::string new_fmt;
+    try
+    {
+        new_fmt = std::format("{} :\t\t", Name);
+    }
+    catch (const std::exception&)
+    {
+        printf("\n\tERROR: Huge error parsing %s", fmt);
+        new_fmt = Name;
+    }
+    new_fmt.append(fmt);
     
+    if (ReadyToLog)
+    {
+        if (ClearingBackLog == false && BackLoggedLogs.size() > 0)
+        {
+            RetrieveLogBacklog();
+        }
+        consolePtr->AddLog(verbosity_level, new_fmt.c_str(), args);
+    }
+    
+    else
+    {
+        char bLogStr[512];
+        vsnprintf(bLogStr, 512, new_fmt.c_str(), args);
+        BackLoggedLogs.push_back(bLogStr);
+    }
     return;
 }
 
-void ImGui::Core_Window(ALIFE_PAIRING* core) {
+void ImGui::Core_Window(ALIFE_SCENARIO* core) {
     
     /* Awful Debug */
     static int iters;
@@ -244,23 +249,36 @@ void ImGui::Core_Window(ALIFE_PAIRING* core) {
     consolePtr = &console;
 
     
-
-    //core->Director.Verbose(args) = console.AddLog(args);
+    core->SetReadyToLog(true);
 
     console.Draw("Core Logger", &stayopen);
-    core->Director.Init_Log();
+
+
     iters++;
 
     if (iters % 60 == 0)
+    {
         core->Director.Verbose("YES!");
+        core->Packet_Ninja.Verbose("OUI");
+    }
+
 
     if (iters % 110 == 0)
+    {
         core->Director.Info("YES %d!", 2);
+        core->Packet_Ninja.Info("OUI %d!", 5555);
+    }
 
     if (iters % 260 == 0)
+    {
         core->Director.Warn("YES! %s", "Yes");
+        core->Packet_Ninja.Warn("OUI! %s", "oui");
+    }
 
     if (iters % 360 == 0)
+    {
         core->Director.Error("YES! %s %s %s", "oui", "da", "dope");
+        core->Packet_Ninja.Error("OUI! %s %s %s", "si", "shi", "好了");
+    }
 }
 

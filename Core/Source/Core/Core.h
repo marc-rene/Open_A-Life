@@ -13,6 +13,8 @@ class ALIFE_CoreObject {
 public:
 	const char* Name;
 	bool ReadyToLog = false;
+	bool ClearingBackLog = false;
+	std::vector<std::string> BackLoggedLogs;
 
 	/**
 	 * @brief Every Object needs to be created with a process name ("Packet Ninja", "Director", etc...)
@@ -30,22 +32,34 @@ public:
 
 
 	/**
-	 * @brief Just in case you need to initialise a logger, 
-	maybe with a new name?
-	 * @param new_logger_name what name will the logger use?, leave BLANK to leave unchanged
+	 * @brief When the logging situation has been sorted, we need to get our old messages
 	 */
-	virtual void Init_Log(const char* new_logger_name);
-	virtual void Init_Log();
+	virtual bool RetrieveLogBacklog();
+	
 
 	virtual void Verbose(const char* fmt, ...); // Verbose log... Same as Log(ELogLevel::Verbose)
 	virtual void Info(const char* fmt, ...);	// Slightly more important log, same as Log(ELogLevel::Info)
 	virtual void Warn(const char* fmt, ...);	// "Oh my!" log, same as Log(ELogLevel::Warning)
 	virtual void Error(const char* fmt, ...);	// "OH BALLS" Log, same as Log(ELogLevel::Error)
-	//virtual void OhShit(const char* fmt, ...);	// Something bad has happend, May this never be called
 	
 };
 
-struct ALIFE_PAIRING {
+struct ALIFE_SCENARIO {
 	ALIFE_CoreObject Director;
 	ALIFE_CoreObject Packet_Ninja;
+
+	void SetReadyToLog(bool isReady)
+	{
+		Director.ReadyToLog = isReady;
+		Packet_Ninja.ReadyToLog = isReady;
+	
+		if (isReady == true)
+		{
+			if (Director.BackLoggedLogs.size() > 0)
+				Director.RetrieveLogBacklog();
+
+			if (Packet_Ninja.BackLoggedLogs.size() > 0)
+				Packet_Ninja.RetrieveLogBacklog();
+		}
+	}
 };

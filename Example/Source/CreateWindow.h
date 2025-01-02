@@ -12,6 +12,6 @@
 
 #include "Core/Core.h"
 
-int CreateAppWindow(ALIFE_PAIRING*);
+int CreateAppWindow(ALIFE_SCENARIO*);
 
 

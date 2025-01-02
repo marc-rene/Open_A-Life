@@ -14,77 +14,49 @@
 
 
 
-
-	
-/*
-	// Thank you https://stackoverflow.com/a/850812
-	void Print_CPU_Details()
-	{
-		int CPUInfo[4] = { -1 };
-		unsigned   nExIds, i = 0;
-		char CPUBrandString[0x40];
-
-		// Get the information associated with each extended ID.
-		__cpuid(CPUInfo, 0x80000000);
-		nExIds = CPUInfo[0];
-
-		for (i = 0x80000000; i <= nExIds; ++i)
-		{
-			__cpuid(CPUInfo, i);
-			// Interpret CPU brand string
-			if (i == 0x80000002)
-				memcpy(CPUBrandString, CPUInfo, sizeof(CPUInfo));
-			else if (i == 0x80000003)
-				memcpy(CPUBrandString + 16, CPUInfo, sizeof(CPUInfo));
-			else if (i == 0x80000004)
-				memcpy(CPUBrandString + 32, CPUInfo, sizeof(CPUInfo));
-		}
-
-		INFOc("CPU Deatils are : {}", CPUBrandString);
-
-		MEMORYSTATUSEX status;
-		status.dwLength = sizeof(status);
-		GlobalMemoryStatusEx(&status);
-		INFOc("Total RAM available : ~{}GB", status.ullTotalPhys / 1024000000 );
-		return;
-	}
-};
-		*/
-
 ALIFE_CoreObject::ALIFE_CoreObject()
 {
 	Name = "Unamed Object";
-
-	Init_Log(Name);
+	BackLoggedLogs.reserve(128);
+	//ReadyToLog = Init_Log();
 }
 
 
 ALIFE_CoreObject::ALIFE_CoreObject(const char* object_name)
 {
 	// idk how to check null string
-	bool valid_name = (object_name == "") || (object_name == NULL) || (object_name == nullptr);
-	Name = valid_name ? object_name : "Unnamed";
+	Name = object_name;
 	
-	Init_Log(object_name);
-	/*
-	if (valid_name)
-		Warn("No name was given for this A-LIFE Object... changing it to %s", Name);
+	BackLoggedLogs.reserve(128);
+	Verbose("Creating %s Object now", Name);
 	
-	else
-		Verbose("Creating %s Object now", Name);
-		*/
-		}
+	//ReadyToLog = Init_Log();
+	//ReadyToLog = false; // TODO: Fix, this is a temporary fix because log is broken
+	
 
-
-
-void ALIFE_CoreObject::Init_Log()
-{
-	Init_Log(Name);
+		
 }
 
-void ALIFE_CoreObject::Init_Log(const char* new_logger_name)
+
+
+bool ALIFE_CoreObject::RetrieveLogBacklog()
 {
-	ReadyToLog = true;
+	ClearingBackLog = true;
+	try
+	{
+
+		for (std::string msg : BackLoggedLogs) 
+		{
+			Verbose(msg.c_str());
+		}
+		BackLoggedLogs.clear();
+		ClearingBackLog = false;
+		return true;
+	}
+	catch (const std::exception&)
+	{
+		return false;
+	}
 }
 
 void ALIFE_CoreObject::Verbose(const char* fmt, ...)
