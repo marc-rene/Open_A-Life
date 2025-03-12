@@ -13,3 +13,4 @@
 [submodule "Example/imgui"]
 	path = Example/imgui
 	url = https://github.com/ocornut/imgui.git
+	branch = docking
