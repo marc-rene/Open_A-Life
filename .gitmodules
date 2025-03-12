@@ -1,0 +1,15 @@
+[submodule "Core/ThirdParty/spdlog"]
+	path = Core/ThirdParty/spdlog
+	url = https://github.com/gabime/spdlog
+[submodule "Core/ThirdParty/csv"]
+	path = Core/ThirdParty/csv
+	url = https://github.com/vincentlaucsb/csv-parser
+[submodule "Core/ThirdParty/mINI"]
+	path = Core/ThirdParty/mINI
+	url = https://github.com/metayeti/mINI
+[submodule "Core/ThirdParty/ValveNetworking"]
+	path = Core/ThirdParty/ValveNetworking
+	url = https://github.com/ValveSoftware/GameNetworkingSockets
+[submodule "Example/imgui"]
+	path = Example/imgui
+	url = https://github.com/ocornut/imgui.git
