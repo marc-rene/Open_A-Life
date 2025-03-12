@@ -1,6 +1,5 @@
 #pragma once
 #include "Core/Core.h"
-#include "ThirdParty/WalnutNetworking/Source/Walnut/Networking/Server.h"
 
 	/*
 class Packet_Ninja : public ALIFE_CoreObject
