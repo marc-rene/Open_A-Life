@@ -1,9 +1,11 @@
 #pragma once
 #include "Core/Core.h"  
+/*
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
 #include "spdlog/sinks/rotating_file_sink.h"
 #include "spdlog/stopwatch.h"
+*/
 #include "Core/Type_Definitions.hpp"
 #include <memory>
 
@@ -15,7 +17,7 @@ namespace Core
 	public:
 		static mint Init();
 
-		inline static std::shared_ptr<spdlog::logger>& GetCoreLogger()
+		/*inline static std::shared_ptr<spdlog::logger>& GetCoreLogger()
 		{
 			return CoreLogger;
 		}
@@ -28,6 +30,7 @@ namespace Core
 
 		static inline std::shared_ptr<spdlog::logger> CoreLogger;
 		static inline std::shared_ptr<spdlog::logger> EngineLogger;
+	*/
 	};
 }
 

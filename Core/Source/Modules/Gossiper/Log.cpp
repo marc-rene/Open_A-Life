@@ -6,22 +6,22 @@
 namespace Core
 {
 
-	static inline std::shared_ptr<spdlog::logger> CoreLogger;
-	static inline std::shared_ptr<spdlog::logger> EngineLogger;
+	//static inline std::shared_ptr<spdlog::logger> CoreLogger;
+	//static inline std::shared_ptr<spdlog::logger> EngineLogger;
 
 
 
 	mint Log::Init()
-	{
+	{/*
 		spdlog::set_pattern("%^[%T] %n: %v%$");
 		try {
 
-			/*
+			
 			// Create a file rotating logger with 5 MB size max and 3 rotated files
 			auto max_size = 1048576 * 5;
 			auto max_files = 3;
 			CoreLogger = spdlog::rotating_logger_mt("Core", "Logs/Log_History.log", max_size, max_files);
-			*/
+			//
 
 			CoreLogger = spdlog::stdout_color_mt("Core");
 			CoreLogger->set_level(spdlog::level::trace);
@@ -54,7 +54,7 @@ namespace Core
 		//ERRORc("CORE Error Log Style");
 		//ERRORe("Engine Error Log Style");
 
-
+		*/
 		return 0;
 	}
 
