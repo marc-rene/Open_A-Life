@@ -8,6 +8,14 @@ struct ALIFE_SCENARIO {
 	Director Director;
 	ALIFE_CoreObject Packet_Ninja;
 
+	void Init()
+	{
+		Director = Director::Director();
+		SetReadyToLog(true);
+		Director.Info("%s is Ready!", Director.Name);
+
+	}
+
 	void SetReadyToLog(bool isReady)
 	{
 		Director.ReadyToLog = isReady;

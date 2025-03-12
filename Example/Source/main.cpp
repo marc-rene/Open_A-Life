@@ -6,6 +6,7 @@
 int main(int, char**)
 {
     ALIFE_SCENARIO ExampleCore;
+    ExampleCore.Init();
     //ExampleCore.Director = ALIFE_CoreObject("Director");
     //ExampleCore.Packet_Ninja = ALIFE_CoreObject("Packet Ninja");
 
