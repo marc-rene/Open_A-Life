@@ -13,13 +13,14 @@ namespace A_LIFE
 
 		ALIFE_SCENARIO()
 		{
+			Logger = A_LIFE_Log();
 			Logger.Init();
 
 			
 			director = Director();
 			SetReadyToLog(true);
 			//director.Info("IT'S SHOOTIN' TIME!");
-			INFOc("AY HEY LETS GO");
+			//INFOc("AY HEY LETS GO");
 		}
 
 		void Init()
