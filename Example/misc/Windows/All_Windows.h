@@ -7,7 +7,7 @@
 
 namespace ImGui
 {
-	void Core_Window(ALIFE_SCENARIO* Core_ref);
+	void Core_Window(A_LIFE::ALIFE_SCENARIO* Core_ref);
 	void Parent_Window(bool* p_open);
 	void Test_Window(bool* p_open);
 }

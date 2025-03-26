@@ -9,16 +9,17 @@ project "Core"
 
     includedirs
     {
-      "Source",
-      "$(SolutionDir)Core",
-      "$(SolutionDir)Core\\Source",
-      "$(SolutionDir)Core\\ThirdParty\\csv\\single_include",
-      "$(SolutionDir)Core\\ThirdParty\\spdlog\\include"
+        "Include",
+        "Source",
+        "$(SolutionDir)Core",
+        "$(SolutionDir)Core\\Source",
+        "$(SolutionDir)Core\\ThirdParty\\csv\\single_include",
+        "$(SolutionDir)Core\\ThirdParty\\spdlog\\include"
     }
 
     -- Create virtual paths for modules
     vpaths {
-        ["Core/Public/*"]                   = { "Source/Core/**.h",                 "Source/Core/**.hpp", "Include/**.h" },  -- CORE
+        ["Core/Public/*"]                   = { "Source/Core/**.h",                 "Source/Core/**.hpp",   "Include/**.h" },  -- CORE
         ["Modules/Gossiper/Public/*"]       = { "Source/Modules/Gossiper/**.h",     "Source/Modules/Gossiper/**.hpp"    },  -- Gossiper module
         ["Modules/Packet Ninja/Public/*"]   = { "Source/Modules/Packet Ninja/**.h", "Source/Modules/Packet Ninja/**.hpp"},  -- Packet Ninja module
         ["Modules/Director/Public/*"]       = { "Source/Modules/Director/**.h",     "Source/Modules/Director/**.hpp"    },  -- Director module

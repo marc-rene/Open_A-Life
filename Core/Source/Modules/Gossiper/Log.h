@@ -1,36 +1,24 @@
 #pragma once
-#include "Core/Core.h"  
-/*
+#include "Core/Type_Definitions.hpp"
+
+#include <memory>
 #include "spdlog/spdlog.h"
-#include "spdlog/sinks/stdout_color_sinks.h"
+
+/*
 #include "spdlog/sinks/rotating_file_sink.h"
 #include "spdlog/stopwatch.h"
 */
-#include "Core/Type_Definitions.hpp"
-#include <memory>
 
-
-namespace Core
+namespace A_LIFE
 {
-	class Log
+	class A_LIFE_Log
 	{
 	public:
-		static mint Init();
+		static inline std::shared_ptr<spdlog::sinks::stdout_sink_st> CORE_LOGGER_SINK;
+		static spdlog::logger CORE_LOGGER;
+		//inline static std::shared_ptr<spdlog::logger>& GetLogger()	{ return CORE_LOGGER; }
+		static void Init();
 
-		/*inline static std::shared_ptr<spdlog::logger>& GetCoreLogger()
-		{
-			return CoreLogger;
-		}
-
-		inline static std::shared_ptr<spdlog::logger>& GetEngineLogger()
-		{
-			return EngineLogger;
-		}
-
-
-		static inline std::shared_ptr<spdlog::logger> CoreLogger;
-		static inline std::shared_ptr<spdlog::logger> EngineLogger;
-	*/
 	};
 }
 
@@ -38,18 +26,17 @@ namespace Core
 
 
 
-#define INFOc(...) Core::Log::GetCoreLogger()->debug(__VA_ARGS__)
+#define INFOc(...) spdlog::get("A-LIFE")->info(__VA_ARGS__)
+//#define INFOc(...) spdlog::info(__VA_ARGS__)
+//#define INFOc(...) A_LIFE::A_LIFE_Log::GetLogger()->info(__VA_ARGS__)
 #define SUCCESSc(...) Core::Log::GetCoreLogger()->info(__VA_ARGS__)
 #define WARNc(...) Core::Log::GetCoreLogger()->warn(__VA_ARGS__)
 #define ERRORc(...) Core::Log::GetCoreLogger()->critical(__VA_ARGS__)
 
 #define SUCCESS_msg "GREAT SUCESS"
-#define FAILURE_msg "Oh Wawaweewa..."
+#define WARNING_msg "Oh Wawaweewa..."
+#define FAILURE_msg "PAIN IN MY ASSHOLES"
+
 #define TIMER_START spdlog::stopwatch sw
 #define TIMER_ELAPSEDc(...) Core::Log::GetCoreLogger()->debug(__VA_ARGS__, sw)
 
-
-#define INFOe(...) ::Core::Log::GetEngineLogger()->debug(__VA_ARGS__)
-#define SUCCESSe(...) ::Core::Log::GetEngineLogger()->info(__VA_ARGS__)
-#define WARNe(...) ::Core::Log::GetEngineLogger()->warn(__VA_ARGS__)
-#define ERRORe(...) ::Core::Log::GetEngineLogger()->error(__VA_ARGS__)

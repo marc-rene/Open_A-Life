@@ -1,12 +1,14 @@
 #pragma once
 #include "Core/Core.h"
 
-
-class Director : public ALIFE_CoreObject
+namespace A_LIFE
 {
-public:
-	Director() : ALIFE_CoreObject()
+	class Director : public ALIFE_CoreObject
 	{
-		Name = "Director";
-	}
-};
+	public:
+		Director() : ALIFE_CoreObject()
+		{
+			Name = "Director";
+		}
+	};
+}

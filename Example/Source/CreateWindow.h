@@ -10,8 +10,7 @@
 #include "Windows/All_Windows.h"
 #include "Styles/custom_styles.h"
 
-#include "Core/Core.h"
 
-int CreateAppWindow(ALIFE_SCENARIO*);
+int CreateAppWindow(A_LIFE::ALIFE_SCENARIO*);
 
 

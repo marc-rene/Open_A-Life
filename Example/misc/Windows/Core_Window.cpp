@@ -204,9 +204,9 @@ struct ConsoleLogger
         ImGui::End();
     }
 };
-
 // TODO: FIX THIS REDEFINITION MADNESS!
 static ConsoleLogger* consolePtr;
+/*
 void ALIFE_CoreObject::Log(ELogLevel verbosity_level, const char* fmt, va_list args)
 {
     std::string new_fmt;
@@ -239,7 +239,8 @@ void ALIFE_CoreObject::Log(ELogLevel verbosity_level, const char* fmt, va_list a
     return;
 }
 
-void ImGui::Core_Window(ALIFE_SCENARIO* core) {
+*/
+void ImGui::Core_Window(A_LIFE::ALIFE_SCENARIO* core) {
     
     static ConsoleLogger console;
     static bool stayopen = true;
@@ -251,4 +252,3 @@ void ImGui::Core_Window(ALIFE_SCENARIO* core) {
 
     
 }
-
