@@ -246,7 +246,6 @@ void ImGui::Core_Window(A_LIFE::ALIFE_SCENARIO* core) {
     static bool stayopen = true;
     consolePtr = &console;
         
-    core->SetReadyToLog(true);
 
     console.Draw("Core Logger", &stayopen);
 

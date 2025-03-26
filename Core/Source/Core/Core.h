@@ -14,10 +14,9 @@ namespace A_LIFE
 
 	public:
 		const char* Name;
-		bool ReadyToLog = false;
-		bool ClearingBackLog = false;
 		std::vector<std::unique_ptr<ALIFE_CoreObject>> ObjectRegistry;
 		std::vector<std::string> BackLoggedLogs;
+		static A_LIFE::A_LIFE_Log ObjectLogger;
 
 		/**
 		 * @brief Every Object needs to be created with a process name ("Packet Ninja", "Director", etc...)
@@ -25,6 +24,8 @@ namespace A_LIFE
 		 */
 		
 		ALIFE_CoreObject();
+		ALIFE_CoreObject(const char* ObjectName);
+		virtual void Init();
 
 		/**
 		 * @brief The logging that every Open A-Life object should contain
@@ -34,10 +35,7 @@ namespace A_LIFE
 		virtual void Log(ELogLevel verbosity_level, const char* fmt, va_list args);
 
 
-		/**
-		 * @brief When the logging situation has been sorted, we need to get our old messages
-		 */
-		virtual bool RetrieveLogBacklog();
+	
 
 
 		virtual void Verbose(const char* fmt, ...); // Verbose log... Same as Log(ELogLevel::Verbose)

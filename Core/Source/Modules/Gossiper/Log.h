@@ -14,11 +14,11 @@ namespace A_LIFE
 	class A_LIFE_Log
 	{
 	public:
-		static inline std::shared_ptr<spdlog::sinks::stdout_sink_st> CORE_LOGGER_SINK;
-		static spdlog::logger CORE_LOGGER;
-		//inline static std::shared_ptr<spdlog::logger>& GetLogger()	{ return CORE_LOGGER; }
-		static void Init();
+		static std::shared_ptr<spdlog::logger> Init();
+		static std::shared_ptr<spdlog::logger> Init(const char* LoggerName);
 
+		static std::shared_ptr<spdlog::logger> GetLogger();
+		static std::shared_ptr<spdlog::logger> GetLogger(const char* LoggerName);
 	};
 }
 
@@ -26,12 +26,10 @@ namespace A_LIFE
 
 
 
-#define INFOc(...) spdlog::get("A-LIFE")->info(__VA_ARGS__)
-//#define INFOc(...) spdlog::info(__VA_ARGS__)
-//#define INFOc(...) A_LIFE::A_LIFE_Log::GetLogger()->info(__VA_ARGS__)
-#define SUCCESSc(...) Core::Log::GetCoreLogger()->info(__VA_ARGS__)
-#define WARNc(...) Core::Log::GetCoreLogger()->warn(__VA_ARGS__)
-#define ERRORc(...) Core::Log::GetCoreLogger()->critical(__VA_ARGS__)
+#define INFOc(...)		spdlog::get("A-LIFE")->info(__VA_ARGS__)
+#define SUCCESSc(...)	spdlog::get("A-LIFE")->info(__VA_ARGS__)
+#define WARNc(...)		spdlog::get("A-LIFE")->warn(__VA_ARGS__)
+#define ERRORc(...)		spdlog::get("A-LIFE")->critical(__VA_ARGS__)
 
 #define SUCCESS_msg "GREAT SUCESS"
 #define WARNING_msg "Oh Wawaweewa..."
