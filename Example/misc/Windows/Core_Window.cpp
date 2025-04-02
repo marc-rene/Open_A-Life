@@ -1,5 +1,6 @@
 ﻿#include "All_Windows.h"
 #include "Styles/custom_styles.h"
+#include "Modules/Gossiper/Log.h"
 
 
 struct ConsoleLogger
@@ -17,7 +18,16 @@ struct ConsoleLogger
     ConsoleLogger()
     {
         ClearLog();
-        memset(InputBuf, 0, sizeof(InputBuf));
+        auto callback_sink = std::make_shared<spdlog:>([](const spdlog::details::log_msg &msg) {
+                 // for example you can be notified by sending an email to yourself
+            });
+        callback_sink->set_level(spdlog::level::err);
+
+
+        
+        
+        
+        
         HistoryPos = -1;
 
         // "CLASSIFY" is here to provide the test case where "C"+[tab] completes to "CL" and display multiple matches.
@@ -35,54 +45,16 @@ struct ConsoleLogger
         for (int i = 0; i < History.Size; i++)
             ImGui::MemFree(History[i]);
     }
-
-    // Portable helpers
-    static int   Stricmp(const char* s1, const char* s2) { int d; while ((d = toupper(*s2) - toupper(*s1)) == 0 && *s1) { s1++; s2++; } return d; }
-    static int   Strnicmp(const char* s1, const char* s2, int n) { int d = 0; while (n > 0 && (d = toupper(*s2) - toupper(*s1)) == 0 && *s1) { s1++; s2++; n--; } return d; }
-    static char* Strdup(const char* s) { IM_ASSERT(s); size_t len = strlen(s) + 1; void* buf = ImGui::MemAlloc(len); IM_ASSERT(buf); return (char*)memcpy(buf, (const void*)s, len); }
-    static void  Strtrim(char* s) { char* str_end = s + strlen(s); while (str_end > s && str_end[-1] == ' ') str_end--; *str_end = 0; }
-
+    
     void    ClearLog()
     {
-        for (int i = 0; i < Items.Size; i++)
-            ImGui::MemFree(Items[i]);
-        Items.clear();
+        /* Clear Logs */
     }
     
 
     void    AddLog(ELogLevel verbosity_level, const char* fmt, va_list args) IM_FMTARGS(2)
     {
-        char buf[1024] = "";
-        static std::string precede;
-
-        switch (verbosity_level)
-        {
-        case Verbose:
-            precede = "\t[-]\t";
-            break;
-
-        case Info:
-            precede = "\t[+]\t";
-            break;
-
-        case Warning:
-            precede = "\t[!!!]\t";
-            break;
-
-        case Error:
-            precede = " [ERROR]\t ";
-            break;
-
-        default:
-            break;
-        }
-
-        precede.append(fmt);
-        const char* tempStr = precede.c_str();
-        vsnprintf(buf, IM_ARRAYSIZE(buf), tempStr, args);
-        buf[IM_ARRAYSIZE(buf) - 1] = 0;
-        va_end(args);
-        Items.push_back(Strdup(buf));
+        /* Do add log function here */
     }
 
   
@@ -204,50 +176,12 @@ struct ConsoleLogger
         ImGui::End();
     }
 };
-// TODO: FIX THIS REDEFINITION MADNESS!
-static ConsoleLogger* consolePtr;
-/*
-void ALIFE_CoreObject::Log(ELogLevel verbosity_level, const char* fmt, va_list args)
-{
-    std::string new_fmt;
-    try
-    {
-        new_fmt = std::format("{} :\t\t", Name);
-    }
-    catch (const std::exception&)
-    {
-        printf("\n\tERROR: Huge error parsing %s", fmt);
-        new_fmt = Name;
-    }
-    new_fmt.append(fmt);
-    
-    if (ReadyToLog)
-    {
-        if (ClearingBackLog == false && BackLoggedLogs.size() > 0)
-        {
-            RetrieveLogBacklog();
-        }
-        consolePtr->AddLog(verbosity_level, new_fmt.c_str(), args);
-    }
-    
-    else
-    {
-        char bLogStr[512];
-        vsnprintf(bLogStr, 512, new_fmt.c_str(), args);
-        BackLoggedLogs.push_back(bLogStr);
-    }
-    return;
-}
 
-*/
 void ImGui::Core_Window(A_LIFE::ALIFE_SCENARIO* core) {
     
     static ConsoleLogger console;
     static bool stayopen = true;
-    consolePtr = &console;
         
 
     console.Draw("Core Logger", &stayopen);
-
-    
 }

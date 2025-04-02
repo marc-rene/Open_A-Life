@@ -1,6 +1,7 @@
 [submodule "Core/ThirdParty/spdlog"]
 	path = Core/ThirdParty/spdlog
 	url = https://github.com/gabime/spdlog
+	branch = v1.x
 [submodule "Core/ThirdParty/csv"]
 	path = Core/ThirdParty/csv
 	url = https://github.com/vincentlaucsb/csv-parser
