@@ -5,29 +5,27 @@
 
 struct ConsoleLogger
 {
-    char                  InputBuf[256];
-    ImVector<char*>       Items;
+    char InputBuf[256];
+    ImVector<char*> Items;
     ImVector<const char*> Commands;
-    ImVector<char*>       History;
-    int                   HistoryPos;    // -1: new line, 0..History.Size-1 browsing history.
-    ImGuiTextFilter       Filter;
-    bool                  AutoScroll;
-    bool                  ScrollToBottom;
-    int                   LogLevel; // 0:Verbose, 1:Info, 2:Warning, 3:Error
+    ImVector<char*> History;
+    int HistoryPos; // -1: new line, 0..History.Size-1 browsing history.
+    ImGuiTextFilter Filter;
+    bool AutoScroll;
+    bool ScrollToBottom;
+    int LogLevel; // 0:Verbose, 1:Info, 2:Warning, 3:Error
 
     ConsoleLogger()
     {
         ClearLog();
-        auto callback_sink = std::make_shared<spdlog:>([](const spdlog::details::log_msg &msg) {
-                 // for example you can be notified by sending an email to yourself
-            });
+        auto callback_sink = std::make_shared<spdlog::sinks::callback_sink_mt>([](const spdlog::details::log_msg& msg)
+        {
+            AddLog(msg);
+        });
         callback_sink->set_level(spdlog::level::err);
+        A_LIFE::A_LIFE_Log::GetLogger()->sinks().emplace_back(callback_sink);
 
 
-        
-        
-        
-        
         HistoryPos = -1;
 
         // "CLASSIFY" is here to provide the test case where "C"+[tab] completes to "CL" and display multiple matches.
@@ -39,28 +37,37 @@ struct ConsoleLogger
         ScrollToBottom = false;
         //AddLog("Welcome to Dear ImGui!");
     }
+
     ~ConsoleLogger()
     {
         ClearLog();
         for (int i = 0; i < History.Size; i++)
             ImGui::MemFree(History[i]);
     }
-    
-    void    ClearLog()
+
+    void ClearLog()
     {
         /* Clear Logs */
     }
-    
 
-    void    AddLog(ELogLevel verbosity_level, const char* fmt, va_list args) IM_FMTARGS(2)
+
+    void AddLog(ELogLevel verbosity_level, const char* fmt, va_list args) IM_FMTARGS(2)
     {
         /* Do add log function here */
     }
 
-  
+    void AddLog(const spdlog::details::log_msg& msg)
+    {
+        // Convert msg.payload (which is an fmt::memory_buffer) into a std::string
+        std::string logMessage(msg.payload.data(), msg.payload.size());
 
-    void    Draw(const char* title, bool* p_open)
-    {   
+        // Store in the vector (ensure to duplicate the string to avoid dangling pointers)
+        Items.push_back(strdup(logMessage.c_str()));
+    }
+
+
+    void Draw(const char* title, bool* p_open)
+    {
         //ImGui::SetNextWindowSize(ImVec2(520, 600), ImGuiCond_FirstUseEver);
         if (!ImGui::Begin(title, p_open))
         {
@@ -83,19 +90,20 @@ struct ConsoleLogger
         ImGui::PushItemWidth(100.0f);
         ImGui::Combo("Log Level", &LogLevel, "Verbose\0Normal\0Warning\0Errors\0[Debug all]\0");
         ImGui::PopItemWidth();
-        
+
         ImGui::SameLine();
         if (ImGui::SmallButton("Clear")) { ClearLog(); }
         ImGui::SameLine();
         bool copy_to_clipboard = ImGui::SmallButton("Copy");
-        
+
         ImGui::SameLine();
         Filter.Draw("Filter (\"incl,-excl\") (\"error\")", 180);
         ImGui::Separator();
 
         // Reserve enough left-over height for 1 separator + 1 input text
         const float footer_height_to_reserve = ImGui::GetStyle().ItemSpacing.y + ImGui::GetFrameHeightWithSpacing();
-        if (ImGui::BeginChild("ScrollingRegion", ImVec2(0, -footer_height_to_reserve), ImGuiChildFlags_NavFlattened, ImGuiWindowFlags_HorizontalScrollbar))
+        if (ImGui::BeginChild("ScrollingRegion", ImVec2(0, -footer_height_to_reserve), ImGuiChildFlags_NavFlattened,
+                              ImGuiWindowFlags_HorizontalScrollbar))
         {
             if (ImGui::BeginPopupContextWindow())
             {
@@ -122,28 +130,33 @@ struct ConsoleLogger
                     if (strstr(item, "[-]")) { break; }
                     [[fallthrough]];
                 case 1: // -Info
-                    if (strstr(item, "[+]")) { 
-                        color = WarningColour; 
-                        has_color = true; 
+                    if (strstr(item, "[+]"))
+                    {
+                        color = WarningColour;
+                        has_color = true;
                         break;
                     }
                     [[fallthrough]];
                 case 2: // -Warning
-                    if (strstr(item, "[!!!]")) {
+                    if (strstr(item, "[!!!]"))
+                    {
                         color = DangerColour;
                         has_color = true;
                         break;
                     }
                     [[fallthrough]];
                 case 3: // -Error
-                    if (strstr(item, "[ERROR]")) {
-                        color = Accent; color.w = 1.0f;
+                    if (strstr(item, "[ERROR]"))
+                    {
+                        color = Accent;
+                        color.w = 1.0f;
                         has_color = true;
                         break;
                     }
                     [[fallthrough]];
                 case 4:
-                    if (LogLevel == 4) {
+                    if (LogLevel == 4)
+                    {
                         break;
                     }
                     [[fallthrough]];
@@ -151,7 +164,7 @@ struct ConsoleLogger
                     continue;
                     break;
                 }
-                
+
                 if (has_color)
                     ImGui::PushStyleColor(ImGuiCol_Text, color);
                 ImGui::TextUnformatted(item);
@@ -172,16 +185,16 @@ struct ConsoleLogger
         ImGui::EndChild();
         ImGui::Separator();
 
-        
+
         ImGui::End();
     }
 };
 
-void ImGui::Core_Window(A_LIFE::ALIFE_SCENARIO* core) {
-    
+void ImGui::Core_Window(A_LIFE::ALIFE_SCENARIO* core)
+{
     static ConsoleLogger console;
     static bool stayopen = true;
-        
+
 
     console.Draw("Core Logger", &stayopen);
 }
