@@ -6,7 +6,7 @@
 struct ConsoleLogger
 {
     char InputBuf[256];
-    ImVector<char*> Items;
+    ImVector<std::string> Items;
     ImVector<const char*> Commands;
     ImVector<char*> History;
     int HistoryPos; // -1: new line, 0..History.Size-1 browsing history.
@@ -15,14 +15,24 @@ struct ConsoleLogger
     bool ScrollToBottom;
     int LogLevel; // 0:Verbose, 1:Info, 2:Warning, 3:Error
 
+    void AddLog(const spdlog::details::log_msg& msg)
+    {
+        // Convert msg.payload (which is an fmt::memory_buffer) into a std::string
+        std::string logMessage(msg.payload.data(), msg.payload.size());
+
+        // Store in the vector (ensure to duplicate the string to avoid dangling pointers)
+        Items.push_back(logMessage);
+    }
+    
     ConsoleLogger()
     {
         ClearLog();
-        auto callback_sink = std::make_shared<spdlog::sinks::callback_sink_mt>([](const spdlog::details::log_msg& msg)
+        auto callback_sink = std::make_shared<spdlog::sinks::callback_sink_mt>([this](const spdlog::details::log_msg& msg)
         {
-            AddLog(msg);
+            INFOc("PLEASE WORK CHRIST");
         });
-        callback_sink->set_level(spdlog::level::err);
+        callback_sink->set_level(spdlog::level::trace);
+
         A_LIFE::A_LIFE_Log::GetLogger()->sinks().emplace_back(callback_sink);
 
 
@@ -50,20 +60,15 @@ struct ConsoleLogger
         /* Clear Logs */
     }
 
-
+    /*
     void AddLog(ELogLevel verbosity_level, const char* fmt, va_list args) IM_FMTARGS(2)
     {
-        /* Do add log function here */
+        // This is terrible, temporary just to test window log
+        spdlog::details::log_msg formatted = fmt::vformat(fmt, fmt::make_format_args(args));
+        AddLog(formatted);
     }
-
-    void AddLog(const spdlog::details::log_msg& msg)
-    {
-        // Convert msg.payload (which is an fmt::memory_buffer) into a std::string
-        std::string logMessage(msg.payload.data(), msg.payload.size());
-
-        // Store in the vector (ensure to duplicate the string to avoid dangling pointers)
-        Items.push_back(strdup(logMessage.c_str()));
-    }
+    */
+    
 
 
     void Draw(const char* title, bool* p_open)
@@ -95,6 +100,8 @@ struct ConsoleLogger
         if (ImGui::SmallButton("Clear")) { ClearLog(); }
         ImGui::SameLine();
         bool copy_to_clipboard = ImGui::SmallButton("Copy");
+        ImGui::SameLine();
+        if (ImGui::SmallButton("Test Log")) {  }
 
         ImGui::SameLine();
         Filter.Draw("Filter (\"incl,-excl\") (\"error\")", 180);
@@ -114,9 +121,9 @@ struct ConsoleLogger
             ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(4, 1)); // Tighten spacing
             if (copy_to_clipboard)
                 ImGui::LogToClipboard();
-            for (const char* item : Items)
+            for (std::string item : Items)
             {
-                if (!Filter.PassFilter(item))
+                if (!Filter.PassFilter(item.c_str()))
                     continue;
 
                 // Normally you would store more information in your item than just a string.
@@ -127,10 +134,10 @@ struct ConsoleLogger
                 switch (LogLevel)
                 {
                 case 0: // -Verbose
-                    if (strstr(item, "[-]")) { break; }
+                    if (strstr(item.c_str(), "[-]")) { break; }
                     [[fallthrough]];
                 case 1: // -Info
-                    if (strstr(item, "[+]"))
+                    if (strstr(item.c_str(), "[+]"))
                     {
                         color = WarningColour;
                         has_color = true;
@@ -138,7 +145,7 @@ struct ConsoleLogger
                     }
                     [[fallthrough]];
                 case 2: // -Warning
-                    if (strstr(item, "[!!!]"))
+                    if (strstr(item.c_str(), "[!!!]"))
                     {
                         color = DangerColour;
                         has_color = true;
@@ -146,7 +153,7 @@ struct ConsoleLogger
                     }
                     [[fallthrough]];
                 case 3: // -Error
-                    if (strstr(item, "[ERROR]"))
+                    if (strstr(item.c_str(), "[ERROR]"))
                     {
                         color = Accent;
                         color.w = 1.0f;
@@ -161,13 +168,16 @@ struct ConsoleLogger
                     }
                     [[fallthrough]];
                 default:
+                    color = Accent;
+                    color.w = 1.0f;
+                    has_color = true;
                     continue;
                     break;
                 }
 
                 if (has_color)
                     ImGui::PushStyleColor(ImGuiCol_Text, color);
-                ImGui::TextUnformatted(item);
+                ImGui::TextUnformatted(item.c_str());
                 if (has_color)
                     ImGui::PopStyleColor();
             }
@@ -197,4 +207,5 @@ void ImGui::Core_Window(A_LIFE::ALIFE_SCENARIO* core)
 
 
     console.Draw("Core Logger", &stayopen);
+    
 }

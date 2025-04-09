@@ -11,6 +11,7 @@ int main(int, char**)
     //ExampleCore.Director = ALIFE_CoreObject("Director");
     //ExampleCore.Packet_Ninja = ALIFE_CoreObject("Packet Ninja");
 
+    ExampleCore.director.Error("HEY YO!");
     CreateAppWindow(&ExampleCore);
     return 0;
 }

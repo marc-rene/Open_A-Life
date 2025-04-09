@@ -29,22 +29,25 @@ namespace A_LIFE
 		A_LIFE_Log::Init(Name);
 	}
 
-	
+
 	void ALIFE_CoreObject::Log(ELogLevel verbosity, const char* fmt, va_list args)
 	{
+		std::string formatted = fmt::vformat(fmt, fmt::make_format_args(args));
+		
 		// FIX THIS BROKEN SHIT!
 		switch (verbosity)
 		{
 		case ELogLevel::Verbose:
-			
+			ObjectLogger.GetLogger(Name)->trace(formatted);
+			break;
 		case ELogLevel::Info:
-			ObjectLogger.GetLogger(Name)->info(fmt, args);
+			ObjectLogger.GetLogger(Name)->info(formatted);
 			break;
 		case ELogLevel::Warning:
-			ObjectLogger.GetLogger(Name)->warn(fmt, args);
+			ObjectLogger.GetLogger(Name)->warn(formatted);
 			break;
 		case ELogLevel::Error:
-			ObjectLogger.GetLogger(Name)->critical(fmt, args);
+			ObjectLogger.GetLogger(Name)->critical(formatted);
 			break;
 		default:
 			break;
