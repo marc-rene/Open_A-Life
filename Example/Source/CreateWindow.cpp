@@ -6,8 +6,8 @@
 static ID3D11Device* g_pd3dDevice = nullptr;
 static ID3D11DeviceContext* g_pd3dDeviceContext = nullptr;
 static IDXGISwapChain* g_pSwapChain = nullptr;
-static bool                     g_SwapChainOccluded = false;
-static UINT                     g_ResizeWidth = 0, g_ResizeHeight = 0;
+static bool g_SwapChainOccluded = false;
+static UINT g_ResizeWidth = 0, g_ResizeHeight = 0;
 static ID3D11RenderTargetView* g_mainRenderTargetView = nullptr;
 
 // Forward declarations of helper functions
@@ -24,9 +24,13 @@ int CreateAppWindow(A_LIFE::ALIFE_SCENARIO* ALIFE_CORE)
 {
     // Create application window
     //ImGui_ImplWin32_EnableDpiAwareness();
-    WNDCLASSEXW wc = { sizeof(wc), CS_CLASSDC, WndProc, 0L, 0L, GetModuleHandle(nullptr), nullptr, nullptr, nullptr, nullptr, L"ImGui Example", nullptr };
+    WNDCLASSEXW wc = {
+        sizeof(wc), CS_CLASSDC, WndProc, 0L, 0L, GetModuleHandle(nullptr), nullptr, nullptr, nullptr, nullptr,
+        L"ImGui Example", nullptr
+    };
     ::RegisterClassExW(&wc);
-    HWND hwnd = ::CreateWindowW(wc.lpszClassName, L"Open A-Life Visualisation Tool", WS_OVERLAPPEDWINDOW, 100, 100, 1280, 800, nullptr, nullptr, wc.hInstance, nullptr);
+    HWND hwnd = ::CreateWindowW(wc.lpszClassName, L"Open A-Life Visualisation Tool", WS_OVERLAPPEDWINDOW, 100, 100,
+                                1280, 800, nullptr, nullptr, wc.hInstance, nullptr);
 
     // Initialize Direct3D
     if (!CreateDeviceD3D(hwnd))
@@ -38,11 +42,16 @@ int CreateAppWindow(A_LIFE::ALIFE_SCENARIO* ALIFE_CORE)
 
     bool done = false;
     bool use_dark_mode = true;
-    bool force_colour_scheme = false;   // Use system colour scheme
+    bool force_colour_scheme = false; // Use system colour scheme
 
     /*--- DEBUGGING PURPOSES ------------------------*/
     bool xShowDemoWindow = false;
     /*-----------------------------------------------*/
+
+    /*--- WHAT WINDOWS TO SHOW ----------------------*/
+    bool showScenarioMaker = false;
+    /*-----------------------------------------------*/
+
 
     // Show the window
     ::ShowWindow(hwnd, SW_SHOWDEFAULT);
@@ -51,27 +60,29 @@ int CreateAppWindow(A_LIFE::ALIFE_SCENARIO* ALIFE_CORE)
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // Enable Docking
-    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;       // Enable Multi-Viewport / Platform Windows
+    ImGuiIO& io = ImGui::GetIO();
+    (void)io;
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad; // Enable Gamepad Controls
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable; // Enable Docking
+    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable; // Enable Multi-Viewport / Platform Windows
     //io.ConfigViewportsNoDecoration = false;  //LEAVE ALONE
-    io.ConfigWindowsMoveFromTitleBarOnly = true;  //LEAVE ALONE
-    
+    io.ConfigWindowsMoveFromTitleBarOnly = true; //LEAVE ALONE
 
 
     // Setup Dear ImGui style
     ImGui::SetStyleMode(NULL, use_dark_mode);
 
     // Make a new thread that will check if we need to switch styles
-    std::future<void> DarkModeCheckThread = std::async(std::launch::async, CheckSystemColourScheme, &done, std::this_thread::get_id(), &force_colour_scheme, &use_dark_mode);
+    std::future<void> DarkModeCheckThread = std::async(std::launch::async, CheckSystemColourScheme, &done,
+                                                       std::this_thread::get_id(), &force_colour_scheme,
+                                                       &use_dark_mode);
 
     // When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
     ImGuiStyle& style = ImGui::GetStyle();
     if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
     {
-        style.WindowRounding = 0.0f;
+        style.WindowRounding = 0.3f;
         style.Colors[ImGuiCol_WindowBg].w = 1.0f;
     }
 
@@ -89,8 +100,8 @@ int CreateAppWindow(A_LIFE::ALIFE_SCENARIO* ALIFE_CORE)
 
     io.ConfigDockingWithShift = true;
     io.ConfigDockingTransparentPayload = true;
-    io.ConfigViewportsNoTaskBarIcon = true;
-    io.ConfigViewportsNoDecoration = false;
+    io.ConfigViewportsNoTaskBarIcon = false;
+    io.ConfigViewportsNoDecoration = true;
 
     // Our state
     ImVec4 clear_color;
@@ -132,18 +143,35 @@ int CreateAppWindow(A_LIFE::ALIFE_SCENARIO* ALIFE_CORE)
         ImGui_ImplDX11_NewFrame();
         ImGui_ImplWin32_NewFrame();
         ImGui::NewFrame();
-        
+
         // Main Menu Bar
         if (ImGui::BeginMainMenuBar())
         {
             if (ImGui::BeginMenu("File"))
             {
-                if (ImGui::MenuItem("New Scenario")) {/* COMING SOON */ }
-                if (ImGui::MenuItem("Open Scenario")) {/* COMING SOON */ }
+                if (ImGui::MenuItem("New Scenario", NULL, &showScenarioMaker, true))
+                {
+                    
+                }
+
+
+                if (ImGui::MenuItem("Open Scenario"))
+                {
+                    /* COMING SOON */
+                }
                 ImGui::Separator();
-                if (ImGui::MenuItem("Autosave", NULL, true, true)) {/* COMING SOON */ }
-                if (ImGui::MenuItem("Save", "CTRL+S")) {/* COMING SOON */ }
-                if (ImGui::MenuItem("Save As")) {/* COMING SOON */ }
+                if (ImGui::MenuItem("Autosave", NULL, true, true))
+                {
+                    /* COMING SOON */
+                }
+                if (ImGui::MenuItem("Save", "CTRL+S"))
+                {
+                    /* COMING SOON */
+                }
+                if (ImGui::MenuItem("Save As"))
+                {
+                    /* COMING SOON */
+                }
                 ImGui::Separator();
                 if (ImGui::MenuItem("Exit")) { done = true; }
 
@@ -155,13 +183,15 @@ int CreateAppWindow(A_LIFE::ALIFE_SCENARIO* ALIFE_CORE)
             }
             if (ImGui::BeginMenu("DEBUG"))
             {
-                if (ImGui::MenuItem("DEMO WINDOW", NULL, &xShowDemoWindow, true)) { }
+                if (ImGui::MenuItem("DEMO WINDOW", NULL, &xShowDemoWindow, true))
+                {
+                }
                 ImGui::EndMenu();
             }
 
             if (ImGui::BeginMenu("View"))
             {
-                if (ImGui::MenuItem("Force Dark Mode", NULL, &force_colour_scheme, true)) 
+                if (ImGui::MenuItem("Force Dark Mode", NULL, &force_colour_scheme, true))
                 {
                     if (force_colour_scheme == true)
                     {
@@ -170,21 +200,23 @@ int CreateAppWindow(A_LIFE::ALIFE_SCENARIO* ALIFE_CORE)
                 }
                 ImGui::EndMenu();
             }
-         
         }
         ImGui::EndMainMenuBar();
 
+
         ImGui::Parent_Window(&done);
 
-        if(xShowDemoWindow)
+        if (xShowDemoWindow)
             ImGui::ShowDemoWindow();
 
         // Let all logs go to terminal instead
         // ImGui::Core_Window(ALIFE_CORE);
-        
-        
+        if (showScenarioMaker)
+            ImGui::Scenario_Maker_Window();
+
+
         ImGui::Test_Window(&done);
-        
+
         /*
         // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
         if (show_demo_window)
@@ -218,7 +250,10 @@ int CreateAppWindow(A_LIFE::ALIFE_SCENARIO* ALIFE_CORE)
 
         // Rendering
         ImGui::Render();
-        const float clear_color_with_alpha[4] = { clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w };
+        const float clear_color_with_alpha[4] = {
+            clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w,
+            clear_color.w
+        };
         g_pd3dDeviceContext->OMSetRenderTargets(1, &g_mainRenderTargetView, nullptr);
         g_pd3dDeviceContext->ClearRenderTargetView(g_mainRenderTargetView, clear_color_with_alpha);
         ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
@@ -231,7 +266,7 @@ int CreateAppWindow(A_LIFE::ALIFE_SCENARIO* ALIFE_CORE)
         }
 
         // Present
-        HRESULT hr = g_pSwapChain->Present(1, 0);   // Present with vsync
+        HRESULT hr = g_pSwapChain->Present(1, 0); // Present with vsync
         //HRESULT hr = g_pSwapChain->Present(0, 0); // Present without vsync
         g_SwapChainOccluded = (hr == DXGI_STATUS_OCCLUDED);
     }
@@ -247,8 +282,6 @@ int CreateAppWindow(A_LIFE::ALIFE_SCENARIO* ALIFE_CORE)
 
     return 0;
 }
-
-
 
 
 // Helper functions
@@ -274,10 +307,15 @@ bool CreateDeviceD3D(HWND hWnd)
     UINT createDeviceFlags = 0;
     //createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
     D3D_FEATURE_LEVEL featureLevel;
-    const D3D_FEATURE_LEVEL featureLevelArray[2] = { D3D_FEATURE_LEVEL_11_0, D3D_FEATURE_LEVEL_10_0, };
-    HRESULT res = D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, createDeviceFlags, featureLevelArray, 2, D3D11_SDK_VERSION, &sd, &g_pSwapChain, &g_pd3dDevice, &featureLevel, &g_pd3dDeviceContext);
+    const D3D_FEATURE_LEVEL featureLevelArray[2] = {D3D_FEATURE_LEVEL_11_0, D3D_FEATURE_LEVEL_10_0,};
+    HRESULT res = D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, createDeviceFlags,
+                                                featureLevelArray, 2, D3D11_SDK_VERSION, &sd, &g_pSwapChain,
+                                                &g_pd3dDevice, &featureLevel, &g_pd3dDeviceContext);
     if (res == DXGI_ERROR_UNSUPPORTED) // Try high-performance WARP software driver if hardware is not available.
-        res = D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_WARP, nullptr, createDeviceFlags, featureLevelArray, 2, D3D11_SDK_VERSION, &sd, &g_pSwapChain, &g_pd3dDevice, &featureLevel, &g_pd3dDeviceContext);
+        res = D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_WARP, nullptr, createDeviceFlags,
+                                            featureLevelArray, 2, D3D11_SDK_VERSION, &sd, &g_pSwapChain,
+                                            &g_pd3dDevice,
+                                            &featureLevel, &g_pd3dDeviceContext);
     if (res != S_OK)
         return false;
 
@@ -288,9 +326,21 @@ bool CreateDeviceD3D(HWND hWnd)
 void CleanupDeviceD3D()
 {
     CleanupRenderTarget();
-    if (g_pSwapChain) { g_pSwapChain->Release(); g_pSwapChain = nullptr; }
-    if (g_pd3dDeviceContext) { g_pd3dDeviceContext->Release(); g_pd3dDeviceContext = nullptr; }
-    if (g_pd3dDevice) { g_pd3dDevice->Release(); g_pd3dDevice = nullptr; }
+    if (g_pSwapChain)
+    {
+        g_pSwapChain->Release();
+        g_pSwapChain = nullptr;
+    }
+    if (g_pd3dDeviceContext)
+    {
+        g_pd3dDeviceContext->Release();
+        g_pd3dDeviceContext = nullptr;
+    }
+    if (g_pd3dDevice)
+    {
+        g_pd3dDevice->Release();
+        g_pd3dDevice = nullptr;
+    }
 }
 
 void CreateRenderTarget()
@@ -303,7 +353,11 @@ void CreateRenderTarget()
 
 void CleanupRenderTarget()
 {
-    if (g_mainRenderTargetView) { g_mainRenderTargetView->Release(); g_mainRenderTargetView = nullptr; }
+    if (g_mainRenderTargetView)
+    {
+        g_mainRenderTargetView->Release();
+        g_mainRenderTargetView = nullptr;
+    }
 }
 
 #ifndef WM_DPICHANGED
@@ -340,7 +394,10 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
             //const int dpi = HIWORD(wParam);
             //printf("WM_DPICHANGED to %d (%.0f%%)\n", dpi, (float)dpi / 96.0f * 100.0f);
             const RECT* suggested_rect = (RECT*)lParam;
-            ::SetWindowPos(hWnd, nullptr, suggested_rect->left, suggested_rect->top, suggested_rect->right - suggested_rect->left, suggested_rect->bottom - suggested_rect->top, SWP_NOZORDER | SWP_NOACTIVATE);
+            ::SetWindowPos(hWnd, nullptr, suggested_rect->left, suggested_rect->top,
+                           suggested_rect->right - suggested_rect->left,
+                           suggested_rect->bottom - suggested_rect->top,
+                           SWP_NOZORDER | SWP_NOACTIVATE);
         }
         break;
     }
@@ -348,9 +405,8 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 }
 
 
-
-
-void CheckSystemColourScheme(bool* done, std::thread::id main_thread_id, bool* force_colour_scheme, bool* use_dark_mode)
+void CheckSystemColourScheme(bool* done, std::thread::id main_thread_id, bool* force_colour_scheme,
+                             bool* use_dark_mode)
 {
     while (*done == false)
     {
@@ -359,22 +415,23 @@ void CheckSystemColourScheme(bool* done, std::thread::id main_thread_id, bool* f
             DWORD darkModeselected = 0;
             DWORD valueSize = sizeof(darkModeselected);
             LSTATUS status = RegGetValue(HKEY_CURRENT_USER,
-                L"Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize",
-                L"AppsUseLightTheme",
-                RRF_RT_REG_DWORD, // Expecting a DWORD value
-                nullptr,
-                &darkModeselected,
-                &valueSize);
+                                         L"Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize",
+                                         L"AppsUseLightTheme",
+                                         RRF_RT_REG_DWORD, // Expecting a DWORD value
+                                         nullptr,
+                                         &darkModeselected,
+                                         &valueSize);
 
-            if (status == ERROR_SUCCESS) {
+            if (status == ERROR_SUCCESS)
+            {
                 ImGui::SetStyleMode(NULL, darkModeselected == false);
-            }                      
+            }
         }
         else // Colour scheme has been force
         {
             ImGui::SetStyleMode(NULL, *use_dark_mode);
         }
-        
+
         // Different Thread, we can sleep
         // TODO: Use event instead
         if (std::this_thread::get_id() != main_thread_id)
