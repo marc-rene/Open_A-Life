@@ -1,5 +1,5 @@
 -- premake5.lua
-workspace "OAL Backend"
+workspace "Open A-Life"
    architecture "x64"
    configurations { "Debug", "Release", "Dist" }
    startproject "Example"
