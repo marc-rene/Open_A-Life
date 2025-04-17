@@ -2,7 +2,9 @@
 #include "Styles/custom_styles.h"
 #include "Modules/Gossiper/Log.h"
 
-
+/* CURSE YOU SPDLOG AND YOUR LACK OF EASY CALLBACK SINK!!
+ * This'll probably be easy to fix later, but for now,
+ * all logs will go to terminal... like a peasant...
 struct ConsoleLogger
 {
     char InputBuf[256];
@@ -29,7 +31,7 @@ struct ConsoleLogger
         ClearLog();
         auto callback_sink = std::make_shared<spdlog::sinks::callback_sink_mt>([this](const spdlog::details::log_msg& msg)
         {
-            INFOc("PLEASE WORK CHRIST");
+                ConsoleLogger::AddLog(msg);
         });
         callback_sink->set_level(spdlog::level::trace);
 
@@ -57,17 +59,17 @@ struct ConsoleLogger
 
     void ClearLog()
     {
-        /* Clear Logs */
+        // Clear Logs
     }
 
-    /*
+    
     void AddLog(ELogLevel verbosity_level, const char* fmt, va_list args) IM_FMTARGS(2)
     {
         // This is terrible, temporary just to test window log
         spdlog::details::log_msg formatted = fmt::vformat(fmt, fmt::make_format_args(args));
         AddLog(formatted);
     }
-    */
+    
     
 
 
@@ -209,3 +211,4 @@ void ImGui::Core_Window(A_LIFE::ALIFE_SCENARIO* core)
     console.Draw("Core Logger", &stayopen);
     
 }
+*/

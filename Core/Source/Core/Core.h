@@ -2,7 +2,6 @@
 
 #include "Modules/Gossiper/Log.h"
 
-#include "Modules/Packet Ninja/Packet_Ninja.h"
 #include <iostream>
 #include <memory>
 #include "Core/Type_Definitions.hpp"

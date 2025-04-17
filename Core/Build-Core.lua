@@ -5,13 +5,14 @@ project "Core"
     targetdir "Binaries/%{cfg.buildcfg}"
     staticruntime "off"
 
-    files { "Source/**.h", "Source/**.cpp", "Source/**.hpp" }
+    files { "Source/**.h", "Source/**.cpp", "Source/**.hpp", "Include/**.h" }
 
     includedirs
     {
         "Include",
         "Source",
         "$(SolutionDir)Core",
+        "$(SolutionDir)Core\\Include",
         "$(SolutionDir)Core\\Source",
         "$(SolutionDir)Core\\ThirdParty\\csv\\single_include",
         "$(SolutionDir)Core\\ThirdParty\\spdlog\\include"

@@ -3,12 +3,11 @@
 
 namespace A_LIFE
 {
-	class Director : public ALIFE_CoreObject
-	{
-	public:
-		Director() : ALIFE_CoreObject("Director")
-		{
-			
-		}
-	};
+    class Director : public ALIFE_CoreObject
+    {
+    public:
+        Director() : ALIFE_CoreObject("Director")
+        {
+        }
+    };
 }

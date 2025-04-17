@@ -26,13 +26,13 @@ namespace A_LIFE
 
 	void ALIFE_CoreObject::Init()
 	{
-		A_LIFE_Log::Init(Name);
+		A_LIFE_Log::Init_Log(Name);
 	}
 
 
 	void ALIFE_CoreObject::Log(ELogLevel verbosity, const char* fmt, va_list args)
 	{
-		std::string formatted = fmt::vformat(fmt, fmt::make_format_args(args));
+		std::string formatted = vformat(fmt, fmt::make_format_args(args));
 		
 		// FIX THIS BROKEN SHIT!
 		switch (verbosity)

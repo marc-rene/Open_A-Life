@@ -179,8 +179,8 @@ int CreateAppWindow(A_LIFE::ALIFE_SCENARIO* ALIFE_CORE)
         if(xShowDemoWindow)
             ImGui::ShowDemoWindow();
 
-        
-        ImGui::Core_Window(ALIFE_CORE);
+        // Let all logs go to terminal instead
+        // ImGui::Core_Window(ALIFE_CORE);
         
         
         ImGui::Test_Window(&done);

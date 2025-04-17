@@ -2,31 +2,30 @@
 
 #include "Core/Core.h"
 #include "Modules/Director/Director.h"
+#include "Modules/Packet Ninja/Packet_Ninja.h"
 
 namespace A_LIFE
 {
-	struct ALIFE_SCENARIO {
-		Director director;
-		ALIFE_CoreObject packet_ninja;
-		static A_LIFE_Log Logger;
-		const char* DEBUG_TestName = "Hello :)";
+    // FOR THE LOVE OF GOD THERE SHALL BE ONE SCENARIO UNTIL I FIGURE OUT HOW TF WE GONNA DO MULTIPLE OF THESE HEATHENS
+    struct ALIFE_SCENARIO
+    {
+        inline static Director director;
+        inline static Packet_Ninja packetNinja;
+        static A_LIFE_Log logger;
+        inline static std::string scenarioName;
 
-		ALIFE_SCENARIO()
-		{
-			Logger.Init();
+        ALIFE_SCENARIO();
 
-			director = Director();
-			director.Info("IT'S SHOOTIN' TIME!");
-			//INFOc("AY HEY LETS GO");
-		}
+        void Init();
 
-		void Init()
-		{
+        ~ALIFE_SCENARIO()
+        {
+            //INFOc("Destroying Scenario Codename \"{}\" \n\n{}", );
+        }
 
-			//Director.Info("%s is Ready!", Director.Name);
-
-		}
-
-		
-	};
+    private:
+        // We are running ONE version of this Scenario
+        // TODO: Get this version from a GIT build or something, not hardcoded
+        static inline ALIFE_Version VERSION = ALIFE_Version(1, 0, 0);
+    };
 }
