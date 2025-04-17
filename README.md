@@ -1,3 +1,5 @@
+![Open ALIFE Logo](readme/Yellow.svg)
+
 # Overview
 
 Welcome to my repo for **Open A-Life**. 
