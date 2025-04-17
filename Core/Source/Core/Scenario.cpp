@@ -10,6 +10,9 @@ namespace A_LIFE
 
         director = Director();
         packetNinja = Packet_Ninja();
+
+        INFOc("{} has finished pre-init steps", scenarioName);
+        
     }
 
     void ALIFE_SCENARIO::Init()

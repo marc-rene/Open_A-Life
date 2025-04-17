@@ -43,18 +43,18 @@ project "Core"
        defines { }
 
    filter "configurations:Debug"
-       defines { "DEBUG" }
+       defines { "DEBUG", "FMT_UNICODE=0" }
        runtime "Debug"
        symbols "On"
 
    filter "configurations:Release"
-       defines { "RELEASE" }
+       defines { "RELEASE", "FMT_UNICODE=0" }
        runtime "Release"
        optimize "On"
        symbols "On"
 
    filter "configurations:Dist"
-       defines { "DIST" }
+       defines { "DIST", "FMT_UNICODE=0" }
        runtime "Release"
        optimize "On"
        symbols "Off"

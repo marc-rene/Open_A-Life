@@ -11,8 +11,8 @@ namespace A_LIFE
     {
         inline static Director director;
         inline static Packet_Ninja packetNinja;
-        static A_LIFE_Log logger;
         inline static std::string scenarioName;
+        static A_LIFE_Log logger;
 
         ALIFE_SCENARIO();
 

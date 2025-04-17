@@ -37,17 +37,23 @@ namespace A_LIFE
 
         try
         {
+            // Thanks https://www.w3schools.com/cpp/trycpp.asp?filename=demo_date_strftime
+            time_t timestamp = time(NULL);
+            struct tm datetime = *localtime(&timestamp);
+            char formatted_date[50];
+            strftime(formatted_date, 50, "%a  %e %b %H-%M", &datetime); 
+
             auto frontEndConsoleSink    = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-            std::string filename = std::format("logs/ALIFE_{}.log", ALIFE_Version::to_string());
-            auto fileSink               = std::make_shared<spdlog::sinks::basic_file_sink_mt>(filename, "logs/async_log.log");
+            std::string filename        = std::format("logs/{} ALIFE_{}.log", formatted_date, ALIFE_Version::to_string());
+            auto fileSink               = std::make_shared<spdlog::sinks::basic_file_sink_mt>(filename, true );
             std::vector<spdlog::sink_ptr> sinks{frontEndConsoleSink, fileSink};
-            /* // ASYNC IMPLEMENTATION
-            if (total_inits == 0)
-                spdlog::init_thread_pool(8192, 1);
-            
-            auto logger =       std::make_shared<spdlog::async_logger>(LoggerName, sinks.begin(), sinks.end(), spdlog::thread_pool(), spdlog::async_overflow_policy::overrun_oldest);
-            */
-            
+
+            // ---------------------
+            // ASYNC IMPLEMENTATION |
+            // ---------------------
+            //if (total_inits == 0)
+            //    spdlog::init_thread_pool(8192, 1);
+            //auto logger =       std::make_shared<spdlog::async_logger>(LoggerName, sinks.begin(), sinks.end(), spdlog::thread_pool(), spdlog::async_overflow_policy::overrun_oldest);
 
             auto logger =     std::make_shared<spdlog::logger>(LoggerName, sinks.begin(), sinks.end());
             logger->set_level(spdlog::level::trace); // or info/warn
@@ -68,6 +74,11 @@ namespace A_LIFE
         return A_LIFE_Log::GetLogger("A-LIFE");
     }
 
+    std::shared_ptr<spdlog::logger> A_LIFE_Log::GetLogger(const std::string LoggerName)
+    {
+        return A_LIFE_Log::GetLogger(LoggerName.c_str());    
+    }
+    
     std::shared_ptr<spdlog::logger> A_LIFE_Log::GetLogger(const char* LoggerName)
     {
         // Use Init instead because if the logger doesn't exist we'll make one..very sketch

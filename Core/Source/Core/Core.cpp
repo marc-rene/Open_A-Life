@@ -10,6 +10,7 @@
 //#include <iostream>
 
 
+
 //using namespace std::chrono_literals;
 
 namespace A_LIFE 
@@ -19,71 +20,62 @@ namespace A_LIFE
 		Name = "Borat!";
 	}
 
-	ALIFE_CoreObject::ALIFE_CoreObject(const char* ObjectName)
+	ALIFE_CoreObject::ALIFE_CoreObject(const std::string ObjectName)
 	{
 		Name = ObjectName;
 	}
 
 	void ALIFE_CoreObject::Init()
 	{
-		A_LIFE_Log::Init_Log(Name);
+		A_LIFE_Log::Init_Log(Name.c_str());
 	}
 
 
-	void ALIFE_CoreObject::Log(ELogLevel verbosity, const char* fmt, va_list args)
+	void ALIFE_CoreObject::Log(ELogLevel verbosity, std::string msg)
 	{
-		std::string formatted = vformat(fmt, fmt::make_format_args(args));
-		
-		// FIX THIS BROKEN SHIT!
 		switch (verbosity)
 		{
 		case ELogLevel::Verbose:
-			ObjectLogger.GetLogger(Name)->trace(formatted);
+			ObjectLogger.GetLogger(Name)->trace(msg);
 			break;
 		case ELogLevel::Info:
-			ObjectLogger.GetLogger(Name)->info(formatted);
+			ObjectLogger.GetLogger(Name)->info(msg);
 			break;
 		case ELogLevel::Warning:
-			ObjectLogger.GetLogger(Name)->warn(formatted);
+			ObjectLogger.GetLogger(Name)->warn(msg);
 			break;
 		case ELogLevel::Error:
-			ObjectLogger.GetLogger(Name)->critical(formatted);
+			ObjectLogger.GetLogger(Name)->critical(msg);
 			break;
 		default:
 			break;
 		}
 	}
 
-	void ALIFE_CoreObject::Verbose(const char* fmt, ...)
+
+	//todo: fix this horrible chatgpt insanity. it doesn't know how spdlog works with fmt and my 4 hour sleep brain
+	// is not equipped to deal with this nonsense. so for now, all logs made using object directly need to use c-style
+	// delimeters like %d and %s instead of fmt {}
+
+	//Update: I've given up... all directly called logs will use fmt::format() or something
+	void ALIFE_CoreObject::Verbose(std::string msg)
 	{
-		va_list args;
-		__crt_va_start(args, fmt);
-		Log(ELogLevel::Verbose, fmt, args);
-		__crt_va_end(args);
+		Log(ELogLevel::Verbose, msg);
 	}
 
-	void ALIFE_CoreObject::Info(const char* fmt, ...)
+	void ALIFE_CoreObject::Info(std::string msg)
 	{
-		va_list args;
-		__crt_va_start(args, fmt);
-		Log(ELogLevel::Info, fmt, args);
-		__crt_va_end(args);
+		Log(ELogLevel::Info, msg);
 	}
 
-	void ALIFE_CoreObject::Warn(const char* fmt, ...)
+	void ALIFE_CoreObject::Warn(std::string msg)
 	{
-		va_list args;
-		__crt_va_start(args, fmt);
-		Log(ELogLevel::Warning, fmt, args);
-		__crt_va_end(args);
+		Log(ELogLevel::Warning, msg);
 	}
 
 	// Oh crap...
-	void ALIFE_CoreObject::Error(const char* fmt, ...)
+	void ALIFE_CoreObject::Error(std::string msg)
 	{
-		va_list args;
-		__crt_va_start(args, fmt);
-		Log(ELogLevel::Error, fmt, args);
-		__crt_va_end(args);
+		Log(ELogLevel::Error, msg);
 	}
 }

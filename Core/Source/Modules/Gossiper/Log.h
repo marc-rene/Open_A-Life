@@ -2,6 +2,7 @@
 #include "Core/Type_Definitions.hpp"
 
 #include <memory>
+#include <ctime>
 #include "spdlog/spdlog.h"
 #include "spdlog/stopwatch.h"
 #include "spdlog/sinks/callback_sink.h"
@@ -25,6 +26,7 @@ namespace A_LIFE
 		static std::shared_ptr<spdlog::logger> Init_Log(const char* LoggerName);
 
 		static std::shared_ptr<spdlog::logger> GetLogger();
+		static std::shared_ptr<spdlog::logger> GetLogger(const std::string LoggerName);
 		static std::shared_ptr<spdlog::logger> GetLogger(const char* LoggerName);
 
 	private:
