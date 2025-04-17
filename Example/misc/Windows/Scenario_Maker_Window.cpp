@@ -1,37 +1,27 @@
 ﻿#include "All_Windows.h"
-#include <nfd.h>
-#include <stdlib.h>
+
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+// Windows code here
+#else
+// Linux Code here
+#endif
+
+static std::filesystem::path SetSavePath();
 
 void ImGui::Scenario_Maker_Window(bool* p_open)
 {
+    static std::filesystem::path scenario_file_path;
     if (!ImGui::Begin("Scenario Maker", p_open))
     {
         ImGui::End();
         return;
     }
 
-    NFD_Init();
-
-    nfdu8char_t *outPath;
-    nfdopendialogu8args_t args = {0};
-    
-    nfdresult_t result = NFD_OpenDialogU8_With(&outPath, &args);
-    if (result == NFD_OKAY)
+    if (scenario_file_path.empty())
     {
-        puts("Success!");
-        puts(outPath);
-        NFD_FreePathU8(outPath);
+        scenario_file_path = SetSavePath();
+        INFO("Scenario Maker Window", "First time running, save path is set to {}", scenario_file_path.string());
     }
-    else if (result == NFD_CANCEL)
-    {
-        puts("User pressed cancel.");
-    }
-    else 
-    {
-        printf("Error: %s\n", NFD_GetError());
-    }
-
-    NFD_Quit();
     
   
 
@@ -41,3 +31,7 @@ void ImGui::Scenario_Maker_Window(bool* p_open)
 }
 
 
+std::filesystem::path SetSavePath()
+{
+    return std::filesystem::current_path();
+}
