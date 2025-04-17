@@ -11,7 +11,10 @@
 [submodule "Core/ThirdParty/ValveNetworking"]
 	path = Core/ThirdParty/ValveNetworking
 	url = https://github.com/ValveSoftware/GameNetworkingSockets
-[submodule "Example/imgui"]
-	path = Example/imgui
+[submodule "Example/ThirdParty/imgui"]
+	path = Example/ThirdParty/imgui
 	url = https://github.com/ocornut/imgui.git
 	branch = docking
+[submodule "Example/ThirdParty/NativeFileDialogue"]
+	path = Example/ThirdParty/NativeFileDialogue
+	url = https://github.com/btzy/nativefiledialog-extended.git
