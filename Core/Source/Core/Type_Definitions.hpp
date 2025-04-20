@@ -1,13 +1,13 @@
 #pragma once
 
 #include <filesystem>
+#include <unordered_map>
 
+#define file_path std::filesystem::path()
 #define mint		__int8
 #define uMint		uint8_t
 #define short		__int16
 #define uShort		uint16_t
-#define file_path	std::filesystem::path
-#define dir_path	std::filesystem::path
 #define mutex_lock	std::lock_guard<std::mutex>
 #define BIT(x)		(1 << x)
 
@@ -120,9 +120,7 @@ typedef struct ALIFE_Version
     bool operator >=(const ALIFE_Version& other) const { return (other < *this) || (*this == other); }
 } ALIFE_Version;
 
-/**
- * Deprecated... SPDLOG has no use for Custom log levels... for now
- */
+
 enum ELogLevel : uMint
 {
     Verbose = BIT(0), // ...

@@ -44,7 +44,7 @@ namespace A_LIFE
             strftime(formatted_date, 50, "%a  %e %b %H-%M", &datetime); 
 
             auto frontEndConsoleSink    = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-            std::string filename        = std::format("logs/{} ALIFE_{}.log", formatted_date, ALIFE_Version::to_string());
+            std::string filename        = std::format("{}/logs/{} ALIFE_{}.log", std::filesystem::current_path().string(),  formatted_date, ALIFE_Version::to_string());
             auto fileSink               = std::make_shared<spdlog::sinks::basic_file_sink_mt>(filename, true );
             std::vector<spdlog::sink_ptr> sinks{frontEndConsoleSink, fileSink};
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Modules/Gossiper/Log.h"
+#include "Modules/File Wizard/File_Wizard.h"
 
 #include <iostream>
 #include <memory>
