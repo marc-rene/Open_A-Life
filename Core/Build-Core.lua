@@ -20,17 +20,19 @@ project "Core"
 
     -- Create virtual paths for modules
     vpaths {
-        ["Core/Public/*"]                   = { "Source/Core/**.h",                 "Source/Core/**.hpp",   "Include/**.h" },  -- CORE
-        ["Modules/Gossiper/Public/*"]       = { "Source/Modules/Gossiper/**.h",     "Source/Modules/Gossiper/**.hpp"    },  -- Gossiper module
-        ["Modules/Packet Ninja/Public/*"]   = { "Source/Modules/Packet Ninja/**.h", "Source/Modules/Packet Ninja/**.hpp"},  -- Packet Ninja module
-        ["Modules/Director/Public/*"]       = { "Source/Modules/Director/**.h",     "Source/Modules/Director/**.hpp"    },  -- Director module
-        ["Modules/File Wizard/Public/*"]    = { "Source/Modules/File Wizard/**.h",  "Source/Modules/File Wizard/**.hpp" },  -- File Wizard module
+        ["Core/Public/*"]                   = { "Source/Core/**.h",                     "Source/Core/**.hpp",   "Include/**.h" },  -- CORE
+        ["Modules/Gossiper/Public/*"]       = { "Source/Modules/Gossiper/**.h",         "Source/Modules/Gossiper/**.hpp"    },  -- Gossiper module
+        ["Modules/World/Public/*"]          = { "Source/Modules/World/**.h",            "Source/Modules/World/**.hpp"    },     -- World and Levels
+        ["Modules/Packet Ninja/Public/*"]   = { "Source/Modules/Packet Ninja/**.h",     "Source/Modules/Packet Ninja/**.hpp"},  -- Packet Ninja module
+        ["Modules/Director/Public/*"]       = { "Source/Modules/Director/**.h",         "Source/Modules/Director/**.hpp"    },  -- Director module
+        ["Modules/File Wizard/Public/*"]    = { "Source/Modules/File Wizard/**.h",      "Source/Modules/File Wizard/**.hpp" },  -- File Wizard module
         
-        ["Core/Private/*"]                  = {"Source/Core/**.cpp",                "Source/Core/**.c", "Include/**.cpp" },
-        ["Modules/Gossiper/Private/*"]      = {"Source/Modules/Gossiper/**.cpp",    "Source/Modules/Gossiper/**.c"      },
-        ["Modules/Packet Ninja/Private/*"]  = {"Source/Modules/Packet Ninja/**.cpp","Source/Modules/Packet Ninja/**.c"  },
-        ["Modules/Director/Private/*"]      = {"Source/Modules/Director/**.cpp",    "Source/Modules/Director/**.c"      },
-        ["Modules/File Wizard/Private/*"]   = {"Source/Modules/File Wizard/**.cpp", "Source/Modules/File Wizard/**.c"   },
+        ["Core/Private/*"]                  = {"Source/Core/**.cpp",                    "Source/Core/**.c", "Include/**.cpp" },
+        ["Modules/Gossiper/Private/*"]      = {"Source/Modules/Gossiper/**.cpp",        "Source/Modules/Gossiper/**.c"      },
+        ["Modules/World/Private/*"]         = {"Source/Modules/World/**.cpp",           "Source/Modules/World/**.c"         },
+        ["Modules/Packet Ninja/Private/*"]  = {"Source/Modules/Packet Ninja/**.cpp",    "Source/Modules/Packet Ninja/**.c"  },
+        ["Modules/Director/Private/*"]      = {"Source/Modules/Director/**.cpp",        "Source/Modules/Director/**.c"      },
+        ["Modules/File Wizard/Private/*"]   = {"Source/Modules/File Wizard/**.cpp",     "Source/Modules/File Wizard/**.c"   },
 
         ["Core/Tests/*"] = { "Tests/**.cpp", "Tests/**.h",   "Tests/**.hpp"  }   -- make sure we have some testing too
     }

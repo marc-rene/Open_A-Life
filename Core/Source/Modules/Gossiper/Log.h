@@ -2,7 +2,6 @@
 #include "Core/Type_Definitions.hpp"
 
 #include <memory>
-#include <ctime>
 #include "spdlog/spdlog.h"
 #include "spdlog/stopwatch.h"
 #include "spdlog/sinks/callback_sink.h"
@@ -48,7 +47,7 @@ namespace A_LIFE
 #define WARN(logger_name, ...)		A_LIFE::A_LIFE_Log::GetLogger(logger_name)->warn(__VA_ARGS__)
 
 #define ERRORc(...)					A_LIFE::A_LIFE_Log::GetLogger("A-HUGE-ERROR")->critical(__VA_ARGS__); A_LIFE::A_LIFE_Log::GetLogger()->critical(__VA_ARGS__)
-#define ERROR(logger_name, ...)		A_LIFE::A_LIFE_Log::GetLogger("A-HUGE-ERROR")->critical(__VA_ARGS__); A_LIFE::A_LIFE_Log::GetLogger(logger_name)->critical(__VA_ARGS__)
+//#define ERROR(logger_name, ...)		A_LIFE::A_LIFE_Log::GetLogger("A-HUGE-ERROR")->critical(__VA_ARGS__); A_LIFE::A_LIFE_Log::GetLogger(logger_name)->critical(__VA_ARGS__)
 
 #define SUCCESS_msg		"GREAT SUCESS"
 #define WARNING_msg		"Oh Wawaweewa..."

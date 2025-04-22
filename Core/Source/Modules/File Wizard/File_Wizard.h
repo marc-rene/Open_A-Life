@@ -12,28 +12,28 @@ namespace A_LIFE
         std::string OS_name;
         std::string CPU_name;
         std::string CPU_arch;
-        unsigned long CPU_core_count;
-        unsigned long CPU_thread_count;
-        unsigned long CPU_cache_bytes_per_thread;
+        uInt CPU_core_count;
+        uFatty CPU_thread_count;
+        uFatty CPU_cache_bytes_per_thread;
 
-        unsigned long RAM_total_amount;
-        unsigned long RAM_available_amount;
+        uFatty RAM_total_amount;
+        uFatty RAM_available_amount;
         
-        unsigned long STORAGE_total;
-        unsigned long STORAGE_free;
+        uFatty STORAGE_total;
+        uFatty STORAGE_free;
         
 
         static std::string Get_OS_Name();
         static std::string Get_CPU_Name();
         static std::string Get_CPU_arch();
-        static unsigned long Get_CPU_core_count();
-        static unsigned long Get_CPU_thread_count();
-        static unsigned long Get_CPU_cache_bytes_per_thread();
-        static unsigned long Get_CPU_cache_bytes_total()    { return Get_CPU_thread_count() * Get_CPU_cache_bytes_per_thread(); }
-        static unsigned long Get_RAM_total_amount();
-        static unsigned long Get_RAM_available_amount();
-        static unsigned long Get_STORAGE_total();
-        static unsigned long Get_STORAGE_free();
+        static uInt     Get_CPU_core_count();
+        static uFatty   Get_CPU_thread_count();
+        static uFatty   Get_CPU_cache_bytes_per_thread();
+        static uFatty   Get_CPU_cache_bytes_total()    { return Get_CPU_thread_count() * Get_CPU_cache_bytes_per_thread(); }
+        static uFatty   Get_RAM_total_amount();
+        static uFatty   Get_RAM_available_amount();
+        static uFatty   Get_STORAGE_total();
+        static uFatty   Get_STORAGE_free();
 
         System_Information() :
             OS_name(Get_OS_Name()),
@@ -66,6 +66,7 @@ namespace A_LIFE
         /// @return True if value was successfully set, false if not
         static bool Set_INI_Setting(std::filesystem::path INI_File, const std::string Section, const std::string Key,
                                     const std::string Value);
+        
         static const std::string Get_INI_Setting(std::filesystem::path INI_File, const std::string Section,
                                                  const std::string Key);
 
@@ -73,7 +74,7 @@ namespace A_LIFE
         
         static std::vector<std::string> Get_CSV_Column_Data(std::filesystem::path CSV_File,
                                                             const std::string Column_Name,
-                                                            const unsigned int allocation_size);
+                                                            const uInt allocation_size);
 
         static mint test_csv_io();
         static mint test_ini_io();

@@ -64,7 +64,7 @@ namespace A_LIFE
         }
         catch (const spdlog::spdlog_ex& ex) // Logger probably already exists
         {
-            std::cout << "Hey, Just so you know, we got SPDLOG tomfoolery here because" << ex.what() << std::endl;
+            std::cout << "Hey, Just so you know, we got SPDLOG tomfoolery here because " << ex.what() << std::endl;
             return spdlog::get(LoggerName);
         }
     }

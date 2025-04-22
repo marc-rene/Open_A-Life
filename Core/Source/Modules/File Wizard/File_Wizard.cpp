@@ -19,210 +19,219 @@
 #include <cstdlib>
 #include <iostream>
 #include <windows.h>
-typedef BOOL (WINAPI *LPFN_GLPI)(PSYSTEM_LOGICAL_PROCESSOR_INFORMATION, PDWORD);
+typedef BOOL (WINAPI*LPFN_GLPI)(PSYSTEM_LOGICAL_PROCESSOR_INFORMATION, PDWORD);
 
-std::string A_LIFE::System_Information::Get_OS_Name()
+namespace A_LIFE
 {
-    HKEY hKey;
-    if (RegOpenKeyExA(HKEY_LOCAL_MACHINE, R"(SOFTWARE\Microsoft\Windows NT\CurrentVersion)", 0, KEY_READ, &hKey) !=
-        ERROR_SUCCESS)
-        return "Unknown Windows Version";
-
-
-    // "Windows 10 Home"
-    char productName[256];
-    DWORD size = sizeof(productName);
-    RegQueryValueExA(hKey, "ProductName", nullptr, nullptr, (LPBYTE)productName, &size);
-    productName[255] = '\0';
-
-    // "Build 26600"
-    char currentBuild_str[256];
-    size = sizeof(currentBuild_str);
-    RegQueryValueExA(hKey, "CurrentBuild", nullptr, nullptr, (LPBYTE)currentBuild_str, &size);
-    currentBuild_str[255] = '\0';
-    int currentBuild = std::stoi(currentBuild_str);
-
-    // "24H2"
-    char displayVersion[256] = {};
-    DWORD displayVersionSize = sizeof(displayVersion);
-    RegQueryValueExA(hKey, "DisplayVersion", nullptr, nullptr, (LPBYTE)displayVersion, &displayVersionSize);
-    displayVersion[255] = '\0';
-
-    RegCloseKey(hKey);
-
-    // Make some STD's to make this easier
-    std::string versionName = (currentBuild >= 22000) ? "Windows 11" : "Windows 10"; // Dear MS... 10 IS NOT 11, why?
-    std::string edition;
-    std::string product = productName;
-
-    if (product.find("Home") != std::string::npos)
-        edition = "Home";
-    else if (product.find("Pro") != std::string::npos)
-        edition = "Pro";
-    else
-        edition = product; // incase we're on Windows 8 or 12
-
-    return std::format("{} {} {} (Build {})", versionName, edition, displayVersion, currentBuild);
-}
-
-
-std::string A_LIFE::System_Information::Get_CPU_Name()
-{
-    int CPUInfoData[4] = {-1};
-    char CPU_name[0x40] = {0};
-
-    __cpuid(CPUInfoData, 0x80000000);
-    unsigned int nExIds = CPUInfoData[0];
-
-    if (nExIds >= 0x80000004)
+    std::string System_Information::Get_OS_Name()
     {
-        __cpuid((int*)CPUInfoData, 0x80000002);
-        memcpy(CPU_name, CPUInfoData, sizeof(CPUInfoData));
-        __cpuid((int*)CPUInfoData, 0x80000003);
-        memcpy(CPU_name + 16, CPUInfoData, sizeof(CPUInfoData));
-        __cpuid((int*)CPUInfoData, 0x80000004);
-        memcpy(CPU_name + 32, CPUInfoData, sizeof(CPUInfoData));
+        HKEY hKey;
+        if (RegOpenKeyExA(HKEY_LOCAL_MACHINE, R"(SOFTWARE\Microsoft\Windows NT\CurrentVersion)", 0, KEY_READ, &hKey) !=
+            ERROR_SUCCESS)
+            return "Unknown Windows Version";
+
+
+        // "Windows 10 Home"
+        char productName[256];
+        DWORD size = sizeof(productName);
+        RegQueryValueExA(hKey, "ProductName", nullptr, nullptr, (LPBYTE)productName, &size);
+        productName[255] = '\0';
+
+        // "Build 26600"
+        char currentBuild_str[256];
+        size = sizeof(currentBuild_str);
+        RegQueryValueExA(hKey, "CurrentBuild", nullptr, nullptr, (LPBYTE)currentBuild_str, &size);
+        currentBuild_str[255] = '\0';
+        int currentBuild = std::stoi(currentBuild_str);
+
+        // "24H2"
+        char displayVersion[256] = {};
+        DWORD displayVersionSize = sizeof(displayVersion);
+        RegQueryValueExA(hKey, "DisplayVersion", nullptr, nullptr, (LPBYTE)displayVersion, &displayVersionSize);
+        displayVersion[255] = '\0';
+
+        RegCloseKey(hKey);
+
+        // Make some STD's to make this easier
+        std::string versionName = (currentBuild >= 22000) ? "Windows 11" : "Windows 10";
+        // Dear MS... 10 IS NOT 11, why?
+        std::string edition;
+        std::string product = productName;
+
+        if (product.find("Home") != std::string::npos)
+            edition = "Home";
+        else if (product.find("Pro") != std::string::npos)
+            edition = "Pro";
+        else
+            edition = product; // incase we're on Windows 8 or 12
+
+        return std::format("{} {} {} (Build {})", versionName, edition, displayVersion, currentBuild);
     }
 
-    return std::format("{}\0", CPU_name);
-}
 
-
-std::string A_LIFE::System_Information::Get_CPU_arch()
-{
-    SYSTEM_INFO nativesysinfo;
-    GetNativeSystemInfo(&nativesysinfo);
-    switch (nativesysinfo.wProcessorArchitecture)
+    std::string System_Information::Get_CPU_Name()
     {
-    case PROCESSOR_ARCHITECTURE_AMD64:
-        return "x64 (AMD or Intel)";
-        break;
-    case PROCESSOR_ARCHITECTURE_INTEL:
-        return "x86";
-        break;
-    case PROCESSOR_ARCHITECTURE_ARM:
-        return "ARM";
-        break;
-    case PROCESSOR_ARCHITECTURE_ARM64:
-        return "ARM64";
-        break;
-    case PROCESSOR_ARCHITECTURE_IA64:
-        return "Old as shit";
-        break;
-    case PROCESSOR_ARCHITECTURE_UNKNOWN:
-    default:
-        return "Alien";
-        break;
-    }
-}
+        int CPUInfoData[4] = {-1};
+        char CPU_name[0x40] = {0};
 
+        __cpuid(CPUInfoData, 0x80000000);
+        unsigned int nExIds = CPUInfoData[0];
 
-unsigned long A_LIFE::System_Information::Get_CPU_core_count()
-{
-    // Logical processor count with GetLogicalProcessorInformationEx
-    DWORD len = 0;
-    GetLogicalProcessorInformationEx(RelationProcessorCore, nullptr, &len);
-    std::vector<uint8_t> buffer(len);
-    SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX* pi = (SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX*)&buffer[0];
-
-    if (GetLogicalProcessorInformationEx(RelationProcessorCore, pi, &len))
-    {
-        int count = 0;
-        char* ptr = (char*)pi;
-        while (ptr < ((char*)pi + len))
+        if (nExIds >= 0x80000004)
         {
-            auto info = (SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX*)ptr;
-            count++;
-            ptr += info->Size;
+            __cpuid((int*)CPUInfoData, 0x80000002);
+            memcpy(CPU_name, CPUInfoData, sizeof(CPUInfoData));
+            __cpuid((int*)CPUInfoData, 0x80000003);
+            memcpy(CPU_name + 16, CPUInfoData, sizeof(CPUInfoData));
+            __cpuid((int*)CPUInfoData, 0x80000004);
+            memcpy(CPU_name + 32, CPUInfoData, sizeof(CPUInfoData));
         }
-        return count;
+
+        return std::format("{}\0", CPU_name);
     }
-    else
+
+
+    std::string System_Information::Get_CPU_arch()
     {
-        return 0;
-    }
-}
-
-unsigned long A_LIFE::System_Information::Get_CPU_cache_bytes_per_thread()
-{
-    LPFN_GLPI glpi = (LPFN_GLPI)GetProcAddress(GetModuleHandle(TEXT("kernel32")), "GetLogicalProcessorInformation");
-    DWORD buffer_bytes = 0;
-    unsigned long cache_size_per_thread = 0;
-
-    glpi(0, &buffer_bytes);
-    std::size_t size = buffer_bytes / sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION);
-    SYSTEM_LOGICAL_PROCESSOR_INFORMATION* cachebuffer = new SYSTEM_LOGICAL_PROCESSOR_INFORMATION[size];
-    glpi(cachebuffer, &buffer_bytes);
-
-    for (std::size_t i = 0; i < size; i++)
-    {
-        if (cachebuffer[i].Relationship == RelationCache &&
-            cachebuffer[i].Cache.Level == 1)
+        SYSTEM_INFO nativesysinfo;
+        GetNativeSystemInfo(&nativesysinfo);
+        switch (nativesysinfo.wProcessorArchitecture)
         {
-            cache_size_per_thread = (int)cachebuffer[i].Cache.Size;
+        case PROCESSOR_ARCHITECTURE_AMD64:
+            return "x64 (AMD or Intel)";
+            break;
+        case PROCESSOR_ARCHITECTURE_INTEL:
+            return "x86";
+            break;
+        case PROCESSOR_ARCHITECTURE_ARM:
+            return "ARM";
+            break;
+        case PROCESSOR_ARCHITECTURE_ARM64:
+            return "ARM64";
+            break;
+        case PROCESSOR_ARCHITECTURE_IA64:
+            return "Old as shit";
+            break;
+        case PROCESSOR_ARCHITECTURE_UNKNOWN:
+        default:
+            return "Alien";
             break;
         }
     }
-    delete cachebuffer;
 
-    return cache_size_per_thread;
+
+    uInt System_Information::Get_CPU_core_count()
+    {
+        // Logical processor count with GetLogicalProcessorInformationEx
+        DWORD len = 0;
+        GetLogicalProcessorInformationEx(RelationProcessorCore, nullptr, &len);
+        std::vector<uint8_t> buffer(len);
+        SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX* pi = (SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX*)&buffer[0];
+
+        if (GetLogicalProcessorInformationEx(RelationProcessorCore, pi, &len))
+        {
+            int count = 0;
+            char* ptr = (char*)pi;
+            while (ptr < ((char*)pi + len))
+            {
+                auto info = (SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX*)ptr;
+                count++;
+                ptr += info->Size;
+            }
+            return count;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+
+    uFatty System_Information::Get_CPU_cache_bytes_per_thread()
+    {
+        LPFN_GLPI glpi = (LPFN_GLPI)GetProcAddress(GetModuleHandle(TEXT("kernel32")), "GetLogicalProcessorInformation");
+        DWORD buffer_bytes = 0;
+        uFatty cache_size_per_thread = 0;
+
+        glpi(0, &buffer_bytes);
+        std::size_t size = buffer_bytes / sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION);
+        SYSTEM_LOGICAL_PROCESSOR_INFORMATION* cachebuffer = new SYSTEM_LOGICAL_PROCESSOR_INFORMATION[size];
+        glpi(cachebuffer, &buffer_bytes);
+
+        for (std::size_t i = 0; i < size; i++)
+        {
+            if (cachebuffer[i].Relationship == RelationCache &&
+                cachebuffer[i].Cache.Level == 1)
+            {
+                cache_size_per_thread = (int)cachebuffer[i].Cache.Size;
+                break;
+            }
+        }
+        delete cachebuffer;
+
+        return cache_size_per_thread;
+    }
+
+
+    uFatty System_Information::Get_RAM_total_amount()
+    {
+        MEMORYSTATUSEX memStatus;
+        memStatus.dwLength = sizeof(memStatus);
+
+        if (GlobalMemoryStatusEx(&memStatus))
+            return memStatus.ullTotalPhys;
+
+        else
+            return 0;
+    }
+
+
+    uFatty System_Information::Get_RAM_available_amount()
+    {
+        MEMORYSTATUSEX memStatus;
+        memStatus.dwLength = sizeof(memStatus);
+
+        if (GlobalMemoryStatusEx(&memStatus))
+            return memStatus.ullAvailPhys;
+
+        else
+            return 0;
+    }
+
+
+    uFatty System_Information::Get_STORAGE_total()
+    {
+        ULARGE_INTEGER freeBytesAvailable, totalBytes, totalFreeBytes;
+
+        if (GetDiskFreeSpaceExW(L".", &freeBytesAvailable, &totalBytes, &totalFreeBytes))
+            return totalBytes.QuadPart;
+
+        else
+            return 0;
+    }
+
+
+    uFatty System_Information::Get_STORAGE_free()
+    {
+        ULARGE_INTEGER freeBytesAvailable, totalBytes, totalFreeBytes;
+
+        if (GetDiskFreeSpaceExW(L".", &freeBytesAvailable, &totalBytes, &totalFreeBytes))
+            return totalFreeBytes.QuadPart;
+        else
+            return 0;
+    }
+
+
+    uFatty System_Information::Get_CPU_thread_count()
+    {
+        SYSTEM_INFO nativesysinfo;
+        GetNativeSystemInfo(&nativesysinfo);
+        return nativesysinfo.dwNumberOfProcessors;
+    }
 }
-
-unsigned long A_LIFE::System_Information::Get_RAM_total_amount()
-{
-    MEMORYSTATUSEX memStatus;
-    memStatus.dwLength = sizeof(memStatus);
-
-    if (GlobalMemoryStatusEx(&memStatus))
-        return memStatus.ullTotalPhys;
-
-    else
-        return 0;
-}
-
-unsigned long A_LIFE::System_Information::Get_RAM_available_amount()
-{
-    MEMORYSTATUSEX memStatus;
-    memStatus.dwLength = sizeof(memStatus);
-
-    if (GlobalMemoryStatusEx(&memStatus))
-        return memStatus.ullAvailPhys;
-
-    else
-        return 0;
-}
-
-unsigned long A_LIFE::System_Information::Get_STORAGE_total()
-{
-    ULARGE_INTEGER freeBytesAvailable, totalBytes, totalFreeBytes;
-
-    if (GetDiskFreeSpaceExW(L".", &freeBytesAvailable, &totalBytes, &totalFreeBytes))
-        return totalBytes.QuadPart;
-
-    else
-        return 0;
-}
-
-unsigned long A_LIFE::System_Information::Get_STORAGE_free()
-{
-    ULARGE_INTEGER freeBytesAvailable, totalBytes, totalFreeBytes;
-
-    if (GetDiskFreeSpaceExW(L".", &freeBytesAvailable, &totalBytes, &totalFreeBytes))
-        return totalFreeBytes.QuadPart;
-    else
-        return 0;
-}
-
-unsigned long A_LIFE::System_Information::Get_CPU_thread_count()
-{
-    SYSTEM_INFO nativesysinfo;
-    GetNativeSystemInfo(&nativesysinfo);
-    return nativesysinfo.dwNumberOfProcessors;
-}
-
 
 #else
-// Linux Code here
+// Linux code here
 #endif
 
 
@@ -352,21 +361,21 @@ namespace A_LIFE
         return 1;
     }
 
-    
-    
+
+
     bool		File_Wizard::Set_Setting(std::string Section, std::string Key, std::string Value)
     {
         mutex_lock setting_lock(Settings_File_Mutex);
 
         settings_ini_file.read(settings_struct);
         settings_struct[Section][Key] = Value;
-        
+
         return settings_ini_file.write(settings_struct);
     }
 
-    
 
-    
+
+
 
     mint		File_Wizard::Transfer_Folder_Content(dir_path source_folder, dir_path target_folder)
     {
@@ -528,7 +537,7 @@ namespace Core
 
     template <typename T>
     std::vector<T> Get_CSV_Column_Data(std::filesystem::path CSV_File, const std::string Column_Name,
-                                       const unsigned int allocation_size = 1024)
+                                       const uInt allocation_size = 1024)
     {
         // Step 1 : Check and see if this file even exists and isn't empty??
         if (std::filesystem::exists(CSV_File) && !std::filesystem::is_empty(CSV_File))
@@ -602,7 +611,7 @@ namespace Core
     {
         System_Information sys_info{};
 
-        std::string buffer = "";
+        std::string buffer = "\n";
 
         buffer.append(std::format("OS Name: {}\n", sys_info.OS_name));
         buffer.append(std::format("CPU_Name: {}\n", sys_info.CPU_name));
@@ -611,12 +620,31 @@ namespace Core
         buffer.append(std::format("CPU_thread_count: {}\n", sys_info.CPU_thread_count));
         buffer.append(std::format("CPU_cache_bytes_per_thread: {} KB\n", sys_info.CPU_cache_bytes_per_thread / 1024));
         buffer.append(std::format("CPU_cache_bytes_total: {} KB\n", sys_info.Get_CPU_cache_bytes_total() / 1024));
-        buffer.append(std::format("RAM_total_amount: {} GB\n", sys_info.RAM_total_amount / pow(1024, 3)));
-        buffer.append(std::format("RAM_available_amount: {} GB\n", sys_info.RAM_available_amount / pow(1024, 3)));
-        buffer.append(std::format("STORAGE_total: {} GB\n", sys_info.STORAGE_total / pow(1024, 3)));
-        buffer.append(std::format("STORAGE_free: {} GB\n", sys_info.STORAGE_free / pow(1024, 3)));
-
+        buffer.append(std::format("RAM_total_amount: {} GB\n", sys_info.RAM_total_amount / (1024 * 1024 * 1024)));
+        buffer.append(std::format("RAM_available_amount: {} GB\n", sys_info.RAM_available_amount / (1024 * 1024 * 1024)));
+        buffer.append(std::format("STORAGE_total: {} GB\n", sys_info.STORAGE_total / (1024 * 1024 * 1024)));
+        buffer.append(std::format("STORAGE_free: {} GB\n", sys_info.STORAGE_free / (1024 * 1024 * 1024)));
 
         return buffer;
+    }
+
+    bool File_Wizard::Does_INI_Exist(std::filesystem::path INI_File, bool make_new_if_not_exist)
+    {
+        if (std::filesystem::exists(INI_File) && std::filesystem::is_regular_file(INI_File)
+            && !std::filesystem::is_empty(INI_File))
+            return true;
+
+        else
+        {
+            if (make_new_if_not_exist)
+            {
+                std::ofstream newINIFile(INI_File, std::ios::out | std::ios::app);
+                newINIFile << std::format("; Compatiable with {} \n", LOCAL_ALIFE_VERSION.full_title()) << std::endl;
+                newINIFile.close();
+                return true;
+            }
+            else
+                return false;
+        }
     }
 }

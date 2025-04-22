@@ -5,10 +5,14 @@
 #include <map>
 
 #define file_path std::filesystem::path()
-#define mint		__int8
+#define mint		__int8      // "Mini" integer
 #define uMint		uint8_t
-#define short		__int16
-#define uShort		uint16_t
+#define short		__int16     // Ensure all shorts are the same, regardless of compiler
+#define uShort		uint16_t    
+#define int         __int32     
+#define uInt		uint32_t
+#define fatty 		__int64     // BIG
+#define uFatty 		uint64_t     
 #define mutex_lock	std::lock_guard<std::mutex>
 #define BIT(x)		(1 << x)
 
@@ -37,8 +41,8 @@ struct A_LIFE_Version
     /// @return the same version but in ALIFE_Version struct
     static A_LIFE_Version from_string(const std::string& versionString)
     {
-        uMint majDot = versionString.find('.');
-        uMint minDot = versionString.find('.', majDot + 1);
+        uMint majDot = static_cast<uMint>(versionString.find('.'));
+        uMint minDot = static_cast<uMint>(versionString.find('.', majDot + 1));
 
         if (majDot == std::string::npos || minDot == std::string::npos)
         {
@@ -59,7 +63,7 @@ struct A_LIFE_Version
             min < 0 || min > 255 ||
             pat < 0 || pat > 255)
         {
-            // Version numbers must fit in uMint range (0–255), You done fucked up
+            // Version numbers must fit in uMint range (0-255), You done fucked up
             return A_LIFE_Version{0,0,0};
         }
 
