@@ -6,7 +6,7 @@ namespace A_LIFE
     {
         logger.Init_Log();
         scenarioName = "Salut!";
-        INFOc("Running on these specs: {}\0", File_Wizard::List_Environment_Vars());
+        INFOc("Running on these specs: {}", File_Wizard::List_Environment_Vars());
         INFOc("Starting ALIFE scenario pre-init steps with version {}", VERSION.to_string());
 
         director = Director();
