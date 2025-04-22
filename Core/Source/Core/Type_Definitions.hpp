@@ -2,6 +2,7 @@
 
 #include <filesystem>
 #include <unordered_map>
+#include <map>
 
 #define file_path std::filesystem::path()
 #define mint		__int8
@@ -13,25 +14,28 @@
 
 #define ASYNC_MODE std::launch::async
 
+#define LOCAL_ALIFE_VERSION A_LIFE_Version(1,0,0,"Pre-Beta")
 
-typedef struct ALIFE_Version
+struct A_LIFE_Version
 {
-    static inline uMint major;
-    static inline uMint minor;
-    static inline uMint patch;
-    static inline std::string version_nickname;
+    
+    uMint major;
+    uMint minor;
+    uMint patch;
+    std::string version_nickname;
 
-    ALIFE_Version(uMint maj = 0, uMint min = 0, uMint pat = 0, std::string nickname = "Borat Edition")
+    A_LIFE_Version(uMint maj = 0, uMint min = 0, uMint pat = 0, std::string nickname = "Borat Edition")
     {
-        major = maj; minor = min; patch = pat;
+        major = maj;
+        minor = min;
+        patch = pat;
         version_nickname = nickname;
     }
-
-
+    
     /// 
     /// @param versionString The Alife Version in the format 'X.Y.Z' 
     /// @return the same version but in ALIFE_Version struct
-    static ALIFE_Version from_string(const std::string& versionString)
+    static A_LIFE_Version from_string(const std::string& versionString)
     {
         uMint majDot = versionString.find('.');
         uMint minDot = versionString.find('.', majDot + 1);
@@ -39,7 +43,7 @@ typedef struct ALIFE_Version
         if (majDot == std::string::npos || minDot == std::string::npos)
         {
             // ALIFE Versioning must be in the format 'X.Y.Z'... you done fucked up
-            return ALIFE_Version();
+            return A_LIFE_Version{0,0,0};
         }
 
 
@@ -47,19 +51,19 @@ typedef struct ALIFE_Version
         std::string minStr = versionString.substr(majDot + 1, minDot - majDot - 1);
         std::string patStr = versionString.substr(minDot + 1);
 
-        int maj = std::stoi(majStr);
-        int min = std::stoi(minStr);
-        int pat = std::stoi(patStr);
+        uMint maj = std::stoi(majStr);
+        uMint min = std::stoi(minStr);
+        uMint pat = std::stoi(patStr);
 
         if (maj < 0 || maj > 255 ||
             min < 0 || min > 255 ||
             pat < 0 || pat > 255)
         {
             // Version numbers must fit in uMint range (0–255), You done fucked up
-            return ALIFE_Version();
+            return A_LIFE_Version{0,0,0};
         }
 
-        return ALIFE_Version(static_cast<uMint>(maj), static_cast<uMint>(min), static_cast<uMint>(pat));
+        return A_LIFE_Version(static_cast<uMint>(maj), static_cast<uMint>(min), static_cast<uMint>(pat));
     }
 
     bool is_valid()
@@ -67,19 +71,25 @@ typedef struct ALIFE_Version
         return !(major == 0 && minor == 0 && patch == 0);
     }
 
-    static std::string to_string()
+    std::string to_string()
     {
         return std::format("{}.{}.{}", major, minor, patch);
     }
-    static std::string full_title()
+
+    std::string full_title()
     {
         return std::format("ALIFE Version {}.{}.{} \"{}\"", major, minor, patch, version_nickname);
+    }
+
+    std::string full_title_NT()
+    {
+        return std::format("{}.{}.{} \"{}\"", major, minor, patch, version_nickname);
     }
 
     /// 
     /// @param other Which ALIFE version are we checking?  
     /// @return We have the SAME patch
-    bool is_exactly_same(const ALIFE_Version& other)
+    bool is_exactly_same(const A_LIFE_Version& other)
     {
         return major == other.major && minor == other.minor && patch == other.patch;
     }
@@ -87,23 +97,23 @@ typedef struct ALIFE_Version
     /// 
     /// @param other Which ALIFE Version we checking?
     /// @return We dont care about the patch
-    bool is_minor_same(const ALIFE_Version& other) const
+    bool is_minor_same(const A_LIFE_Version& other) const
     {
         return major == other.major && minor == other.minor;
     }
 
-    bool is_major_same(const ALIFE_Version& other) const
+    bool is_major_same(const A_LIFE_Version& other) const
     {
         return major == other.major;
     }
 
-    bool operator ==(const ALIFE_Version& other) const
+    bool operator ==(const A_LIFE_Version& other) const
     {
         return major == other.major && minor == other.minor && patch == other.patch;
     }
 
 
-    bool operator <(const ALIFE_Version& other) const
+    bool operator <(const A_LIFE_Version& other) const
     {
         if (major != other.major)
             return major < other.major;
@@ -114,11 +124,11 @@ typedef struct ALIFE_Version
         return patch < other.patch;
     }
 
-    bool operator !=(const ALIFE_Version& other) const { return !(*this == other); }
-    bool operator >(const ALIFE_Version& other) const { return (other < *this); }
-    bool operator <=(const ALIFE_Version& other) const { return (*this < other) || (*this == other); }
-    bool operator >=(const ALIFE_Version& other) const { return (other < *this) || (*this == other); }
-} ALIFE_Version;
+    bool operator !=(const A_LIFE_Version& other) const { return !(*this == other); }
+    bool operator >(const A_LIFE_Version& other) const { return (other < *this); }
+    bool operator <=(const A_LIFE_Version& other) const { return (*this < other) || (*this == other); }
+    bool operator >=(const A_LIFE_Version& other) const { return (other < *this) || (*this == other); }
+};
 
 
 enum ELogLevel : uMint

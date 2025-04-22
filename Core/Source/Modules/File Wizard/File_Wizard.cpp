@@ -3,6 +3,16 @@
 #include "Modules/Gossiper/Log.h"
 #include "ThirdParty/mINI/src/mini/ini.h"
 #include "ThirdParty/csv/include/csv.hpp"
+#include <exception>
+#include <fstream>
+#include <iostream>
+#include "csv.hpp"
+#include "string"
+#include "array"
+#include <stdlib.h>
+#include <map>
+#include <mutex>
+
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 #include <commdlg.h>
@@ -11,38 +21,104 @@
 #include <windows.h>
 typedef BOOL (WINAPI *LPFN_GLPI)(PSYSTEM_LOGICAL_PROCESSOR_INFORMATION, PDWORD);
 
-std::unordered_map<std::string, std::string> A_LIFE::File_Wizard::Get_Environment_Vars()
+std::string A_LIFE::System_Information::Get_OS_Name()
 {
-    std::unordered_map<std::string, std::string> Info_Map;
-    SYSTEM_INFO sysinfo;
-    SYSTEM_INFO nativesysinfo;
-    GetSystemInfo(&sysinfo);
-    GetNativeSystemInfo(&nativesysinfo);
+    HKEY hKey;
+    if (RegOpenKeyExA(HKEY_LOCAL_MACHINE, R"(SOFTWARE\Microsoft\Windows NT\CurrentVersion)", 0, KEY_READ, &hKey) !=
+        ERROR_SUCCESS)
+        return "Unknown Windows Version";
 
-    // ---- CPU --------------------------------------------
-    // Get CPU name
+
+    // "Windows 10 Home"
+    char productName[256];
+    DWORD size = sizeof(productName);
+    RegQueryValueExA(hKey, "ProductName", nullptr, nullptr, (LPBYTE)productName, &size);
+    productName[255] = '\0';
+
+    // "Build 26600"
+    char currentBuild_str[256];
+    size = sizeof(currentBuild_str);
+    RegQueryValueExA(hKey, "CurrentBuild", nullptr, nullptr, (LPBYTE)currentBuild_str, &size);
+    currentBuild_str[255] = '\0';
+    int currentBuild = std::stoi(currentBuild_str);
+
+    // "24H2"
+    char displayVersion[256] = {};
+    DWORD displayVersionSize = sizeof(displayVersion);
+    RegQueryValueExA(hKey, "DisplayVersion", nullptr, nullptr, (LPBYTE)displayVersion, &displayVersionSize);
+    displayVersion[255] = '\0';
+
+    RegCloseKey(hKey);
+
+    // Make some STD's to make this easier
+    std::string versionName = (currentBuild >= 22000) ? "Windows 11" : "Windows 10"; // Dear MS... 10 IS NOT 11, why?
+    std::string edition;
+    std::string product = productName;
+
+    if (product.find("Home") != std::string::npos)
+        edition = "Home";
+    else if (product.find("Pro") != std::string::npos)
+        edition = "Pro";
+    else
+        edition = product; // incase we're on Windows 8 or 12
+
+    return std::format("{} {} {} (Build {})", versionName, edition, displayVersion, currentBuild);
+}
+
+
+std::string A_LIFE::System_Information::Get_CPU_Name()
+{
     int CPUInfoData[4] = {-1};
-    std::vector<int> cpudata;
-    char brand[0x40] = {0};
+    char CPU_name[0x40] = {0};
+
     __cpuid(CPUInfoData, 0x80000000);
     unsigned int nExIds = CPUInfoData[0];
 
     if (nExIds >= 0x80000004)
     {
         __cpuid((int*)CPUInfoData, 0x80000002);
-        memcpy(brand, CPUInfoData, sizeof(CPUInfoData));
+        memcpy(CPU_name, CPUInfoData, sizeof(CPUInfoData));
         __cpuid((int*)CPUInfoData, 0x80000003);
-        memcpy(brand + 16, CPUInfoData, sizeof(CPUInfoData));
+        memcpy(CPU_name + 16, CPUInfoData, sizeof(CPUInfoData));
         __cpuid((int*)CPUInfoData, 0x80000004);
-        memcpy(brand + 32, CPUInfoData, sizeof(CPUInfoData));
+        memcpy(CPU_name + 32, CPUInfoData, sizeof(CPUInfoData));
     }
-    Info_Map["CPU Name"] = std::string(brand);
 
-    // Get system info (cores/threads)
-    SYSTEM_INFO sysInfo;
-    GetSystemInfo(&sysInfo);
-    Info_Map["CPU Threads"] = std::to_string(sysInfo.dwNumberOfProcessors);
+    return std::format("{}\0", CPU_name);
+}
 
+
+std::string A_LIFE::System_Information::Get_CPU_arch()
+{
+    SYSTEM_INFO nativesysinfo;
+    GetNativeSystemInfo(&nativesysinfo);
+    switch (nativesysinfo.wProcessorArchitecture)
+    {
+    case PROCESSOR_ARCHITECTURE_AMD64:
+        return "x64 (AMD or Intel)";
+        break;
+    case PROCESSOR_ARCHITECTURE_INTEL:
+        return "x86";
+        break;
+    case PROCESSOR_ARCHITECTURE_ARM:
+        return "ARM";
+        break;
+    case PROCESSOR_ARCHITECTURE_ARM64:
+        return "ARM64";
+        break;
+    case PROCESSOR_ARCHITECTURE_IA64:
+        return "Old as shit";
+        break;
+    case PROCESSOR_ARCHITECTURE_UNKNOWN:
+    default:
+        return "Alien";
+        break;
+    }
+}
+
+
+unsigned long A_LIFE::System_Information::Get_CPU_core_count()
+{
     // Logical processor count with GetLogicalProcessorInformationEx
     DWORD len = 0;
     GetLogicalProcessorInformationEx(RelationProcessorCore, nullptr, &len);
@@ -59,59 +135,19 @@ std::unordered_map<std::string, std::string> A_LIFE::File_Wizard::Get_Environmen
             count++;
             ptr += info->Size;
         }
-        Info_Map["CPU Cores"] = std::to_string(count);
+        return count;
     }
-
-    switch (nativesysinfo.wProcessorArchitecture)
+    else
     {
-    case PROCESSOR_ARCHITECTURE_AMD64:
-        Info_Map["CPU ARCH"] = "x64 (AMD or Intel)";
-        break;
-    case PROCESSOR_ARCHITECTURE_INTEL:
-        Info_Map["CPU ARCH"] = "x86";
-        break;
-    case PROCESSOR_ARCHITECTURE_ARM:
-        Info_Map["CPU ARCH"] = "ARM";
-        break;
-    case PROCESSOR_ARCHITECTURE_ARM64:
-        Info_Map["CPU ARCH"] = "ARM64";
-        break;
-    case PROCESSOR_ARCHITECTURE_IA64:
-        Info_Map["CPU ARCH"] = "Old as shit";
-        break;
-    case PROCESSOR_ARCHITECTURE_UNKNOWN:
-    default:
-        Info_Map["CPU ARCH"] = "Alien";
-        break;
+        return 0;
     }
+}
 
-    // ---- END OF CPU -------------------------------------
-
-    // ---- RAM --------------------------------------------
-    MEMORYSTATUSEX memStatus;
-    memStatus.dwLength = sizeof(memStatus);
-
-    if (GlobalMemoryStatusEx(&memStatus))
-    {
-        Info_Map["RAM Total Ammount"] = std::format("{} MB", memStatus.ullTotalPhys / (1024 * 1024));
-        Info_Map["RAM Total Available"] = std::format("{} MB", memStatus.ullAvailPhys / (1024 * 1024));
-    }
-    // ---- END OF RAM -------------------------------------
-
-    // ---- STORAGE ----------------------------------------
-    ULARGE_INTEGER freeBytesAvailable, totalBytes, totalFreeBytes;
-
-    if (GetDiskFreeSpaceExW(L".", &freeBytesAvailable, &totalBytes, &totalFreeBytes))
-    {
-        Info_Map["Storage Total"] = std::format("{} GB",totalBytes.QuadPart / (1024 * 1024 * 1024));
-        Info_Map["Storage Free"] = std::format("{} GB", totalFreeBytes.QuadPart / (1024 * 1024 * 1024));
-    }
-    // ---- END OF STORAGE ---------------------------------
-
-
-    LPFN_GLPI glpi = (LPFN_GLPI) GetProcAddress(GetModuleHandle(TEXT("kernel32")), "GetLogicalProcessorInformation");
+unsigned long A_LIFE::System_Information::Get_CPU_cache_bytes_per_thread()
+{
+    LPFN_GLPI glpi = (LPFN_GLPI)GetProcAddress(GetModuleHandle(TEXT("kernel32")), "GetLogicalProcessorInformation");
     DWORD buffer_bytes = 0;
-    int cache_size = 0;
+    unsigned long cache_size_per_thread = 0;
 
     glpi(0, &buffer_bytes);
     std::size_t size = buffer_bytes / sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION);
@@ -123,30 +159,71 @@ std::unordered_map<std::string, std::string> A_LIFE::File_Wizard::Get_Environmen
         if (cachebuffer[i].Relationship == RelationCache &&
             cachebuffer[i].Cache.Level == 1)
         {
-            cache_size = (int) cachebuffer[i].Cache.Size;
+            cache_size_per_thread = (int)cachebuffer[i].Cache.Size;
             break;
         }
     }
-
     delete cachebuffer;
-    
-    Info_Map["CPU L1 Per-Core Cache Size"] = std::format("{} KB", cache_size);
-    return Info_Map;
+
+    return cache_size_per_thread;
 }
+
+unsigned long A_LIFE::System_Information::Get_RAM_total_amount()
+{
+    MEMORYSTATUSEX memStatus;
+    memStatus.dwLength = sizeof(memStatus);
+
+    if (GlobalMemoryStatusEx(&memStatus))
+        return memStatus.ullTotalPhys;
+
+    else
+        return 0;
+}
+
+unsigned long A_LIFE::System_Information::Get_RAM_available_amount()
+{
+    MEMORYSTATUSEX memStatus;
+    memStatus.dwLength = sizeof(memStatus);
+
+    if (GlobalMemoryStatusEx(&memStatus))
+        return memStatus.ullAvailPhys;
+
+    else
+        return 0;
+}
+
+unsigned long A_LIFE::System_Information::Get_STORAGE_total()
+{
+    ULARGE_INTEGER freeBytesAvailable, totalBytes, totalFreeBytes;
+
+    if (GetDiskFreeSpaceExW(L".", &freeBytesAvailable, &totalBytes, &totalFreeBytes))
+        return totalBytes.QuadPart;
+
+    else
+        return 0;
+}
+
+unsigned long A_LIFE::System_Information::Get_STORAGE_free()
+{
+    ULARGE_INTEGER freeBytesAvailable, totalBytes, totalFreeBytes;
+
+    if (GetDiskFreeSpaceExW(L".", &freeBytesAvailable, &totalBytes, &totalFreeBytes))
+        return totalFreeBytes.QuadPart;
+    else
+        return 0;
+}
+
+unsigned long A_LIFE::System_Information::Get_CPU_thread_count()
+{
+    SYSTEM_INFO nativesysinfo;
+    GetNativeSystemInfo(&nativesysinfo);
+    return nativesysinfo.dwNumberOfProcessors;
+}
+
+
 #else
 // Linux Code here
 #endif
-
-
-#include <exception>
-#include <fstream>
-#include <iostream>
-#include "csv.hpp"
-#include "string"
-#include "array"
-#include <stdlib.h>
-#include <map>
-#include <mutex>
 
 
 namespace A_LIFE
@@ -521,15 +598,24 @@ namespace Core
     }
 
 
-    std::string File_Wizard::List_Environment_Vars(const char delimiter)
+    std::string File_Wizard::List_Environment_Vars()
     {
-        auto system_info = Get_Environment_Vars();
+        System_Information sys_info{};
+
         std::string buffer = "";
 
-        for (auto const& [key, value] : system_info)
-        {
-            buffer.append(std::format("{}: {}\n", key, value));
-        }
+        buffer.append(std::format("OS Name: {}\n", sys_info.OS_name));
+        buffer.append(std::format("CPU_Name: {}\n", sys_info.CPU_name));
+        buffer.append(std::format("CPU_arch: {}\n", sys_info.CPU_arch));
+        buffer.append(std::format("CPU_core_count: {}\n", sys_info.CPU_core_count));
+        buffer.append(std::format("CPU_thread_count: {}\n", sys_info.CPU_thread_count));
+        buffer.append(std::format("CPU_cache_bytes_per_thread: {} KB\n", sys_info.CPU_cache_bytes_per_thread / 1024));
+        buffer.append(std::format("CPU_cache_bytes_total: {} KB\n", sys_info.Get_CPU_cache_bytes_total() / 1024));
+        buffer.append(std::format("RAM_total_amount: {} GB\n", sys_info.RAM_total_amount / pow(1024, 3)));
+        buffer.append(std::format("RAM_available_amount: {} GB\n", sys_info.RAM_available_amount / pow(1024, 3)));
+        buffer.append(std::format("STORAGE_total: {} GB\n", sys_info.STORAGE_total / pow(1024, 3)));
+        buffer.append(std::format("STORAGE_free: {} GB\n", sys_info.STORAGE_free / pow(1024, 3)));
+
 
         return buffer;
     }

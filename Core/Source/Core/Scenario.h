@@ -26,6 +26,6 @@ namespace A_LIFE
     private:
         // We are running ONE version of this Scenario
         // TODO: Get this version from a GIT build or something, not hardcoded
-        static inline ALIFE_Version VERSION = ALIFE_Version(1, 0, 0);
+        static inline A_LIFE_Version VERSION = LOCAL_ALIFE_VERSION;
     };
 }
