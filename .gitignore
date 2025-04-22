@@ -12,6 +12,7 @@ Example/imgui/examples
 *.vcxproj.filters
 *.sln
 *.temp
+*/imgui.ini
 Makefile
 
 # Exclude
