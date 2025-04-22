@@ -9,7 +9,7 @@ int main(int, char**)
     ExampleCore.Init();
 
 
-    INFOc(test);
+
     CreateAppWindow(&ExampleCore);
 
     return 0;

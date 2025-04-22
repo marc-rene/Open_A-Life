@@ -38,14 +38,15 @@ namespace A_LIFE
         try
         {
             // Thanks https://www.w3schools.com/cpp/trycpp.asp?filename=demo_date_strftime
-            time_t timestamp = time(NULL);
-            struct tm datetime = *localtime(&timestamp);
-            char formatted_date[50];
+            static time_t timestamp = time(NULL);
+            static struct tm datetime = *localtime(&timestamp);
+            static char formatted_date[50];
             strftime(formatted_date, 50, "%a  %e %b %H-%M", &datetime); 
 
-            auto frontEndConsoleSink    = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-            std::string filename        = std::format("{}/logs/{} ALIFE_{}.log", std::filesystem::current_path().string(),  formatted_date, LOCAL_ALIFE_VERSION.to_string());
-            auto fileSink               = std::make_shared<spdlog::sinks::basic_file_sink_mt>(filename, true );
+            static auto frontEndConsoleSink    = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+            static std::string filename        = std::format("{}/logs/{} ALIFE_{}.log", std::filesystem::current_path().string(),  formatted_date, LOCAL_ALIFE_VERSION.to_string());
+            static auto fileSink               = std::make_shared<spdlog::sinks::basic_file_sink_mt>(filename, true);
+            spdlog::flush_every(std::chrono::seconds(4));
             std::vector<spdlog::sink_ptr> sinks{frontEndConsoleSink, fileSink};
 
             // ---------------------
@@ -84,7 +85,7 @@ namespace A_LIFE
         // Use Init instead because if the logger doesn't exist we'll make one..very sketch
         if (spdlog::get(LoggerName) == nullptr)
         {
-            WARNc("HEY! {} DOESN'T EXIST YET... Making him now", LoggerName);
+            WARNc("HEY! {} DOESN'T EXIST YET... Making him now, path is {}", LoggerName, std::filesystem::current_path().string());
             A_LIFE_Log::Init_Log(LoggerName);
         }
 

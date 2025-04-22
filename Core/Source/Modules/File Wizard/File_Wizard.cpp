@@ -228,6 +228,35 @@ namespace A_LIFE
         GetNativeSystemInfo(&nativesysinfo);
         return nativesysinfo.dwNumberOfProcessors;
     }
+
+
+    std::filesystem::path File_Wizard::SetSavePath()
+    {
+        char szFile[MAX_PATH] = { 0 };
+
+        OPENFILENAMEA ofn{0};
+        ofn.lStructSize = sizeof(OPENFILENAMEA);
+        ofn.lpstrFile = szFile;
+        ofn.nMaxFile = sizeof(szFile);
+        ofn.lpstrFilter = "Scenario Files (*.scenario)\0*.scenario\0All Files (*.*)\0*.*\0";
+        ofn.nFilterIndex = 1;
+        ofn.Flags = OFN_PATHMUSTEXIST | OFN_OVERWRITEPROMPT | OFN_LONGNAMES | OFN_NOCHANGEDIR;
+        ofn.lpstrDefExt = "scenario";
+        ofn.lpTemplateName = "Salut.scenario";
+        ofn.lpstrTitle = "Habibi, where we save our new Scenario?";
+
+        if (GetSaveFileNameA(&ofn)) {
+            return std::filesystem::path(ofn.lpstrFile);
+        }
+        else {
+            // User cancelled or an error occurred
+            
+            return std::filesystem::current_path() / "Nouveau Scenario.scenario";
+        }
+    }
+
+
+    
 }
 
 #else
@@ -613,6 +642,7 @@ namespace Core
 
         std::string buffer = "\n";
 
+        buffer.append(std::format("A-Life Version: {}\n", LOCAL_ALIFE_VERSION.full_title()));
         buffer.append(std::format("OS Name: {}\n", sys_info.OS_name));
         buffer.append(std::format("CPU_Name: {}\n", sys_info.CPU_name));
         buffer.append(std::format("CPU_arch: {}\n", sys_info.CPU_arch));
@@ -647,4 +677,6 @@ namespace Core
                 return false;
         }
     }
+
+    
 }

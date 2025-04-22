@@ -18,13 +18,12 @@ void ImGui::Scenario_Maker_Window(bool* p_open)
         return;
     }
 
-    /*
     if (scenario_file_path.empty())
     {
-        scenario_file_path =  Core::File_Wizard::SetSavePath();
+        scenario_file_path =  A_LIFE::File_Wizard::SetSavePath();
         INFO("Scenario Maker Window", "First time running, save path is set to {}", scenario_file_path.string());
     }
-*/
+    
     ImGui::Text("Current Save path is {}", scenario_file_path.string());
 
     ImGui::End();

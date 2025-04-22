@@ -13,7 +13,15 @@ namespace A_LIFE
         packetNinja = Packet_Ninja();
 
         INFOc("{} has finished pre-init steps", scenarioName);
-        
+    }
+
+    ALIFE_SCENARIO::~ALIFE_SCENARIO()
+    {
+        SUCCESSc("\nThe {} Scenario has finished..."
+                 "\nThe drapes have been draped..."
+                 "\nThe prayer to the gods for a successful run/exit,"
+                 "\n...have hopefully been answered"
+                 "\n\nIf not, drop me a Github issue and i'll reply", scenarioName);
     }
 
     void ALIFE_SCENARIO::Init()

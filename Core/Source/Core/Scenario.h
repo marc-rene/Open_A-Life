@@ -18,10 +18,7 @@ namespace A_LIFE
 
         void Init();
 
-        ~ALIFE_SCENARIO()
-        {
-            //INFOc("Destroying Scenario Codename \"{}\" \n\n{}", );
-        }
+        ~ALIFE_SCENARIO();
 
     private:
         // We are running ONE version of this Scenario
