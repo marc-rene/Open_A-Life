@@ -212,10 +212,11 @@ int CreateAppWindow(A_LIFE::ALIFE_SCENARIO* ALIFE_CORE)
         // Let all logs go to terminal instead
         // ImGui::Core_Window(ALIFE_CORE);
         if (showScenarioMaker)
-            ImGui::Scenario_Maker_Window();
+            ImGui::Scenario_Maker_Window(&showScenarioMaker);   // Scenario_Maker_Window mutates its bool,
+                                                                // ...you have been warned
+                                                                // This is becuase a widget cannot suicide itself
 
 
-        ImGui::Test_Window(&done);
 
         /*
         // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).

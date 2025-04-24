@@ -230,32 +230,72 @@ namespace A_LIFE
     }
 
 
-    std::filesystem::path File_Wizard::SetSavePath()
+    std::filesystem::path File_Wizard::SetSavePath(const char* Filter, const char* File_Extention,
+                                                   const char* Default_Filename, const char* Dialog_Title)
     {
-        char szFile[MAX_PATH] = { 0 };
+        char szFile[MAX_PATH] = {0};
 
         OPENFILENAMEA ofn{0};
         ofn.lStructSize = sizeof(OPENFILENAMEA);
         ofn.lpstrFile = szFile;
         ofn.nMaxFile = sizeof(szFile);
-        ofn.lpstrFilter = "Scenario Files (*.scenario)\0*.scenario\0All Files (*.*)\0*.*\0";
+        ofn.lpstrFilter = Filter;
         ofn.nFilterIndex = 1;
         ofn.Flags = OFN_PATHMUSTEXIST | OFN_OVERWRITEPROMPT | OFN_LONGNAMES | OFN_NOCHANGEDIR;
-        ofn.lpstrDefExt = "scenario";
-        ofn.lpTemplateName = "Salut.scenario";
-        ofn.lpstrTitle = "Habibi, where we save our new Scenario?";
+        ofn.lpstrDefExt = File_Extention;
+        ofn.lpTemplateName = Default_Filename;
+        ofn.lpstrTitle = Dialog_Title;
 
-        if (GetSaveFileNameA(&ofn)) {
+        if (GetSaveFileNameA(&ofn))
+        {
             return std::filesystem::path(ofn.lpstrFile);
         }
-        else {
+        else
+        {
             // User cancelled or an error occurred
-            
-            return std::filesystem::current_path() / "Nouveau Scenario.scenario";
+
+            return std::filesystem::current_path() / std::format("{}.{}", Default_Filename, File_Extention);
         }
     }
 
+    bool File_Wizard::Prompt_Confirm(std::string Title, std::string Description)
+    {
+        int msgboxID = MessageBoxA(
+            NULL,
+            Description.c_str(),
+            Title.c_str(),
+            MB_ICONWARNING | MB_YESNO | MB_DEFBUTTON2 | MB_SETFOREGROUND
+        );
 
+        switch (msgboxID)
+        {
+        case IDYES:
+            return true;
+        default:
+            return false;
+            break;
+        }
+    }
+
+    
+    static bool Prompt_Retry(std::string Title, std::string Description)
+    {
+        int msgboxID = MessageBoxA(
+            NULL,
+            Description.c_str(),
+            Title.c_str(),
+            MB_ICONWARNING | MB_RETRYCANCEL | MB_DEFBUTTON2 | MB_SETFOREGROUND
+        );
+
+        switch (msgboxID)
+        {
+        case IDRETRY:
+            return true;
+        default:
+            return false;
+            break;
+        }
+    }
     
 }
 
@@ -604,38 +644,6 @@ namespace Core
         return entries_buffer;
     }
 
-    std::filesystem::path SetSavePath()
-    {
-        char szFile[MAX_PATH] = {0};
-
-        OPENFILENAMEA ofn = {0};
-        ofn.lStructSize = sizeof(OPENFILENAMEA);
-        ofn.lpstrFile = szFile;
-        ofn.nMaxFile = sizeof(szFile);
-        ofn.lpstrFilter = "Scenario Files (*.scenario)\0*.scenario\0All Files (*.*)\0*.*\0";
-        ofn.nFilterIndex = 1;
-        ofn.Flags = OFN_PATHMUSTEXIST | OFN_OVERWRITEPROMPT;
-        ofn.lpstrDefExt = "scenario";
-        ofn.lpTemplateName = "Salut maman";
-        ofn.lpstrTitle = "Habibi, where we save our new Scenario?";
-
-        // Q: WHY NOT USE COMMON ITEM DIALOG??
-        // A: I am a lazy man, I am an unwise man, and most of all, I am a man still awake at 3:28am
-        //    I am unable to motivate myself to figure out how CID works...
-
-        //TODO: Saw weird bug, chosen save location results in the Logs being written to that folder, wtf?
-        if (GetSaveFileNameA(&ofn))
-        {
-            return std::filesystem::path(ofn.lpstrFile);
-        }
-        else
-        {
-            // User cancelled or an error occurred
-            return std::filesystem::current_path() / "Nouveau Scenario.scenario";
-        }
-    }
-
-
     std::string File_Wizard::List_Environment_Vars()
     {
         System_Information sys_info{};
@@ -651,7 +659,8 @@ namespace Core
         buffer.append(std::format("CPU_cache_bytes_per_thread: {} KB\n", sys_info.CPU_cache_bytes_per_thread / 1024));
         buffer.append(std::format("CPU_cache_bytes_total: {} KB\n", sys_info.Get_CPU_cache_bytes_total() / 1024));
         buffer.append(std::format("RAM_total_amount: {} GB\n", sys_info.RAM_total_amount / (1024 * 1024 * 1024)));
-        buffer.append(std::format("RAM_available_amount: {} GB\n", sys_info.RAM_available_amount / (1024 * 1024 * 1024)));
+        buffer.append(
+            std::format("RAM_available_amount: {} GB\n", sys_info.RAM_available_amount / (1024 * 1024 * 1024)));
         buffer.append(std::format("STORAGE_total: {} GB\n", sys_info.STORAGE_total / (1024 * 1024 * 1024)));
         buffer.append(std::format("STORAGE_free: {} GB\n", sys_info.STORAGE_free / (1024 * 1024 * 1024)));
 
@@ -677,6 +686,4 @@ namespace Core
                 return false;
         }
     }
-
-    
 }

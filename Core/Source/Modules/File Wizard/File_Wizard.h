@@ -70,12 +70,15 @@ namespace A_LIFE
         static const std::string Get_INI_Setting(std::filesystem::path INI_File, const std::string Section,
                                                  const std::string Key);
 
-        static std::filesystem::path SetSavePath();
+        static std::filesystem::path SetSavePath(const char* Filter, const char* File_Extention, const char* Default_Filename, const char* Dialog_Title);
         
         static std::vector<std::string> Get_CSV_Column_Data(std::filesystem::path CSV_File,
                                                             const std::string Column_Name,
                                                             const uInt allocation_size);
 
+
+        static bool Prompt_Confirm(std::string Title, std::string Description);
+        static bool Prompt_Retry(std::string Title, std::string Description);
         static mint test_csv_io();
         static mint test_ini_io();
     };

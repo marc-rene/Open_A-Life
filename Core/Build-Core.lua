@@ -1,7 +1,7 @@
 project "Core"
     kind "StaticLib"
     language "C++"
-    cppdialect "C++20"
+    cppdialect "C++23"
     targetdir "Binaries/%{cfg.buildcfg}"
     staticruntime "off"
 
@@ -9,13 +9,15 @@ project "Core"
 
     includedirs
     {
-        "Include",
-        "Source",
         "$(SolutionDir)Core",
         "$(SolutionDir)Core\\Include",
         "$(SolutionDir)Core\\Source",
+        "$(SolutionDir)Core\\ThirdParty\\AI_Pathfinding\\Recast\\Include",
+        "$(SolutionDir)Core\\ThirdParty\\AI_Pathfinding\\Detour\\Include",
+        "$(SolutionDir)Core\\ThirdParty\\mINI\\src\\mini",
         "$(SolutionDir)Core\\ThirdParty\\csv\\single_include",
-        "$(SolutionDir)Core\\ThirdParty\\spdlog\\include"
+        "$(SolutionDir)Core\\ThirdParty\\spdlog\\include",
+        "$(SolutionDir)Core\\ThirdParty\\ValveNetworking\\include"
     }
 
     -- Create virtual paths for modules

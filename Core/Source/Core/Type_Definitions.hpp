@@ -67,7 +67,7 @@ struct A_LIFE_Version
             return A_LIFE_Version{0,0,0};
         }
 
-        return A_LIFE_Version(static_cast<uMint>(maj), static_cast<uMint>(min), static_cast<uMint>(pat));
+        return A_LIFE_Version(maj, min, pat);
     }
 
     bool is_valid()

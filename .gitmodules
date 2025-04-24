@@ -15,3 +15,6 @@
 	path = Example/ThirdParty/imgui
 	url = https://github.com/ocornut/imgui.git
 	branch = docking
+[submodule "Core/ThirdParty/AI_Pathfinding"]
+	path = Core/ThirdParty/AI_Pathfinding
+	url = https://github.com/recastnavigation/recastnavigation.git
