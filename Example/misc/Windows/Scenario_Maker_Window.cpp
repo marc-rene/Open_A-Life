@@ -1,4 +1,4 @@
-﻿#include <ThirdParty/mINI/src/mini/ini.h>
+﻿
 
 #include "All_Windows.h"
 

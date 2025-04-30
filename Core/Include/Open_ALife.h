@@ -1,7 +1,8 @@
 #pragma once
 
-#include "Core/Core.h"
-#include "Modules/Director/Director.h"
-#include "Modules/File Wizard/File_Wizard.h"
-#include "Core/Scenario.h"
+#include "../Source/Core/Core.h"
+#include "../Source/Modules/Director/Director.h"
+#include "../Source/Modules/File Wizard/File_Wizard.h"
+#include "../Source/Core/Scenario.h"
 
+#include "../ThirdParty/mINI/src/mini/ini.h"

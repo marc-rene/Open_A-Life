@@ -1,5 +1,6 @@
 #include "CreateWindow.h"
 #include <format>
+#include <Windows.h>
 
 
 // Data
@@ -9,6 +10,7 @@ static IDXGISwapChain* g_pSwapChain = nullptr;
 static bool g_SwapChainOccluded = false;
 static UINT g_ResizeWidth = 0, g_ResizeHeight = 0;
 static ID3D11RenderTargetView* g_mainRenderTargetView = nullptr;
+
 
 // Forward declarations of helper functions
 bool CreateDeviceD3D(HWND hWnd);
@@ -24,6 +26,8 @@ int CreateAppWindow(A_LIFE::ALIFE_SCENARIO* ALIFE_CORE)
 {
     // Create application window
     //ImGui_ImplWin32_EnableDpiAwareness();
+
+
     WNDCLASSEXW wc = {
         sizeof(wc), CS_CLASSDC, WndProc, 0L, 0L, GetModuleHandle(nullptr), nullptr, nullptr, nullptr, nullptr,
         L"ImGui Example", nullptr
@@ -40,22 +44,25 @@ int CreateAppWindow(A_LIFE::ALIFE_SCENARIO* ALIFE_CORE)
         return 1;
     }
 
+
     bool done = false;
     bool use_dark_mode = true;
     bool force_colour_scheme = false; // Use system colour scheme
 
     /*--- DEBUGGING PURPOSES ------------------------*/
-    bool xShowDemoWindow = false;
+    bool xShowDemoWindow = true;
     /*-----------------------------------------------*/
 
     /*--- WHAT WINDOWS TO SHOW ----------------------*/
     bool showScenarioMaker = false;
+    bool showNavmeshVisualiser = false;
     /*-----------------------------------------------*/
 
 
     // Show the window
     ::ShowWindow(hwnd, SW_SHOWDEFAULT);
     ::UpdateWindow(hwnd);
+
 
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
@@ -66,6 +73,7 @@ int CreateAppWindow(A_LIFE::ALIFE_SCENARIO* ALIFE_CORE)
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad; // Enable Gamepad Controls
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable; // Enable Docking
     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable; // Enable Multi-Viewport / Platform Windows
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableSetMousePos; // Enable Multi-Viewport / Platform Windows
     //io.ConfigViewportsNoDecoration = false;  //LEAVE ALONE
     io.ConfigWindowsMoveFromTitleBarOnly = true; //LEAVE ALONE
 
@@ -89,6 +97,7 @@ int CreateAppWindow(A_LIFE::ALIFE_SCENARIO* ALIFE_CORE)
     // Setup Platform/Renderer backends
     ImGui_ImplWin32_Init(hwnd);
     ImGui_ImplDX11_Init(g_pd3dDevice, g_pd3dDeviceContext);
+
 
     // Load Fonts
     io.Fonts->Clear();
@@ -151,7 +160,6 @@ int CreateAppWindow(A_LIFE::ALIFE_SCENARIO* ALIFE_CORE)
             {
                 if (ImGui::MenuItem("New Scenario", NULL, &showScenarioMaker, true))
                 {
-                    
                 }
 
 
@@ -212,39 +220,12 @@ int CreateAppWindow(A_LIFE::ALIFE_SCENARIO* ALIFE_CORE)
         // Let all logs go to terminal instead
         // ImGui::Core_Window(ALIFE_CORE);
         if (showScenarioMaker)
-            ImGui::Scenario_Maker_Window(&showScenarioMaker);   // Scenario_Maker_Window mutates its bool,
-                                                                // ...you have been warned
-                                                                // This is becuase a widget cannot suicide itself
+            ImGui::Scenario_Maker_Window(&showScenarioMaker); // Scenario_Maker_Window mutates its bool,
+        // ...you have been warned
+        // This is becuase a widget cannot suicide itself
 
+        ImGui::NavmeshVisualiser(&showNavmeshVisualiser, g_pd3dDevice, g_pd3dDeviceContext, &hwnd);
 
-
-        /*
-        // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-        if (show_demo_window)
-
-        // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
-        {
-            static float f = 0.0f;
-            static int counter = 0;
-
-            ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
-
-            ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-            ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-            //ImGui::Checkbox("Another Window", &use_dark_mode);
-
-            ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-            ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
-
-            if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-                counter++;
-            ImGui::SameLine();
-            ImGui::Text("counter = %d", counter);
-
-            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
-            ImGui::End();
-        }
-        */
 
         clear_color = ImGui::GetStyle().Colors[ImGuiCol_WindowBg];
 
@@ -402,7 +383,7 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
         }
         break;
     }
-    return ::DefWindowProcW(hWnd, msg, wParam, lParam);
+    return DefWindowProc(hWnd, msg, wParam, lParam);
 }
 
 
@@ -437,7 +418,7 @@ void CheckSystemColourScheme(bool* done, std::thread::id main_thread_id, bool* f
         // TODO: Use event instead
         if (std::this_thread::get_id() != main_thread_id)
         {
-            std::this_thread::sleep_for(std::chrono::seconds(3));
+            std::this_thread::sleep_for(std::chrono::seconds(5));
         }
     }
 
