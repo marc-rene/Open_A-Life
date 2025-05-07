@@ -12,5 +12,3 @@
 
 
 int CreateAppWindow(A_LIFE::ALIFE_SCENARIO*);
-
-

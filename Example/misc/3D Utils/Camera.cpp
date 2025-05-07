@@ -2,14 +2,15 @@
 
 Camera::Camera()
 {
-    worldPosition = {0};
     yaw = pitch = 0.0f;
-    activeControlScheme = EcontrolMode::None;
+    activeControlScheme = None;
 
     // We're using UDK Co-ordinate axis 
     forwardVector = {1.0f, 0.0f, 0.0f}; // +X is front
     rightVector = {0.0f, 1.0f, 0.0f}; // +Y is right
     upVector = {0.0f, 0.0f, 1.0f}; // +Z is up
+
+    Reset_Position();
 
     Mouse_Captured = false;
 }
@@ -17,11 +18,12 @@ Camera::Camera()
 Camera::Camera(Vector3 p_position, Vector3 p_target)
 {
     worldPosition = p_position;
-    activeControlScheme = EcontrolMode::None;
+    activeControlScheme = None;
 
     Vector3 temp_direction = Vector3Normalize(Vector3Subtract(p_target, p_position));
     pitch = asinf(temp_direction.z);
     yaw = atan2f(temp_direction.y, temp_direction.x);
+
 
     forwardVector = {cosf(yaw) * cosf(pitch), sinf(yaw) * cosf(pitch), sinf(pitch)};
     rightVector = {-sinf(yaw), cosf(yaw), 0.0f};
@@ -30,10 +32,60 @@ Camera::Camera(Vector3 p_position, Vector3 p_target)
     Mouse_Captured = false;
 }
 
+void Camera::Reset_Position()
+{
+    worldPosition = {-2.5, -2.5, 3.5};
+    yaw = PI / 4;
+    pitch = -PI / 4;
+}
+
 
 std::string Camera::to_string()
 {
     std::stringstream ss;
+    ss << std::format(
+        "\n\t\t###\tMouse wont be captured in window. Mouse must stay in window in order to move camera\n");
+    ss << std::format("\n- - - Camera Controls (Unreal Engine 5 style)  - - - - - - - - - - - - - - - - - -\n");
+
+    ss << std::format("\tMovement = W A S D\n");
+    ss << std::format("\tUp/Down = E Q\n\n");
+
+    ss << std::format("\t -- Mouse Controls --\n");
+    ss << std::format("\tFree-view = hold RIGHT mouse button \n");
+    ss << std::format("\tTank Controls = hold LEFT mouse button\n");
+    ss << std::format("\tWall-climb = hold Left AND Right mouse button\n");
+
+    ss << std::format("\tBase Move Speed = {}\n", baseMoveSpeed);
+    ss << std::format("\tAcceleration multiplier = {}\n", accelerateMult);
+    ss << std::format("\tInvert Horizontal Look? = {}\n", invertHorizontal);
+    ss << std::format("\tInvert Vertical Look? = {}\n", invertVertical);
+    ss << std::format("\tMouse Sensitivity = Horizontal: {} Vertical: {}\n", mouseSensitivity.x, mouseSensitivity.y);
+
+
+    switch (activeControlScheme)
+    {
+    case (flight_controls):
+        ss << "\tCurrent Control Scheme: flight controls\n";
+        break;
+    case (tank_controls):
+        ss << "\tCurrent Control Scheme: tank controls\n";
+        break;
+    case (vertical_climber):
+        ss << "\tCurrent Control Scheme: vertical climber\n";
+        break;
+    case (pivot_swinger):
+        ss << "\tCurrent Control Scheme: pivot swinger\n";
+        break;
+    default:
+        break;
+    }
+
+
+    ss << std::format("\tMouse Sensitivity = Horizontal: {} Vertical: {}\n", mouseSensitivity.x, mouseSensitivity.y);
+    ss << std::format("\tCapturing Mouse input? = {}", Mouse_Captured ? "Yes\n" : "No\n");
+    ss << std::format(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
+
+    ss << std::format("\n - - - Camera Properties   - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
     ss << std::format("\tPosition = X: {:.2f} Y: {:.2f} Z: {:.2f}\n", worldPosition.x, worldPosition.y,
                       worldPosition.z);
     ss << std::format("\tForward = X: {:.2f} Y: {:.2f} Z: {:.2f}\n", forwardVector.x, forwardVector.y, forwardVector.z);
@@ -41,19 +93,20 @@ std::string Camera::to_string()
     ss << std::format("\tUp = X: {:.2f} Y: {:.2f} Z: {:.2f}\n", upVector.x, upVector.y, upVector.z);
     ss << std::format("\tYaw (Z-axis) = {}\n", yaw);
     ss << std::format("\tPitch (Y-axis)= {}\n", pitch);
-    ss << std::format("\tBase Move Speed = {}\n", baseMoveSpeed);
-    
-    ss << std::format("\tInvert Horizontal Look? = {}\n", invertHorizontal);
-    ss << std::format("\tInvert Vertical Look? = {}\n", invertVertical);
+    ss << std::format(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
+
     return ss.str();
 }
 
 void Camera::onUpdate(ImGuiIO* IO_ref)
 {
-    ProcessMouse(IO_ref);
-    ProcessKeyboard(IO_ref);
+    if (ImGui::IsItemHovered())
+    {
+        ProcessMouse(IO_ref);
+        ProcessKeyboard(IO_ref);
+    }
 
-    // Recompute basis vectors
+    // redo main camera vectors
     forwardVector = {
         cosf(pitch) * cosf(yaw),
         cosf(pitch) * sinf(yaw),
@@ -67,61 +120,75 @@ void Camera::onUpdate(ImGuiIO* IO_ref)
 
 bool Camera::ProcessMouse(ImGuiIO* IO_ref)
 {
+    // Scroll in/out
+    if (IO_ref->MouseWheel > 0 || IO_ref->MouseWheel < 0)
+    {
+        // INFO("Mouse Debug", "Scroll is {}", IO_ref->MouseWheel);
+        worldPosition = Vector3Add(
+            worldPosition, Vector3Multiply(forwardVector,
+                                           {IO_ref->MouseWheel, IO_ref->MouseWheel, IO_ref->MouseWheel}));
+    }
+
+    // Release
     if (!(ImGui::IsMouseDown(ImGuiMouseButton_Left) || ImGui::IsMouseDown(ImGuiMouseButton_Right) ||
         ImGui::IsMouseDown(ImGuiMouseButton_Middle)) && Mouse_Captured)
     {
         Mouse_Captured = false;
-        activeControlScheme = EcontrolMode::None;
-        INFO("Mouse Debug", "Mouse lost");
+        activeControlScheme = None;
+        // INFO("Mouse Debug", "Mouse lost");
         return false;
     }
 
+    // GOT YA
     if ((ImGui::IsMouseDown(ImGuiMouseButton_Left) || ImGui::IsMouseDown(ImGuiMouseButton_Right) ||
         ImGui::IsMouseDown(ImGuiMouseButton_Middle)) && !Mouse_Captured)
     {
         Mouse_Captured = true;
-        INFO("Mouse Debug", "Mouse CAPTURED");
+        // INFO("Mouse Debug", "Mouse CAPTURED");
     }
 
     // Only right click
     if (!ImGui::IsMouseDown(ImGuiMouseButton_Left) && ImGui::IsMouseDown(ImGuiMouseButton_Right) && Mouse_Captured)
     {
-        activeControlScheme = EcontrolMode::flight_controls;
+        activeControlScheme = flight_controls;
         Look_Right(IO_ref->MouseDelta.x * mouseSensitivity.x);
         Look_Up(IO_ref->MouseDelta.y * mouseSensitivity.y);
-        INFO("Mouse Debug", "Right click");
-    }
-    // Only left click
-    else if (ImGui::IsMouseDown(ImGuiMouseButton_Left) && !ImGui::IsMouseDown(ImGuiMouseButton_Right) && Mouse_Captured)
-    {
-        activeControlScheme = EcontrolMode::tank_controls;
-        Look_Right(IO_ref->MouseDelta.x * mouseSensitivity.x);
-        Move_Forward(IO_ref->MouseDelta.y * IO_ref->DeltaTime * mouseSensitivity.y);
-        INFO("Mouse Debug", "Left click");
-    }
-    // BOTH
-    else if (ImGui::IsMouseDown(ImGuiMouseButton_Left) && ImGui::IsMouseDown(ImGuiMouseButton_Right) && Mouse_Captured)
-    {
-        activeControlScheme = EcontrolMode::vertical_climber;
-        Move_Up(IO_ref->MouseDelta.y * IO_ref->DeltaTime * mouseSensitivity.y);
-        Move_Right(IO_ref->MouseDelta.x * IO_ref->DeltaTime * mouseSensitivity.x);
-        INFO("Mouse Debug", "Both down");
+        // INFO("Mouse Debug", "Right click");
+        return true;
     }
 
+    // Only left click
+    if (ImGui::IsMouseDown(ImGuiMouseButton_Left) && !ImGui::IsMouseDown(ImGuiMouseButton_Right) && Mouse_Captured)
+    {
+        activeControlScheme = tank_controls;
+        Look_Right(IO_ref->MouseDelta.x * mouseSensitivity.x);
+        Move_Backward(IO_ref->MouseDelta.y * mouseSensitivity.y * baseMoveSpeed, true);
+        // INFO("Mouse Debug", "Left click");
+        return true;
+    }
+
+    // BOTH
+    if (ImGui::IsMouseDown(ImGuiMouseButton_Left) && ImGui::IsMouseDown(ImGuiMouseButton_Right) && Mouse_Captured)
+    {
+        activeControlScheme = vertical_climber;
+        Move_Down(IO_ref->MouseDelta.y * mouseSensitivity.y * baseMoveSpeed, true);
+        Move_Right(IO_ref->MouseDelta.x * mouseSensitivity.x * baseMoveSpeed);
+        // INFO("Mouse Debug", "Both down");
+        return true;
+    }
+
+    // TODO: This is launches us
+    /*
     else if (ImGui::IsMouseDown(ImGuiMouseButton_Middle) && Mouse_Captured)
     {
-        INFOc("PIVOT THAT BOOTY");
         activeControlScheme = EcontrolMode::pivot_swinger;
 
-        // pivot around a new point that is 5 units in front of us
-        Vector3 new_pivot = Vector3Add(worldPosition, Vector3Multiply(forwardVector, {5}));
+        Vector3 new_pivot = Vector3Add(worldPosition, Vector3Multiply(forwardVector, {500, 0, 0}));
         Pivot_Around(new_pivot, {
                          (IO_ref->MouseDelta.x * IO_ref->DeltaTime * mouseSensitivity.x),
                          (IO_ref->MouseDelta.y * IO_ref->DeltaTime * mouseSensitivity.y)
                      });
-    }
-
-
+    }*/
 
     return false;
 }
@@ -138,6 +205,8 @@ void Camera::ProcessKeyboard(ImGuiIO* IO_ref)
 
     speed_scaled = current_move_speed * IO_ref->DeltaTime;
 
+
+    //TODO: change this into a single vector3 called "movement this frame" so that keyboard keys just inc/decrint it
     // Movement keys
     if (ImGui::IsKeyDown(ImGuiKey_W))
         Move_Forward(speed_scaled);
@@ -152,10 +221,10 @@ void Camera::ProcessKeyboard(ImGuiIO* IO_ref)
         Move_Right(speed_scaled);
 
     if (ImGui::IsKeyDown(ImGuiKey_E))
-        Move_Up(speed_scaled);
+        Move_Up(speed_scaled, true);
 
     if (ImGui::IsKeyDown(ImGuiKey_Q))
-        Move_Down(speed_scaled);
+        Move_Down(speed_scaled, true);
 }
 
 void Camera::Move_Forward(float scale, bool clamp_2D_movement)
@@ -203,8 +272,8 @@ void Camera::Move_Up(float scale, bool clamp_2D_movement)
 {
     worldPosition = Vector3Add(worldPosition, Vector3Scale(
                                    {
-                                       upVector.x,
-                                       upVector.y,
+                                       clamp_2D_movement ? 0 : upVector.x,
+                                       clamp_2D_movement ? 0 : upVector.y,
                                        clamp_2D_movement ? 1 : upVector.z
                                    }, scale));
 }
@@ -212,13 +281,14 @@ void Camera::Move_Up(float scale, bool clamp_2D_movement)
 void Camera::Move_Down(float scale, bool clamp_2D_movement)
 {
     worldPosition = Vector3Subtract(worldPosition, Vector3Scale(
-                               {
-                                   upVector.x,
-                                   upVector.y,
-                                   clamp_2D_movement ? 1 : upVector.z
-                               }, scale));
+                                        {
+                                            clamp_2D_movement ? 0 : upVector.x,
+                                            clamp_2D_movement ? 0 : upVector.y,
+                                            clamp_2D_movement ? 1 : upVector.z
+                                        }, scale));
 }
 
+// TODO: This launches the camera into the stratosphere 
 void Camera::Pivot_Around(Vector3 pivot_around, Vector2 scale)
 {
     // Update yaw and pitch
@@ -226,7 +296,7 @@ void Camera::Pivot_Around(Vector3 pivot_around, Vector2 scale)
     pitch += scale.y;
 
     // Clamp pitch so you don't flip upside down (optional, but recommended)
-    const float max_pitch = DEG2RAD * 89.0f; // ~89 degrees to avoid gimbal lock
+    constexpr float max_pitch = DEG2RAD * 89.9f;
     if (pitch > max_pitch) pitch = max_pitch;
     if (pitch < -max_pitch) pitch = -max_pitch;
 
@@ -241,12 +311,7 @@ void Camera::Pivot_Around(Vector3 pivot_around, Vector2 scale)
         distance * sinf(pitch)
     };
 
-    worldPosition = Vector3Add(pivot_around, newOffset);
-
-    // Update basis vectors
-    forwardVector = Vector3Normalize(Vector3Subtract(pivot_around, worldPosition));
-    rightVector = {-sinf(yaw), cosf(yaw), 0.0f};
-    upVector = Vector3CrossProduct(rightVector, forwardVector);
+    worldPosition = Vector3Add(offset, newOffset);
 }
 
 void Camera::Look_Up(float amount)

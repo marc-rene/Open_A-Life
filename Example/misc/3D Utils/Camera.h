@@ -23,7 +23,7 @@ public:
     EcontrolMode activeControlScheme;
     float yaw;
     float pitch;
-    float baseMoveSpeed = 4.0f;
+    float baseMoveSpeed = 7.0f;
     float accelerateMult = 3.0f;
     bool invertHorizontal = false;
     bool invertVertical = false;
@@ -31,6 +31,8 @@ public:
 
     Camera();
     Camera(Vector3 p_position, Vector3 p_target);
+
+    void Reset_Position();
 
     std::string to_string();
 

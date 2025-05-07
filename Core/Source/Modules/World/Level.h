@@ -3,13 +3,20 @@
 
 namespace A_LIFE
 {
+    struct MeshData
+    {
+        std::vector<float> vertices;
+        std::vector<int> indices;
+    };
+
     class Level : public ALIFE_CoreObject
     {
-        #define LevelName Name
-        inline static std::vector<std::string> AllRegisteredLevels;
-        std::string DisplayName;
-        
     public:
+        MeshData LevelMeshData;
+
+        void SetStaticMeshData(std::filesystem::path obj_file_path);
+        void SetStaticMeshData(MeshData staticMeshData);
+        
         Level(const std::string levelName);
     };
 }

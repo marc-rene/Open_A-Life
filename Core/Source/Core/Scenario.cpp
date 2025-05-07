@@ -6,15 +6,19 @@ namespace A_LIFE
     {
         logger.Init_Log();
         scenarioName = "Salut!";
+        allLevels = {};
         INFOc("Running on these specs: {}", File_Wizard::List_Environment_Vars());
-        INFOc("Starting ALIFE scenario pre-init steps with version {}", VERSION.to_string());
-
-        director = Director();
-        packetNinja = Packet_Ninja();
-
-        INFOc("{} has finished pre-init steps", scenarioName);
     }
 
+    void ALIFE_SCENARIO::GetAllLevelsFromRuntimeRegistry()
+    {
+        for (const auto& level : ALIFE_CoreObject::ObjectRegistry)
+        {
+            if (level.second->ObjectType == EObjectType::LEVEL)
+                allLevels.push_back(&level.first);
+        }
+    }
+    
     ALIFE_SCENARIO::~ALIFE_SCENARIO()
     {
         SUCCESSc("\nThe {} Scenario has finished..."
@@ -29,5 +33,6 @@ namespace A_LIFE
         INFOc("The {} show is about to begin!", scenarioName);
         director.Init();
         packetNinja.Init();
+        GetAllLevelsFromRuntimeRegistry();
     }
 }

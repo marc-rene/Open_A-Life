@@ -7,7 +7,7 @@ namespace A_LIFE
 {
     std::shared_ptr<spdlog::logger> A_LIFE_Log::Init_Log()
     {
-        return A_LIFE_Log::Init_Log("A-LIFE");
+        return Init_Log("A-LIFE");
     }
 
     std::shared_ptr<spdlog::logger> A_LIFE_Log::Init_Err_Log()
@@ -38,14 +38,16 @@ namespace A_LIFE
         try
         {
             // Thanks https://www.w3schools.com/cpp/trycpp.asp?filename=demo_date_strftime
-            static time_t timestamp = time(NULL);
+            static time_t timestamp = time(nullptr);
             static struct tm datetime = *localtime(&timestamp);
             static char formatted_date[50];
-            strftime(formatted_date, 50, "%a  %e %b %H-%M", &datetime); 
+            strftime(formatted_date, 50, "%a  %e %b %H-%M", &datetime);
 
-            static auto frontEndConsoleSink    = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-            static std::string filename        = std::format("{}/logs/{} ALIFE_{}.log", std::filesystem::current_path().string(),  formatted_date, LOCAL_ALIFE_VERSION.to_string());
-            static auto fileSink               = std::make_shared<spdlog::sinks::basic_file_sink_mt>(filename, true);
+            static auto frontEndConsoleSink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+            static std::string filename = std::format("{}/logs/{} ALIFE_{}.log",
+                                                      std::filesystem::current_path().string(), formatted_date,
+                                                      LOCAL_ALIFE_VERSION.to_string());
+            static auto fileSink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(filename, true);
             spdlog::flush_every(std::chrono::seconds(4));
             std::vector<spdlog::sink_ptr> sinks{frontEndConsoleSink, fileSink};
 
@@ -56,7 +58,7 @@ namespace A_LIFE
             //    spdlog::init_thread_pool(8192, 1);
             //auto logger =       std::make_shared<spdlog::async_logger>(LoggerName, sinks.begin(), sinks.end(), spdlog::thread_pool(), spdlog::async_overflow_policy::overrun_oldest);
 
-            auto logger =     std::make_shared<spdlog::logger>(LoggerName, sinks.begin(), sinks.end());
+            auto logger = std::make_shared<spdlog::logger>(LoggerName, sinks.begin(), sinks.end());
             logger->set_level(spdlog::level::trace); // or info/warn
             spdlog::register_logger(logger);
             total_inits++;
@@ -72,21 +74,22 @@ namespace A_LIFE
 
     std::shared_ptr<spdlog::logger> A_LIFE_Log::GetLogger()
     {
-        return A_LIFE_Log::GetLogger("A-LIFE");
+        return GetLogger("A-LIFE");
     }
 
     std::shared_ptr<spdlog::logger> A_LIFE_Log::GetLogger(const std::string LoggerName)
     {
-        return A_LIFE_Log::GetLogger(LoggerName.c_str());    
+        return GetLogger(LoggerName.c_str());
     }
-    
+
     std::shared_ptr<spdlog::logger> A_LIFE_Log::GetLogger(const char* LoggerName)
     {
         // Use Init instead because if the logger doesn't exist we'll make one..very sketch
         if (spdlog::get(LoggerName) == nullptr)
         {
-            WARNc("HEY! {} DOESN'T EXIST YET... Making him now, path is {}", LoggerName, std::filesystem::current_path().string());
-            A_LIFE_Log::Init_Log(LoggerName);
+            WARNc("HEY! {} DOESN'T EXIST YET... Making him now, path is {}", LoggerName,
+                  std::filesystem::current_path().string());
+            Init_Log(LoggerName);
         }
 
         return spdlog::get(LoggerName);

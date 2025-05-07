@@ -32,7 +32,7 @@ int CreateAppWindow(A_LIFE::ALIFE_SCENARIO* ALIFE_CORE)
         sizeof(wc), CS_CLASSDC, WndProc, 0L, 0L, GetModuleHandle(nullptr), nullptr, nullptr, nullptr, nullptr,
         L"ImGui Example", nullptr
     };
-    ::RegisterClassExW(&wc);
+    RegisterClassExW(&wc);
     HWND hwnd = ::CreateWindowW(wc.lpszClassName, L"Open A-Life Visualisation Tool", WS_OVERLAPPEDWINDOW, 100, 100,
                                 1280, 800, nullptr, nullptr, wc.hInstance, nullptr);
 
@@ -40,7 +40,7 @@ int CreateAppWindow(A_LIFE::ALIFE_SCENARIO* ALIFE_CORE)
     if (!CreateDeviceD3D(hwnd))
     {
         CleanupDeviceD3D();
-        ::UnregisterClassW(wc.lpszClassName, wc.hInstance);
+        UnregisterClassW(wc.lpszClassName, wc.hInstance);
         return 1;
     }
 
@@ -60,8 +60,8 @@ int CreateAppWindow(A_LIFE::ALIFE_SCENARIO* ALIFE_CORE)
 
 
     // Show the window
-    ::ShowWindow(hwnd, SW_SHOWDEFAULT);
-    ::UpdateWindow(hwnd);
+    ShowWindow(hwnd, SW_SHOWDEFAULT);
+    UpdateWindow(hwnd);
 
 
     // Setup Dear ImGui context
@@ -74,12 +74,14 @@ int CreateAppWindow(A_LIFE::ALIFE_SCENARIO* ALIFE_CORE)
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable; // Enable Docking
     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable; // Enable Multi-Viewport / Platform Windows
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableSetMousePos; // Enable Multi-Viewport / Platform Windows
+    io.ConfigFlags |= ImGuiButtonFlags_AllowOverlap;
+    io.ConfigFlags |= ImGuiHoveredFlags_AllowWhenOverlappedByItem;
     //io.ConfigViewportsNoDecoration = false;  //LEAVE ALONE
     io.ConfigWindowsMoveFromTitleBarOnly = true; //LEAVE ALONE
 
 
     // Setup Dear ImGui style
-    ImGui::SetStyleMode(NULL, use_dark_mode);
+    ImGui::SetStyleMode(nullptr, use_dark_mode);
 
     // Make a new thread that will check if we need to switch styles
     std::future<void> DarkModeCheckThread = std::async(std::launch::async, CheckSystemColourScheme, &done,
@@ -123,7 +125,7 @@ int CreateAppWindow(A_LIFE::ALIFE_SCENARIO* ALIFE_CORE)
         MSG msg;
         while (::PeekMessage(&msg, nullptr, 0U, 0U, PM_REMOVE))
         {
-            ::TranslateMessage(&msg);
+            TranslateMessage(&msg);
             ::DispatchMessage(&msg);
             if (msg.message == WM_QUIT)
                 done = true;
@@ -134,7 +136,7 @@ int CreateAppWindow(A_LIFE::ALIFE_SCENARIO* ALIFE_CORE)
         // Handle window being minimized or screen locked
         if (g_SwapChainOccluded && g_pSwapChain->Present(0, DXGI_PRESENT_TEST) == DXGI_STATUS_OCCLUDED)
         {
-            ::Sleep(10);
+            Sleep(10);
             continue;
         }
         g_SwapChainOccluded = false;
@@ -158,7 +160,7 @@ int CreateAppWindow(A_LIFE::ALIFE_SCENARIO* ALIFE_CORE)
         {
             if (ImGui::BeginMenu("File"))
             {
-                if (ImGui::MenuItem("New Scenario", NULL, &showScenarioMaker, true))
+                if (ImGui::MenuItem("New Scenario", nullptr, &showScenarioMaker, true))
                 {
                 }
 
@@ -168,7 +170,7 @@ int CreateAppWindow(A_LIFE::ALIFE_SCENARIO* ALIFE_CORE)
                     /* COMING SOON */
                 }
                 ImGui::Separator();
-                if (ImGui::MenuItem("Autosave", NULL, true, true))
+                if (ImGui::MenuItem("Autosave", nullptr, true, true))
                 {
                     /* COMING SOON */
                 }
@@ -191,7 +193,7 @@ int CreateAppWindow(A_LIFE::ALIFE_SCENARIO* ALIFE_CORE)
             }
             if (ImGui::BeginMenu("DEBUG"))
             {
-                if (ImGui::MenuItem("DEMO WINDOW", NULL, &xShowDemoWindow, true))
+                if (ImGui::MenuItem("DEMO WINDOW", nullptr, &xShowDemoWindow, true))
                 {
                 }
                 ImGui::EndMenu();
@@ -199,7 +201,7 @@ int CreateAppWindow(A_LIFE::ALIFE_SCENARIO* ALIFE_CORE)
 
             if (ImGui::BeginMenu("View"))
             {
-                if (ImGui::MenuItem("Force Dark Mode", NULL, &force_colour_scheme, true))
+                if (ImGui::MenuItem("Force Dark Mode", nullptr, &force_colour_scheme, true))
                 {
                     if (force_colour_scheme == true)
                     {
@@ -224,7 +226,7 @@ int CreateAppWindow(A_LIFE::ALIFE_SCENARIO* ALIFE_CORE)
         // ...you have been warned
         // This is becuase a widget cannot suicide itself
 
-        ImGui::NavmeshVisualiser(&showNavmeshVisualiser, g_pd3dDevice, g_pd3dDeviceContext, &hwnd);
+        ImGui::NavmeshVisualiser(&showNavmeshVisualiser, g_pd3dDevice, g_pd3dDeviceContext, ALIFE_CORE);
 
 
         clear_color = ImGui::GetStyle().Colors[ImGuiCol_WindowBg];
@@ -259,8 +261,8 @@ int CreateAppWindow(A_LIFE::ALIFE_SCENARIO* ALIFE_CORE)
     ImGui::DestroyContext();
 
     CleanupDeviceD3D();
-    ::DestroyWindow(hwnd);
-    ::UnregisterClassW(wc.lpszClassName, wc.hInstance);
+    DestroyWindow(hwnd);
+    UnregisterClassW(wc.lpszClassName, wc.hInstance);
 
     return 0;
 }
@@ -289,7 +291,7 @@ bool CreateDeviceD3D(HWND hWnd)
     UINT createDeviceFlags = 0;
     //createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
     D3D_FEATURE_LEVEL featureLevel;
-    const D3D_FEATURE_LEVEL featureLevelArray[2] = {D3D_FEATURE_LEVEL_11_0, D3D_FEATURE_LEVEL_10_0,};
+    constexpr D3D_FEATURE_LEVEL featureLevelArray[2] = {D3D_FEATURE_LEVEL_11_0, D3D_FEATURE_LEVEL_10_0,};
     HRESULT res = D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, createDeviceFlags,
                                                 featureLevelArray, 2, D3D11_SDK_VERSION, &sd, &g_pSwapChain,
                                                 &g_pd3dDevice, &featureLevel, &g_pd3dDeviceContext);
@@ -360,15 +362,15 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
     case WM_SIZE:
         if (wParam == SIZE_MINIMIZED)
             return 0;
-        g_ResizeWidth = (UINT)LOWORD(lParam); // Queue resize
-        g_ResizeHeight = (UINT)HIWORD(lParam);
+        g_ResizeWidth = static_cast<UINT>(LOWORD(lParam)); // Queue resize
+        g_ResizeHeight = static_cast<UINT>(HIWORD(lParam));
         return 0;
     case WM_SYSCOMMAND:
         if ((wParam & 0xfff0) == SC_KEYMENU) // Disable ALT application menu
             return 0;
         break;
     case WM_DESTROY:
-        ::PostQuitMessage(0);
+        PostQuitMessage(0);
         return 0;
     case WM_DPICHANGED:
         if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_DpiEnableScaleViewports)
@@ -376,10 +378,10 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
             //const int dpi = HIWORD(wParam);
             //printf("WM_DPICHANGED to %d (%.0f%%)\n", dpi, (float)dpi / 96.0f * 100.0f);
             const RECT* suggested_rect = (RECT*)lParam;
-            ::SetWindowPos(hWnd, nullptr, suggested_rect->left, suggested_rect->top,
-                           suggested_rect->right - suggested_rect->left,
-                           suggested_rect->bottom - suggested_rect->top,
-                           SWP_NOZORDER | SWP_NOACTIVATE);
+            SetWindowPos(hWnd, nullptr, suggested_rect->left, suggested_rect->top,
+                         suggested_rect->right - suggested_rect->left,
+                         suggested_rect->bottom - suggested_rect->top,
+                         SWP_NOZORDER | SWP_NOACTIVATE);
         }
         break;
     }
@@ -406,12 +408,12 @@ void CheckSystemColourScheme(bool* done, std::thread::id main_thread_id, bool* f
 
             if (status == ERROR_SUCCESS)
             {
-                ImGui::SetStyleMode(NULL, darkModeselected == false);
+                ImGui::SetStyleMode(nullptr, darkModeselected == false);
             }
         }
         else // Colour scheme has been force
         {
-            ImGui::SetStyleMode(NULL, *use_dark_mode);
+            ImGui::SetStyleMode(nullptr, *use_dark_mode);
         }
 
         // Different Thread, we can sleep
@@ -421,6 +423,4 @@ void CheckSystemColourScheme(bool* done, std::thread::id main_thread_id, bool* f
             std::this_thread::sleep_for(std::chrono::seconds(5));
         }
     }
-
-    return;
 }

@@ -23,6 +23,5 @@ static ImVec4 CoolColour(0.408f, 0.439f, 0.667f, 1.00f);
 namespace ImGui
 {
     // Styles
-    IMGUI_API void          SetStyleMode(ImGuiStyle* dst = NULL, bool useDarkMode = true);
+    IMGUI_API void SetStyleMode(ImGuiStyle* dst = nullptr, bool useDarkMode = true);
 }
-

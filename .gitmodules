@@ -21,3 +21,6 @@
 [submodule "Example/ThirdParty/DirectXhelper"]
 	path = Example/ThirdParty/DirectXhelper
 	url = https://github.com/microsoft/DirectXTK.git
+[submodule "Core/ThirdParty/TinyObjLoader"]
+	path = Core/ThirdParty/TinyObjLoader
+	url = https://github.com/tinyobjloader/tinyobjloader.git

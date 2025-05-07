@@ -4,15 +4,14 @@
 #include <unordered_map>
 #include <map>
 
-#define file_path std::filesystem::path()
 #define mint		__int8      // "Mini" integer
 #define uMint		uint8_t
 #define short		__int16     // Ensure all shorts are the same, regardless of compiler
-#define uShort		uint16_t    
-#define int         __int32     
+#define uShort		uint16_t
+#define int         __int32
 #define uInt		uint32_t
 #define fatty 		__int64     // BIG
-#define uFatty 		uint64_t     
+#define uFatty 		uint64_t
 #define mutex_lock	std::lock_guard<std::mutex>
 #define BIT(x)		(1 << x)
 
@@ -22,7 +21,6 @@
 
 struct A_LIFE_Version
 {
-    
     uMint major;
     uMint minor;
     uMint patch;
@@ -35,7 +33,7 @@ struct A_LIFE_Version
         patch = pat;
         version_nickname = nickname;
     }
-    
+
     /// 
     /// @param versionString The Alife Version in the format 'X.Y.Z' 
     /// @return the same version but in ALIFE_Version struct
@@ -47,7 +45,7 @@ struct A_LIFE_Version
         if (majDot == std::string::npos || minDot == std::string::npos)
         {
             // ALIFE Versioning must be in the format 'X.Y.Z'... you done fucked up
-            return A_LIFE_Version{0,0,0};
+            return A_LIFE_Version{0, 0, 0};
         }
 
 
@@ -64,7 +62,7 @@ struct A_LIFE_Version
             pat < 0 || pat > 255)
         {
             // Version numbers must fit in uMint range (0-255), You done fucked up
-            return A_LIFE_Version{0,0,0};
+            return A_LIFE_Version{0, 0, 0};
         }
 
         return A_LIFE_Version(maj, min, pat);
@@ -121,8 +119,7 @@ struct A_LIFE_Version
     {
         if (major != other.major)
             return major < other.major;
-
-        else if (minor != other.minor)
+        if (minor != other.minor)
             return minor < other.minor;
 
         return patch < other.patch;
@@ -147,7 +144,7 @@ enum ELogLevel : uMint
 // Sets flag to true
 static void set_flag(uMint* BitFlagDst, uMint new_flag)
 {
-    *BitFlagDst |= (uMint)new_flag;
+    *BitFlagDst |= new_flag;
 }
 
 #define add_flag set_flag
@@ -155,22 +152,22 @@ static void set_flag(uMint* BitFlagDst, uMint new_flag)
 // Sets flag to false
 static void remove_flag(uMint* BitFlagDst, uMint removing_flag)
 {
-    *BitFlagDst &= ~(uMint)removing_flag;
+    *BitFlagDst &= ~removing_flag;
 }
 
 // Sets a flag value from true to false and vice versa
 static void flip_flag(uMint* BitFlagDst, uMint flag_to_flip)
 {
-    *BitFlagDst ^= (uMint)flag_to_flip;
+    *BitFlagDst ^= flag_to_flip;
 }
 
 // Check whether a flag is set to true
 static bool has_flag(uMint* BitFlagDst, uMint flag_to_check)
 {
-    return (*BitFlagDst & (uMint)flag_to_check) == (uMint)flag_to_check;
+    return (*BitFlagDst & flag_to_check) == flag_to_check;
 }
 
 static bool has_any_flags(uMint* BitFlagDst, uMint all_flags)
 {
-    return (*BitFlagDst & (uMint)all_flags) != 0;
+    return (*BitFlagDst & all_flags) != 0;
 }

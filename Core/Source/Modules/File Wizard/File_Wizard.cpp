@@ -10,8 +10,12 @@
 #include "string"
 #include "array"
 #include <stdlib.h>
+
 #include <map>
 #include <mutex>
+
+#define TINYOBJLOADER_IMPLEMENTATION
+#include "../ThirdParty/TinyObjLoader/tiny_obj_loader.h"
 
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
@@ -19,7 +23,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <windows.h>
-typedef BOOL (WINAPI*LPFN_GLPI)(PSYSTEM_LOGICAL_PROCESSOR_INFORMATION, PDWORD);
+using LPFN_GLPI = BOOL(WINAPI*)(PSYSTEM_LOGICAL_PROCESSOR_INFORMATION, PDWORD);
 
 namespace A_LIFE
 {
@@ -79,11 +83,11 @@ namespace A_LIFE
 
         if (nExIds >= 0x80000004)
         {
-            __cpuid((int*)CPUInfoData, 0x80000002);
+            __cpuid(CPUInfoData, 0x80000002);
             memcpy(CPU_name, CPUInfoData, sizeof(CPUInfoData));
-            __cpuid((int*)CPUInfoData, 0x80000003);
+            __cpuid(CPUInfoData, 0x80000003);
             memcpy(CPU_name + 16, CPUInfoData, sizeof(CPUInfoData));
-            __cpuid((int*)CPUInfoData, 0x80000004);
+            __cpuid(CPUInfoData, 0x80000004);
             memcpy(CPU_name + 32, CPUInfoData, sizeof(CPUInfoData));
         }
 
@@ -126,12 +130,12 @@ namespace A_LIFE
         DWORD len = 0;
         GetLogicalProcessorInformationEx(RelationProcessorCore, nullptr, &len);
         std::vector<uint8_t> buffer(len);
-        SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX* pi = (SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX*)&buffer[0];
+        auto pi = (SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX*)&buffer[0];
 
         if (GetLogicalProcessorInformationEx(RelationProcessorCore, pi, &len))
         {
             int count = 0;
-            char* ptr = (char*)pi;
+            auto ptr = (char*)pi;
             while (ptr < ((char*)pi + len))
             {
                 auto info = (SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX*)ptr;
@@ -140,22 +144,19 @@ namespace A_LIFE
             }
             return count;
         }
-        else
-        {
-            return 0;
-        }
+        return 0;
     }
 
 
     uFatty System_Information::Get_CPU_cache_bytes_per_thread()
     {
-        LPFN_GLPI glpi = (LPFN_GLPI)GetProcAddress(GetModuleHandle(TEXT("kernel32")), "GetLogicalProcessorInformation");
+        auto glpi = (LPFN_GLPI)GetProcAddress(GetModuleHandle(TEXT("kernel32")), "GetLogicalProcessorInformation");
         DWORD buffer_bytes = 0;
         uFatty cache_size_per_thread = 0;
 
-        glpi(0, &buffer_bytes);
+        glpi(nullptr, &buffer_bytes);
         std::size_t size = buffer_bytes / sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION);
-        SYSTEM_LOGICAL_PROCESSOR_INFORMATION* cachebuffer = new SYSTEM_LOGICAL_PROCESSOR_INFORMATION[size];
+        auto cachebuffer = new SYSTEM_LOGICAL_PROCESSOR_INFORMATION[size];
         glpi(cachebuffer, &buffer_bytes);
 
         for (std::size_t i = 0; i < size; i++)
@@ -163,7 +164,7 @@ namespace A_LIFE
             if (cachebuffer[i].Relationship == RelationCache &&
                 cachebuffer[i].Cache.Level == 1)
             {
-                cache_size_per_thread = (int)cachebuffer[i].Cache.Size;
+                cache_size_per_thread = static_cast<__int32>(cachebuffer[i].Cache.Size);
                 break;
             }
         }
@@ -180,9 +181,7 @@ namespace A_LIFE
 
         if (GlobalMemoryStatusEx(&memStatus))
             return memStatus.ullTotalPhys;
-
-        else
-            return 0;
+        return 0;
     }
 
 
@@ -193,9 +192,7 @@ namespace A_LIFE
 
         if (GlobalMemoryStatusEx(&memStatus))
             return memStatus.ullAvailPhys;
-
-        else
-            return 0;
+        return 0;
     }
 
 
@@ -205,9 +202,7 @@ namespace A_LIFE
 
         if (GetDiskFreeSpaceExW(L".", &freeBytesAvailable, &totalBytes, &totalFreeBytes))
             return totalBytes.QuadPart;
-
-        else
-            return 0;
+        return 0;
     }
 
 
@@ -217,8 +212,7 @@ namespace A_LIFE
 
         if (GetDiskFreeSpaceExW(L".", &freeBytesAvailable, &totalBytes, &totalFreeBytes))
             return totalFreeBytes.QuadPart;
-        else
-            return 0;
+        return 0;
     }
 
 
@@ -250,18 +244,15 @@ namespace A_LIFE
         {
             return std::filesystem::path(ofn.lpstrFile);
         }
-        else
-        {
-            // User cancelled or an error occurred
+        // User cancelled or an error occurred
 
-            return std::filesystem::current_path() / std::format("{}.{}", Default_Filename, File_Extention);
-        }
+        return std::filesystem::current_path() / std::format("{}.{}", Default_Filename, File_Extention);
     }
 
     bool File_Wizard::Prompt_Confirm(std::string Title, std::string Description)
     {
         int msgboxID = MessageBoxA(
-            NULL,
+            nullptr,
             Description.c_str(),
             Title.c_str(),
             MB_ICONWARNING | MB_YESNO | MB_DEFBUTTON2 | MB_SETFOREGROUND
@@ -277,11 +268,11 @@ namespace A_LIFE
         }
     }
 
-    
+
     static bool Prompt_Retry(std::string Title, std::string Description)
     {
         int msgboxID = MessageBoxA(
-            NULL,
+            nullptr,
             Description.c_str(),
             Title.c_str(),
             MB_ICONWARNING | MB_RETRYCANCEL | MB_DEFBUTTON2 | MB_SETFOREGROUND
@@ -296,7 +287,6 @@ namespace A_LIFE
             break;
         }
     }
-    
 }
 
 #else
@@ -610,7 +600,10 @@ namespace Core
     {
         // Step 1 : Check and see if this file even exists and isn't empty??
         if (std::filesystem::exists(CSV_File) && !std::filesystem::is_empty(CSV_File))
+        {
             INFO("File Wizard", "We're starting to read {} now", CSV_File.string());
+        }
+
         else
         {
             WARN("File Wizard", "HEY! {} doesn't exist", CSV_File.string());
@@ -672,18 +665,59 @@ namespace Core
         if (std::filesystem::exists(INI_File) && std::filesystem::is_regular_file(INI_File)
             && !std::filesystem::is_empty(INI_File))
             return true;
-
-        else
+        if (make_new_if_not_exist)
         {
-            if (make_new_if_not_exist)
-            {
-                std::ofstream newINIFile(INI_File, std::ios::out | std::ios::app);
-                newINIFile << std::format("; Compatiable with {} \n", LOCAL_ALIFE_VERSION.full_title()) << std::endl;
-                newINIFile.close();
-                return true;
-            }
-            else
-                return false;
+            std::ofstream newINIFile(INI_File, std::ios::out | std::ios::app);
+            newINIFile << std::format("; Compatiable with {} \n", LOCAL_ALIFE_VERSION.full_title()) << std::endl;
+            newINIFile.close();
+            return true;
         }
+        return false;
     }
+
+    bool File_Wizard::OBJ_to_Mesh(std::filesystem::path obj_file_path, std::pair<std::vector<float>, std::vector<int>>* mesh_buffer)
+    {
+        
+        tinyobj::attrib_t attrib;
+        std::vector<tinyobj::shape_t> shapes;
+        std::vector<tinyobj::material_t> materials;
+        std::string warning_msg, error_msg;
+
+        bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &warning_msg, &error_msg, obj_file_path.string().c_str());
+
+        if (!ret)
+        {
+            //WARN("File Wizard", "We couldn't load {} because {} or {}", obj_file_path.string(), warning_msg, error_msg);
+            return false;
+        }
+
+        std::vector<float> vertices;
+        std::vector<int> indices;
+
+        for (const auto& shape : shapes)
+        {
+            for (const auto& index : shape.mesh.indices)
+            {
+                float vx = attrib.vertices[3 * index.vertex_index + 0];
+                float vy = attrib.vertices[3 * index.vertex_index + 1];
+                float vz = attrib.vertices[3 * index.vertex_index + 2];
+
+                vertices.push_back(vx);
+                vertices.push_back(vy);
+                vertices.push_back(vz);
+            }
+
+            for (size_t i = 0; i < shape.mesh.indices.size(); i += 3)
+            {
+                indices.push_back(static_cast<int>(i + 0));
+                indices.push_back(static_cast<int>(i + 1));
+                indices.push_back(static_cast<int>(i + 2));
+            }
+        }
+        mesh_buffer->first = vertices;
+        mesh_buffer->second = indices;
+        
+        return true;
+    }
+    
 }

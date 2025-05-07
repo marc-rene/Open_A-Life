@@ -15,6 +15,7 @@ includedirs {   "$(SolutionDir)Core",
                 "$(SolutionDir)Core\\ThirdParty\\mINI\\src\\mini", 
                 "$(SolutionDir)Core\\ThirdParty\\csv\\single_include",
                 "$(SolutionDir)Core\\ThirdParty\\spdlog\\include",
+                --"$(SolutionDir)Core\\ThirdParty\\spdlog\\TinyObjLoader",
                 "$(SolutionDir)Core\\ThirdParty\\ValveNetworking\\include"}
 
 -- Create virtual paths for modules

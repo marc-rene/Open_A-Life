@@ -5,25 +5,51 @@
 
 #include <iostream>
 #include <memory>
-#include "Core/Type_Definitions.hpp"
+#include <map>
+#include "Core/Type_Definitions.h"
 
 
 namespace A_LIFE
 {
+    enum EObjectType : uMint // Using Unreal Engine terminology
+    {
+        OBJECT = 0, // something that is just PURE data
+        LEVEL = 1,
+        ACTOR = 2, // something that exists in the world
+    };
+
+
     class ALIFE_CoreObject
     {
     public:
-        std::string Name;
-        std::vector<std::unique_ptr<ALIFE_CoreObject>> ObjectRegistry;
+        const std::string ObjectName;
+        const EObjectType ObjectType = OBJECT;
+        inline static std::map<const std::string, ALIFE_CoreObject*> ObjectRegistry = {};
         std::vector<std::string> BackLoggedLogs;
-        A_LIFE::A_LIFE_Log ObjectLogger;
+        A_LIFE_Log ObjectLogger;
 
         /**
          * @brief Every Object needs to be created with a process name ("Packet Ninja", "Director", etc...)
          * @param object_name: what's the name?
          */
-        ALIFE_CoreObject(const std::string ObjectName);
-        ALIFE_CoreObject();
+        ALIFE_CoreObject(std::string ObjectName, EObjectType ObjectType = OBJECT);
+        ~ALIFE_CoreObject();
+
+        ALIFE_CoreObject(); // This should NEVER be called
+
+        static std::string ListObjectRegistry(const char* delimiter = "\n")
+        {
+            std::stringstream ss;
+            ss.clear();
+
+            for (const auto& [UID, objPtr] : ObjectRegistry)
+            {
+                ss << objPtr->ObjectName << delimiter;
+            }
+
+            return ss.str();
+        }
+
         virtual void Init();
 
         /**

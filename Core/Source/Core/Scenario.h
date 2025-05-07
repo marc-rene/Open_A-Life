@@ -12,17 +12,19 @@ namespace A_LIFE
         inline static Director director;
         inline static Packet_Ninja packetNinja;
         inline static std::string scenarioName;
+        inline static std::vector<const std::string*> allLevels;
         static A_LIFE_Log logger;
 
         ALIFE_SCENARIO();
 
         void Init();
+        static void GetAllLevelsFromRuntimeRegistry();
 
         ~ALIFE_SCENARIO();
 
     private:
         // We are running ONE version of this Scenario
         // TODO: Get this version from a GIT build or something, not hardcoded
-        static inline A_LIFE_Version VERSION = LOCAL_ALIFE_VERSION;
+        static inline auto VERSION = LOCAL_ALIFE_VERSION;
     };
 }

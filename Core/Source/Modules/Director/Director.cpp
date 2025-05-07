@@ -1,4 +1,3 @@
-
 #include "Core/Core.h"
 #include "Director.h"
 #include <mutex>
@@ -6,5 +5,3 @@
 #include <chrono>
 #include <cmath>
 #include <fstream>
-
-
