@@ -5,7 +5,7 @@
 #include "3D Utils/Camera.h"
 #include "All_Windows.h"
 #include "Styles/custom_styles.h"
-
+/*
 // Forward declarations
 void RenderScene(ID3D11DeviceContext* context, Camera* p_local_camera);
 void InitViewportResources(ID3D11Device*, ImVec2*);
@@ -28,13 +28,17 @@ ID3D11VertexShader* g_pVertexShader = nullptr;
 ID3D11PixelShader* g_pPixelShader = nullptr;
 ID3D11InputLayout* g_pInputLayout = nullptr;
 
-
 // DEBUG: DELETE LATER
-ID3D11Buffer* g_pVertexBuffer = nullptr;
-ID3D11Buffer* g_pIndexBuffer = nullptr;
+static ID3D11Buffer* g_dungeonVertexBuffer = nullptr;
+static ID3D11Buffer* g_dungeonIndexBuffer = nullptr;
+static ID3D11Buffer* g_constantBuffer = nullptr;
+
 static uInt g_dungeonIndexCount = 0;
 static bool g_dungeonModelLoaded = false;
-static bool g_showTestDungeon = false;
+
+ID3D11Buffer* g_pVertexBuffer = nullptr;
+ID3D11Buffer* g_pIndexBuffer = nullptr;
+
 //====================
 
 
@@ -52,7 +56,7 @@ struct Vertex
     Vector3 pos;
     Vector3 colour;
 };
-
+/*
 void LoadTestDungeonModel(ID3D11Device* device, A_LIFE::Level* levelmesh)
 {
     levelmesh->SetStaticMeshData(std::filesystem::current_path() / "test dungeon.obj");
@@ -156,7 +160,56 @@ void LoadTestDungeonModel(ID3D11Device* device, A_LIFE::Level* levelmesh)
     g_dungeonIndexCount = static_cast<uInt>(idx_buffer.size());
     g_dungeonModelLoaded = true;
     SUCCESSc("Dungeon model loaded: {} verts, {} indices", gpuVerts.size(), g_dungeonIndexCount);
-    */
+}
+ 
+void InitDungeonConstantBuffer(ID3D11Device* device)
+{
+    if (g_constantBuffer) return;
+
+    D3D11_BUFFER_DESC bd{};
+    bd.Usage = D3D11_USAGE_DEFAULT;
+    bd.ByteWidth = sizeof(ConstantBuffer);
+    bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+
+    if (FAILED(device->CreateBuffer(&bd, nullptr, &g_constantBuffer)))
+        ERRORc("Failed to create dungeon constant buffer")
+    else
+        SUCCESSc("Dungeon constant buffer created")
+}
+
+
+void LoadTestDungeonModel(ID3D11Device* device, A_LIFE::Level* levelmesh)
+{
+    levelmesh->SetStaticMeshData(std::filesystem::current_path() / "test dungeon.obj");
+
+    const auto& vtx_buffer = levelmesh->LevelMeshData.vertices;
+    const auto& idx_buffer = levelmesh->LevelMeshData.indices;
+
+    struct Vertex { DirectX::XMFLOAT3 pos; };
+    std::vector<Vertex> gpuVerts;
+    for (size_t i = 0; i + 2 < vtx_buffer.size(); i += 3)
+        gpuVerts.push_back({ {vtx_buffer[i], vtx_buffer[i + 1], vtx_buffer[i + 2]} });
+
+    // Create vertex buffer
+    D3D11_BUFFER_DESC vbDesc{};
+    vbDesc.Usage = D3D11_USAGE_DEFAULT;
+    vbDesc.ByteWidth = sizeof(Vertex) * gpuVerts.size();
+    vbDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+    D3D11_SUBRESOURCE_DATA vbData{ gpuVerts.data() };
+    device->CreateBuffer(&vbDesc, &vbData, &g_dungeonVertexBuffer);
+
+    // Create index buffer
+    D3D11_BUFFER_DESC ibDesc{};
+    ibDesc.Usage = D3D11_USAGE_DEFAULT;
+    ibDesc.ByteWidth = sizeof(uInt) * idx_buffer.size();
+    ibDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+    D3D11_SUBRESOURCE_DATA ibData{ idx_buffer.data() };
+    device->CreateBuffer(&ibDesc, &ibData, &g_dungeonIndexBuffer);
+
+    g_dungeonIndexCount = static_cast<uInt>(idx_buffer.size());
+    g_dungeonModelLoaded = true;
+
+    SUCCESSc("Dungeon model loaded: {} verts, {} indices", gpuVerts.size(), g_dungeonIndexCount);
 }
 
 void InitCube(ID3D11Device* device)
@@ -319,12 +372,15 @@ void ImGui::NavmeshVisualiser(bool* p_open, ID3D11Device* g_pd3dDevice, ID3D11De
 
     if (!initialised)
     {
+        InitViewportResources(g_pd3dDevice, &viewportSize);
+        InitDungeonConstantBuffer(g_pd3dDevice);
         A_LIFE::Level* DebugLevel = static_cast<A_LIFE::Level*>(A_LIFE::ALIFE_CoreObject::ObjectRegistry[*(ALIFEScenario->allLevels[0])]); 
         if (DebugLevel->LevelMeshData.indices.empty())
         {
             //DebugLevel->SetStaticMeshData(std::filesystem::current_path() / "test dungeon.obj");
         }
         SUCCESS("Navmesh Vis", "WE ABOUT TO LOAD UP A {}", *(ALIFEScenario->allLevels[0]));
+        //LoadTestDungeonModel(g_pd3dDevice, dungeonLevel);
         LoadTestDungeonModel(g_pd3dDevice, DebugLevel);
         //InitCube(g_pd3dDevice);
         initialised = true;
@@ -380,7 +436,7 @@ void RenderScene(ID3D11DeviceContext* context, Camera* p_local_camera)
     Matrix view = p_local_camera->GetViewMatrix();
     Matrix world = MatrixIdentity();
     Matrix proj = MatrixPerspective(45.0f * DEG2RAD, aspect, 0.1f, 100.0f);
-
+    /*
     ConstantBuffer cb;
     memcpy(&cb.world, &world, sizeof(Matrix));
     memcpy(&cb.view, &view, sizeof(Matrix));
@@ -398,7 +454,28 @@ void RenderScene(ID3D11DeviceContext* context, Camera* p_local_camera)
     context->PSSetShader(g_pPixelShader, nullptr, 0);
     
     context->DrawIndexed(262144, 0, 0);
+*/
+/*
+    if (!g_constantBuffer || !g_dungeonModelLoaded) return;
 
+
+    ConstantBuffer cb;
+    memcpy(&cb.world, &world, sizeof(Matrix));
+    memcpy(&cb.view, &view, sizeof(Matrix));
+    memcpy(&cb.projection, &proj, sizeof(Matrix));
+    context->UpdateSubresource(g_constantBuffer, 0, nullptr, &cb, 0, 0);
+
+    UINT stride = sizeof(DirectX::XMFLOAT3);
+    UINT offset = 0;
+    context->IASetVertexBuffers(0, 1, &g_dungeonVertexBuffer, &stride, &offset);
+    context->IASetIndexBuffer(g_dungeonIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+    context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    context->IASetInputLayout(g_pInputLayout); // existing layout
+    context->VSSetShader(g_pVertexShader, nullptr, 0);
+    context->VSSetConstantBuffers(0, 1, &g_constantBuffer);
+    context->PSSetShader(g_pPixelShader, nullptr, 0);
+
+    context->DrawIndexed(g_dungeonIndexCount, 0, 0);
     /*if (g_dungeonModelLoaded) {
         UINT stride = sizeof(DirectX::XMFLOAT3);
         UINT offset = 0;
@@ -412,6 +489,7 @@ void RenderScene(ID3D11DeviceContext* context, Camera* p_local_camera)
         context->PSSetShader(g_pPixelShader, nullptr, 0);
 
         context->DrawIndexed(g_dungeonIndexCount, 0, 0);
-    }*/
+    }
 }
 
+*/

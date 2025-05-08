@@ -14,7 +14,8 @@ files { "Source/**.h",              "Source/**.cpp",            "Source/**.hpp",
 includedirs {   "$(SolutionDir)Core\\Include", -- Include La Core
                 "$(SolutionDir)Example\\ThirdParty\\imgui", 
                 "$(SolutionDir)Example\\ThirdParty\\imgui\\backends",
-                "$(SolutionDir)Example\\ThirdParty\\DirectXhelper\\Inc", 
+                "$(SolutionDir)Example\\ThirdParty\\GLFW", 
+                "$(SolutionDir)Example\\ThirdParty\\GLAD\\include", 
                 "$(SolutionDir)Example\\ThirdParty",
                 "$(SolutionDir)Example\\misc",
 
@@ -33,23 +34,23 @@ removefiles {   "ThirdParty\\imgui\\backends\\imgui_impl_allegro5.cpp",
                 "ThirdParty\\imgui\\backends\\imgui_impl_android.h",
                 "ThirdParty\\imgui\\backends\\imgui_impl_dx10.cpp", 
                 "ThirdParty\\imgui\\backends\\imgui_impl_dx10.h",
-                "!ThirdParty\\imgui\\backends\\imgui_impl_dx11.cpp", -- Keep 
-                "!ThirdParty\\imgui\\backends\\imgui_impl_dx11.h", -- Keep
+                "!ThirdParty\\imgui\\backends\\imgui_impl_dx11.cpp",    -- Keep 
+                "!ThirdParty\\imgui\\backends\\imgui_impl_dx11.h",      -- Keep
                 "ThirdParty\\imgui\\backends\\imgui_impl_dx12.cpp", 
                 "ThirdParty\\imgui\\backends\\imgui_impl_dx12.h",
                 "ThirdParty\\imgui\\backends\\imgui_impl_dx9.cpp", 
                 "ThirdParty\\imgui\\backends\\imgui_impl_dx9.h",
-                "ThirdParty\\imgui\\backends\\imgui_impl_glfw.cpp",
-                "ThirdParty\\imgui\\backends\\imgui_impl_glfw.h",
+                "!ThirdParty\\imgui\\backends\\imgui_impl_glfw.cpp",    -- Keep
+                "!ThirdParty\\imgui\\backends\\imgui_impl_glfw.h",      -- Keep
                 "ThirdParty\\imgui\\backends\\imgui_impl_glut.cpp",
                 "ThirdParty\\imgui\\backends\\imgui_impl_glut.h",
                 "ThirdParty\\imgui\\backends\\imgui_impl_metal.h", 
                 "ThirdParty\\imgui\\backends\\imgui_impl_metal.mm",
                 "ThirdParty\\imgui\\backends\\imgui_impl_opengl2.cpp", 
                 "ThirdParty\\imgui\\backends\\imgui_impl_opengl2.h",
-                "ThirdParty\\imgui\\backends\\imgui_impl_opengl3.cpp", 
-                "ThirdParty\\imgui\\backends\\imgui_impl_opengl3.h",
-                "ThirdParty\\imgui\\backends\\imgui_impl_opengl3_loader.h",
+                "!ThirdParty\\imgui\\backends\\imgui_impl_opengl3.cpp",     -- Keep
+                "!ThirdParty\\imgui\\backends\\imgui_impl_opengl3.h",       -- Keep
+                "ThirdParty\\imgui\\backends\\imgui_impl_opengl3_loader.h",-- Keep
                 "ThirdParty\\imgui\\backends\\imgui_impl_osx.h",
                 "ThirdParty\\imgui\\backends\\imgui_impl_osx.mm",
                 "ThirdParty\\imgui\\backends\\imgui_impl_sdl2.cpp", 
@@ -73,7 +74,7 @@ removefiles {   "ThirdParty\\imgui\\backends\\imgui_impl_allegro5.cpp",
                 "ThirdParty\\imgui\\misc\\freetype/**",
                 "ThirdParty\\imgui\\misc\\fonts/**.cpp"}
 
-links {"Core", "d3d11"}
+links {"Core", "$(SolutionDir)Example\\ThirdParty\\GLFW\\glfw3", "opengl32"}
 
 -- Create virtual paths for modules
 vpaths {
