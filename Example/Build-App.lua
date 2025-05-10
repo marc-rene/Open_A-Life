@@ -14,8 +14,9 @@ files { "Source/**.h",              "Source/**.cpp",            "Source/**.hpp",
 includedirs {   "$(SolutionDir)Core\\Include", -- Include La Core
                 "$(SolutionDir)Example\\ThirdParty\\imgui", 
                 "$(SolutionDir)Example\\ThirdParty\\imgui\\backends",
-                "$(SolutionDir)Example\\ThirdParty\\GLFW", 
+                "$(SolutionDir)Example\\ThirdParty\\GLFW\\include", 
                 "$(SolutionDir)Example\\ThirdParty\\GLAD\\include", 
+                "$(SolutionDir)Example\\ThirdParty\\Raylib\\src", 
                 "$(SolutionDir)Example\\ThirdParty",
                 "$(SolutionDir)Example\\misc",
 
@@ -74,7 +75,7 @@ removefiles {   "ThirdParty\\imgui\\backends\\imgui_impl_allegro5.cpp",
                 "ThirdParty\\imgui\\misc\\freetype/**",
                 "ThirdParty\\imgui\\misc\\fonts/**.cpp"}
 
-links {"Core", "$(SolutionDir)Example\\ThirdParty\\GLFW\\glfw3", "opengl32"}
+links {"Core", "$(SolutionDir)Example\\ThirdParty\\GLFW\\lib-vc2022\\glfw3", "opengl32"}
 
 -- Create virtual paths for modules
 vpaths {

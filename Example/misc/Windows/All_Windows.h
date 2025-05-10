@@ -1,11 +1,15 @@
 #pragma once
-#include <imgui.h>
-#include "Open_ALife.h"
 
+#include <glad/glad.h>
+#include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+#include <stdio.h>
 #define GL_SILENCE_DEPRECATION
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
+
+#include "Open_ALife.h"
+#include "Styles/custom_styles.h"
 
 
 namespace ImGui
@@ -14,5 +18,8 @@ namespace ImGui
     void Parent_Window(bool* p_open = nullptr);
     void Test_Window(bool* p_open = nullptr);
     void Scenario_Maker_Window(bool* p_open = nullptr);
-    //void NavmeshVisualiser(bool* p_open, ID3D11Device* g_pd3dDevice, ID3D11DeviceContext* g_pd3dDeviceContext, A_LIFE::ALIFE_SCENARIO*);
+    void NavmeshVisualiser(bool* p_open, A_LIFE::ALIFE_SCENARIO*);
 }
+
+int CreateAppWindow(A_LIFE::ALIFE_SCENARIO*);
+static GLFWwindow* window;
