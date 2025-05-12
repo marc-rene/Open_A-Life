@@ -90,7 +90,7 @@ namespace A_LIFE
         // Defining here because compiler is complaining
         //template <typename floatType, typename intType>
         //static bool OBJ_to_Mesh(std::filesystem::path obj_file_path, std::pair<std::vector<floatType>, std::vector<intType>>* mesh_buffer);
-        static bool OBJ_to_Mesh(std::filesystem::path obj_file_path, std::pair<std::vector<float>, std::vector<int>>* mesh_buffer);
+        //static bool OBJ_to_Mesh(std::filesystem::path obj_file_path, std::pair<std::vector<float>, std::vector<int>>* mesh_buffer);
             /*
         {
             tinyobj::attrib_t attrib;

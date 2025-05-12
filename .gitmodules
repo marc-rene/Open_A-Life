@@ -27,3 +27,6 @@
 [submodule "Example/ThirdParty/Raylib"]
 	path = Example/ThirdParty/Raylib
 	url = https://github.com/raysan5/raylib.git
+[submodule "Example/ThirdParty/TinyOBJ"]
+	path = Example/ThirdParty/TinyOBJ
+	url = https://github.com/tinyobjloader/tinyobjloader.git

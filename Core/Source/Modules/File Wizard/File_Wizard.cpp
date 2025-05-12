@@ -14,8 +14,8 @@
 #include <map>
 #include <mutex>
 
-#define TINYOBJLOADER_IMPLEMENTATION
-#include "../ThirdParty/TinyObjLoader/tiny_obj_loader.h"
+//#define TINYOBJLOADER_IMPLEMENTATION
+//#include "../ThirdParty/TinyObjLoader/tiny_obj_loader.h"
 
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
@@ -675,6 +675,7 @@ namespace Core
         return false;
     }
 
+    /*
     bool File_Wizard::OBJ_to_Mesh(std::filesystem::path obj_file_path, std::pair<std::vector<float>, std::vector<int>>* mesh_buffer)
     {
         
@@ -719,5 +720,5 @@ namespace Core
         
         return true;
     }
-    
+*/
 }
