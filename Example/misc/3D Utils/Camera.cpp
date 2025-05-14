@@ -81,7 +81,6 @@ std::string Camera::to_string()
     }
 
 
-    ss << std::format("\tMouse Sensitivity = Horizontal: {} Vertical: {}\n", mouseSensitivity.x, mouseSensitivity.y);
     ss << std::format("\tCapturing Mouse input? = {}", Mouse_Captured ? "Yes\n" : "No\n");
     ss << std::format(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
 
