@@ -22,4 +22,3 @@ namespace ImGui
 }
 
 int CreateAppWindow(A_LIFE::ALIFE_SCENARIO*);
-static GLFWwindow* window;

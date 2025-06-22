@@ -36,7 +36,7 @@ int CreateAppWindow(A_LIFE::ALIFE_SCENARIO* ALIFE_CORE)
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     // Create window with graphics context
-    window = glfwCreateWindow(1280, 720, "Open A-Life Visualisation Tool", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(1280, 720, "Open A-Life Visualisation Tool", nullptr, nullptr);
     if (window == nullptr)
     {
         ERRORc("{} WE CANT MAKE A DAMN OPENGL WINDOW! FAILURE!!!!", FAILURE_msg);
@@ -44,12 +44,16 @@ int CreateAppWindow(A_LIFE::ALIFE_SCENARIO* ALIFE_CORE)
     }
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1); // Enable vsync
-  /*  gladLoadGL();
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
-        ERRORc("{} Failed to initialize GLAD", FAILURE_msg);
+        std::cout << "Failed to initialize GLAD" << std::endl;
         return -1;
-    }*/
+    }
+    //if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    //{
+    //    ERRORc("{} Failed to initialize GLAD", FAILURE_msg);
+    //    return -1;
+    //}
     //------------------------------------ 
 
 
@@ -206,7 +210,7 @@ int CreateAppWindow(A_LIFE::ALIFE_SCENARIO* ALIFE_CORE)
         // ...you have been warned
         // This is becuase a widget cannot suicide itself
 
-        ImGui::NavmeshVisualiser(&showNavmeshVisualiser, ALIFE_CORE);
+        //ImGui::NavmeshVisualiser(&showNavmeshVisualiser, ALIFE_CORE);
 
 
         clear_color = ImGui::GetStyle().Colors[ImGuiCol_WindowBg];
