@@ -16,72 +16,7 @@ static uInt fbo = 0, colorTexture = 0, depthRBO = 0;
 static const char* Window_Title = "Navmesh Visualiser";
 
 
-/*
-void InitGLResources(int width, int height)
-{
-	// FBO
-	glGenFramebuffers(1, &fbo);
-	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
-	glGenTextures(1, &colorTexture);
-	glBindTexture(GL_TEXTURE_2D, colorTexture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTexture, 0);
-
-	glGenRenderbuffers(1, &depthRBO);
-	glBindRenderbuffer(GL_RENDERBUFFER, depthRBO);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, depthRBO);
-
-	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-		ERRORc("Framebuffer not complete!");
-
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-	glGenVertexArrays(1, &vao);
-	glGenBuffers(1, &vbo);
-	glBindVertexArray(vao);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-
-	// Shader
-	const char* vsSrc = R"(#version 330 core
-		layout(location = 0) in vec3 aPos;
-		uniform mat4 model;
-		uniform mat4 view;
-		uniform mat4 projection;
-		void main() {
-			gl_Position = projection * view * model * vec4(aPos, 1.0);
-		})";
-
-	const char* fsSrc = R"(
-            #version 330
-            out vec4 FragColor;
-            void main() { FragColor = vec4(0.4, 0.7, 1.0, 1.0); }
-        )";
-
-	auto CompileShader = [](const char* src, GLenum type)
-		{
-			GLuint shader = glCreateShader(type);
-			glShaderSource(shader, 1, &src, nullptr);
-			glCompileShader(shader);
-			return shader;
-		};
-
-	GLuint vs = CompileShader(vsSrc, GL_VERTEX_SHADER);
-	GLuint fs = CompileShader(fsSrc, GL_FRAGMENT_SHADER);
-	shaderProgram = glCreateProgram();
-	glAttachShader(shaderProgram, vs);
-	glAttachShader(shaderProgram, fs);
-	glLinkProgram(shaderProgram);
-	glDeleteShader(vs);
-	glDeleteShader(fs);
-}
-
-*/
 void ImGui::NavmeshVisualiser(bool* p_open, A_LIFE::ALIFE_SCENARIO* ALIFEScenario)
 {
 	static Camera local_camera;

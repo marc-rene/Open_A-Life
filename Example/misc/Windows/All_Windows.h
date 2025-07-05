@@ -19,6 +19,7 @@ namespace ImGui
     void Test_Window(bool* p_open = nullptr);
     void Scenario_Maker_Window(bool* p_open = nullptr);
     void NavmeshVisualiser(bool* p_open, A_LIFE::ALIFE_SCENARIO*);
+    void OBJ_Viewer_Window(bool* p_open = nullptr);
 }
 
 int CreateAppWindow(A_LIFE::ALIFE_SCENARIO*);

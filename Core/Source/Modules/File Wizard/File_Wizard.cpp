@@ -249,6 +249,30 @@ namespace A_LIFE
         return std::filesystem::current_path() / std::format("{}.{}", Default_Filename, File_Extention);
     }
 
+    std::filesystem::path File_Wizard::OpenFilePath(const char* Filter, const char* File_Extention,
+        const char* Dialog_Title)
+    {
+        char szFile[MAX_PATH] = { 0 };
+
+        OPENFILENAMEA ofn{ 0 };
+        ofn.lStructSize = sizeof(OPENFILENAMEA);
+        ofn.lpstrFile = szFile;
+        ofn.nMaxFile = sizeof(szFile);
+        ofn.lpstrFilter = Filter;
+        ofn.nFilterIndex = 1;
+        ofn.Flags = OFN_PATHMUSTEXIST | OFN_OVERWRITEPROMPT | OFN_LONGNAMES | OFN_NOCHANGEDIR;
+        ofn.lpstrDefExt = File_Extention;
+        ofn.lpstrTitle = Dialog_Title;
+
+        if (GetOpenFileNameA(&ofn))
+        {
+            return std::filesystem::path(ofn.lpstrFile);
+        }
+        // User cancelled or an error occurred
+
+        return {};
+    }
+
     bool File_Wizard::Prompt_Confirm(std::string Title, std::string Description)
     {
         int msgboxID = MessageBoxA(

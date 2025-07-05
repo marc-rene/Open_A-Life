@@ -211,7 +211,7 @@ int CreateAppWindow(A_LIFE::ALIFE_SCENARIO* ALIFE_CORE)
         // This is becuase a widget cannot suicide itself
 
         //ImGui::NavmeshVisualiser(&showNavmeshVisualiser, ALIFE_CORE);
-
+        ImGui::OBJ_Viewer_Window(&showNavmeshVisualiser);
 
         clear_color = ImGui::GetStyle().Colors[ImGuiCol_WindowBg];
 

@@ -76,6 +76,7 @@ namespace A_LIFE
 
         static std::filesystem::path SetSavePath(const char* Filter, const char* File_Extention,
                                                  const char* Default_Filename, const char* Dialog_Title);
+        static std::filesystem::path OpenFilePath(const char* Filter, const char* File_Extention, const char* Dialog_Title);
 
         static std::vector<std::string> Get_CSV_Column_Data(std::filesystem::path CSV_File,
                                                             std::string Column_Name,
