@@ -12,7 +12,6 @@
 #include <cmath>
 
 namespace {
-    struct Vec3 { float x, y, z; };
     struct ObjMesh {
         std::vector<Vector3> vertices;
         std::vector<int>  indices;
@@ -48,25 +47,18 @@ namespace {
         return true;
     }
 
-    ImVec2 Project(const Vector3& v, const Camera& cam, float scale, ImVec2 center)
+    ImVec2 Project(const Vector3& vertex, const Camera& cam, float scale, ImVec2 center)
     {
-        // Translate into camera space
-        float px = v.x - cam.worldPosition.x;
-        float py = v.y - cam.worldPosition.y;
-        float pz = v.z - cam.worldPosition.z;
-
         float cy = cosf(cam.yaw), sy = sinf(cam.yaw);
         float cp = cosf(cam.pitch), sp = sinf(cam.pitch);
-
-        float x1 = cy * px + sy * py;
-        float y1 = -sy * px + cy * py;
-        float z1 = pz;
-
-        float x2 = cp * x1 - sp * z1;
-        float z2 = sp * x1 + cp * z1;
-
+    
+        float x1 = cy * vertex.x + sy * vertex.z;
+        float z1 = -sy * vertex.x + cy * vertex.z;
+        float y1 = cp * vertex.y - sp * z1;
+        float z2 = sp * vertex.y + cp * z1;
+    
         float f = 1.0f / (z2 * 0.3f + 3.0f);
-        return ImVec2(center.x + x2 * scale * f, center.y - y1 * scale * f);
+        return ImVec2(center.x + x1 * scale * f, center.y - y1 * scale * f);
     }
 }
 
@@ -132,9 +124,13 @@ void ImGui::OBJ_Viewer_Window(bool* p_open)
         ImVec2 p1 = Project(v1, local_camera, scale, center);
         ImVec2 p2 = Project(v2, local_camera, scale, center);
 
-        dl->AddLine(p0, p1, IM_COL32(255, 255, 255, 255));
-        dl->AddLine(p1, p2, IM_COL32(255, 255, 255, 255));
-        dl->AddLine(p2, p0, IM_COL32(255, 255, 255, 255));
+        // Skip triangles behind the camera (offscreen pushed to -1000, -1000)
+        if (p0.x < -500 || p1.x < -500 || p2.x < -500)
+            continue;
+
+        dl->AddLine(p0, p1, IM_COL32(255, 5, 5, 255));
+        dl->AddLine(p1, p2, IM_COL32(5, 255, 5, 255));
+        dl->AddLine(p2, p0, IM_COL32(5, 5, 255, 255));
     }
     //ImGui::Image(nullptr, prevViewportSize, ImVec2(0, 1), ImVec2(1, 0));
     ImGui::Dummy(avail);
@@ -144,6 +140,9 @@ void ImGui::OBJ_Viewer_Window(bool* p_open)
     ImGui::SetCursorPos(GetWindowContentRegionMin());
     ImGui::InputText("OBJ Path", obj_path, sizeof(obj_path));
     ImGui::SameLine();
+    
+    LoadObjMesh("C:\\Users\\cesar\\Downloads\\Untitled.obj");
+    
     if (ImGui::Button("Load"))
     {
         std::filesystem::path tempmeshpath = A_LIFE::File_Wizard::OpenFilePath("Mesh Files\0*.obj\0", "obj", "What mesh will we load");
@@ -154,6 +153,7 @@ void ImGui::OBJ_Viewer_Window(bool* p_open)
             WARNc("The .OBJ file {} is not halal", tempmeshpath.string())
         }
     }
+    
     
     Text("%s", local_camera.to_string().c_str());
 

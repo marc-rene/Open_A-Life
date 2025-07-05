@@ -25,18 +25,16 @@ Camera::Camera(Vector3 p_position, Vector3 p_target)
     yaw = atan2f(temp_direction.y, temp_direction.x);
 
 
-    forwardVector = {cosf(yaw) * cosf(pitch), sinf(yaw) * cosf(pitch), sinf(pitch)};
-    rightVector = {-sinf(yaw), cosf(yaw), 0.0f};
-    upVector = Vector3CrossProduct(rightVector, forwardVector);
+    recomputeVectors();
 
     Mouse_Captured = false;
 }
 
 void Camera::Reset_Position()
 {
-    worldPosition = {-2.5, -2.5, 3.5};
-    yaw = PI / 4;
-    pitch = -PI / 4;
+    worldPosition = {4.0f, 24.0f, 13.0f};
+    yaw = 0;
+    pitch = 0;
 }
 
 
@@ -97,6 +95,22 @@ std::string Camera::to_string()
     return ss.str();
 }
 
+void Camera::recomputeVectors()
+{
+    // redo main camera vectors
+    forwardVector = {
+        cosf(yaw) * cosf(pitch),
+        sinf(yaw) * cosf(pitch),
+        sinf(pitch)
+    };
+
+    //upVector = Vector3Normalize(Vector3CrossProduct(forwardVector, rightVector));
+    //rightVector = Vector3Normalize(Vector3CrossProduct({0.0f, 0.0f, 1.0f}, forwardVector));
+    
+    rightVector = Vector3Normalize(Vector3CrossProduct(Vector3(0,0,1.0f), forwardVector));
+    upVector = Vector3Normalize(Vector3CrossProduct(forwardVector, rightVector));
+}
+
 void Camera::onUpdate(ImGuiIO* IO_ref)
 {
     if (ImGui::IsItemHovered())
@@ -105,15 +119,7 @@ void Camera::onUpdate(ImGuiIO* IO_ref)
         ProcessKeyboard(IO_ref);
     }
 
-    // redo main camera vectors
-    forwardVector = {
-        cosf(pitch) * cosf(yaw),
-        cosf(pitch) * sinf(yaw),
-        sinf(pitch)
-    };
-
-    rightVector = Vector3Normalize(Vector3CrossProduct({0.0f, 0.0f, 1.0f}, forwardVector));
-    upVector = Vector3Normalize(Vector3CrossProduct(forwardVector, rightVector));
+    recomputeVectors();
 }
 
 
@@ -317,15 +323,17 @@ void Camera::Look_Up(float amount)
 {
     pitch += (amount * (invertVertical ? 1.0f : -1.0f));
     pitch = Clamp(pitch, (-(PI / 2) + EPSILON), ((PI / 2) - EPSILON));
+    recomputeVectors();
 }
 
 void Camera::Look_Right(float amount)
 {
     yaw -= (amount * (invertHorizontal ? -1.0f : 1.0f));
+    recomputeVectors();
 }
 
 Matrix Camera::GetViewMatrix() const
 {
     Vector3 target = Vector3Add(worldPosition, forwardVector);
-    return MatrixLookAt(worldPosition, target, upVector);
+    return MatrixLookAt(worldPosition, target, {0,0,1});
 }

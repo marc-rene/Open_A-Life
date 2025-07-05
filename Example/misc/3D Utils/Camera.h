@@ -36,6 +36,7 @@ public:
 
     std::string to_string();
 
+    void recomputeVectors();
     void onUpdate(ImGuiIO* IO_ref);
 
     bool ProcessMouse(ImGuiIO* IO_ref);
