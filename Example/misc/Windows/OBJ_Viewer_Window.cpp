@@ -57,15 +57,16 @@ namespace {
 
 
         // Translate the vertex relative to the camera's world position
-        Vector3 relVertex = {
-            vertex.x - cam.worldPosition.x,
-            vertex.y - cam.worldPosition.y,
-            vertex.z - cam.worldPosition.z };
+        Vector3 vtx(
+        vertex.x - cam.worldPosition.x,
+        vertex.y - cam.worldPosition.y,
+        vertex.z - cam.worldPosition.z
+        );
 
-        float x1 = cy * relVertex.x + sy * relVertex.z;
-        float z1 = -sy * relVertex.x + cy * relVertex.z;
-        float y1 = cp * relVertex.y - sp * z1;
-        float z2 = sp * relVertex.y + cp * z1;
+        float x1 = cy * vtx.x + sy * vtx.z;
+        float z1 = -sy * vtx.x + cy * vtx.z;
+        float y1 = cp * vtx.y - sp * z1;
+        float z2 = sp * vtx.y + cp * z1;
 
     
         float f = 1.0f / (z2 * 0.3f + 3.0f);

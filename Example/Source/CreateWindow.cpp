@@ -205,13 +205,14 @@ int CreateAppWindow(A_LIFE::ALIFE_SCENARIO* ALIFE_CORE)
 
         // Let all logs go to terminal instead
         // ImGui::Core_Window(ALIFE_CORE);
+        // Scenario_Maker_Window mutates its bool,
         if (showScenarioMaker)
-            ImGui::Scenario_Maker_Window(&showScenarioMaker); // Scenario_Maker_Window mutates its bool,
+            ImGui::Scenario_Maker_Window(&showScenarioMaker); 
+        
         // ...you have been warned
         // This is becuase a widget cannot suicide itself
-
-        //ImGui::NavmeshVisualiser(&showNavmeshVisualiser, ALIFE_CORE);
-        ImGui::OBJ_Viewer_Window(&showNavmeshVisualiser);
+        if(showNavmeshVisualiser)
+            ImGui::OBJ_Viewer_Window(&showNavmeshVisualiser);
 
         clear_color = ImGui::GetStyle().Colors[ImGuiCol_WindowBg];
 
