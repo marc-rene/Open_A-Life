@@ -49,13 +49,24 @@ namespace {
 
     ImVec2 Project(const Vector3& vertex, const Camera& cam, float scale, ImVec2 center)
     {
-        float cy = cosf(cam.yaw), sy = sinf(cam.yaw);
-        float cp = cosf(cam.pitch), sp = sinf(cam.pitch);
-    
-        float x1 = cy * vertex.x + sy * vertex.z;
-        float z1 = -sy * vertex.x + cy * vertex.z;
-        float y1 = cp * vertex.y - sp * z1;
-        float z2 = sp * vertex.y + cp * z1;
+
+        float cy = cosf(cam.yaw);
+        float sy = sinf(cam.yaw);
+        float cp = cosf(cam.pitch);
+        float sp = sinf(cam.pitch);
+
+
+        // Translate the vertex relative to the camera's world position
+        Vector3 relVertex = {
+            vertex.x - cam.worldPosition.x,
+            vertex.y - cam.worldPosition.y,
+            vertex.z - cam.worldPosition.z };
+
+        float x1 = cy * relVertex.x + sy * relVertex.z;
+        float z1 = -sy * relVertex.x + cy * relVertex.z;
+        float y1 = cp * relVertex.y - sp * z1;
+        float z2 = sp * relVertex.y + cp * z1;
+
     
         float f = 1.0f / (z2 * 0.3f + 3.0f);
         return ImVec2(center.x + x1 * scale * f, center.y - y1 * scale * f);
@@ -114,6 +125,7 @@ void ImGui::OBJ_Viewer_Window(bool* p_open)
     ImVec2 center = ImVec2(origin.x + avail.x * 0.5f, origin.y + avail.y * 0.5f);
     float scale = avail.y * 0.5f;
     ImDrawList* dl = ImGui::GetWindowDrawList();
+
     for (size_t i = 0; i + 2 < gMesh.indices.size(); i += 3)
     {
         const Vector3& v0 = gMesh.vertices[gMesh.indices[i + 0]];
@@ -140,8 +152,6 @@ void ImGui::OBJ_Viewer_Window(bool* p_open)
     ImGui::SetCursorPos(GetWindowContentRegionMin());
     ImGui::InputText("OBJ Path", obj_path, sizeof(obj_path));
     ImGui::SameLine();
-    
-    LoadObjMesh("C:\\Users\\cesar\\Downloads\\Untitled.obj");
     
     if (ImGui::Button("Load"))
     {
