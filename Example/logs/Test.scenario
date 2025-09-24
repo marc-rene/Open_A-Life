@@ -1,0 +1,9 @@
+; Compatiable with ALIFE Version 1.0.0 "Pre-Beta" 
+
+
+[version]
+a-life version = 1.0.0
+a-life full title = ALIFE Version 1.0.0 "Pre-Beta"
+
+[main]
+scenario name = 
